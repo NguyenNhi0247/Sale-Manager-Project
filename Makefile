@@ -21,3 +21,7 @@ fe-setup-env:
 	cd src/frontend; \
 	yarn; \
 	cd ../..
+
+fe-start-dev: 
+	cd src/frontend; \
+	yarn serve
