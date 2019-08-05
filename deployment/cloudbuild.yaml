@@ -9,7 +9,7 @@ steps:
   timeout: 180s
 
 - id: 'frontend'
-  waitFor: 'backend'
+  waitFor: ['backend']
   name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend', '.']
   dir: 'src/frontend'
