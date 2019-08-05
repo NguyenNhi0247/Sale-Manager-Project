@@ -1,0 +1,22 @@
+# Google Cloud Build configuration to automatically deploy application 
+# to Google Compute Engine whenever a new push has been made to master branch.
+
+steps:
+- id: 'backend'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/backend', '.']
+  dir: src/backend
+  timeout: 180s
+
+- id: 'frontend'
+  waitFor: 'backend'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend', '.']
+  dir: src/frontend
+  timeout: 300s
+
+images: ['gcr.io/$PROJECT_ID/frontend', 'gcr.io/$PROJECT_ID/backend']
+timeout: 600s
+logsBucket: gs://beanies-cicd
+options:
+ logStreamingOption: STREAM_ON
