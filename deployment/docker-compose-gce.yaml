@@ -8,7 +8,7 @@ services:
     hostname: beanies-postgres
     container_name: beanies-postgres
     volumes:
-      - ~/beanies/postgres:/var/lib/postgresql/data
+      - /home/bean/app/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     restart: always
@@ -20,13 +20,13 @@ services:
   #   ports:
   #     - "6379:6379"
   #   volumes:
-  #     - ~/beanies/redis:/data
+  #     - /home/bean/app/redis:/data
   #   command: ["redis-server", "--appendonly", "yes"]
   #   restart: always
 
   # Backend API service
   backend:
-    image: beanies-backend:latest
+    image: gcr.io/beanies/backend:latest
     hostname: beanies-backend
     container_name: beanies-backend
     ports:
@@ -40,7 +40,7 @@ services:
  
   # Web frontend service
   frontend:
-    image: beanies-frontend:latest
+    image: gcr.io/beanies/frontend:latest
     hostname: beanies-frontend
     container_name: beanies-frontend
     ports:

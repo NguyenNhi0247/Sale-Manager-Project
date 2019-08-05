@@ -17,6 +17,10 @@ be-setup-env:
 	pip3 install -r requirements.txt; \
 	cd ../..
 
+be-build-docker:
+	cd src/backend; \
+	docker build -t beanies-backend .
+
 fe-setup-env:
 	cd src/frontend; \
 	yarn; \
@@ -25,3 +29,11 @@ fe-setup-env:
 fe-start-dev: 
 	cd src/frontend; \
 	yarn serve
+
+fe-build-docker:
+	cd src/frontend; \
+	docker build -t beanies-frontend .
+
+docker-compose:
+	cd deployment; \
+	docker-compose up
