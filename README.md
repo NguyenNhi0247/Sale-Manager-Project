@@ -38,7 +38,7 @@ After that, you can open your browser and head to `http://localhost` to see the 
 *You can reference to the `setup-env`, `fe-start-dev` and `be-start-dev` profiles in the `Makefile` to know which commands must be run in order to manually setup the local development environment.*
 
 
-#### Database management
+### Database management
 - After start the local environment by `docker-compose`, you can access `pgAdmin` at `http://localhost:10000`.
 - Email/Password: `admin@local.dev` / `123456x@X`
 - Create new connection to Postgres database with details below:
