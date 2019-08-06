@@ -17,15 +17,12 @@ If you don't have `Docker` and `docker-compose` installed on your machine then y
   - yarn
 
 ### Development
-If you have `Docker` and `docker-compose` installed on your machine then just have to run the below commands.  
-`docker-compose` will start all required services for local development with live reloading for both `frontend` and `backend` services.
 ```sh
-$ cd deployment/
-$ docker-compose up
-
-or just have to run `make docker-compose` if you're using Linux and have make tool installed.
+$ git clone https://github.com/lnquy/Sale-Manager-Project
+$ cd Sale-Manager-Project
+$ make setup-env   # Prepare local dev env and install dependencies
+$ make docker-compose   # Start services for local dev
 ```
-
 Services will be started and exposed at address:
   - Database: `postgres:5432` (+pgAdmin: `0.0.0.0:10000`)
   - Backend: `backend:9090`
