@@ -1,4 +1,4 @@
-# docker-compose down && docker-compose build --pull && docker-compose up -d
+# Deploy to Google Compute Engine.
 
 version: '3'
 
@@ -11,18 +11,22 @@ services:
       - /home/bean/app/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    environment: # TODO
+      - POSTGRES_PASSWORD= 
     restart: always
- 
-  # redis:
-  #   image: redis:5.0.4-alpine
-  #   hostname: beanies-redis
-  #   container_name: beanies-redis
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - /home/bean/app/redis:/data
-  #   command: ["redis-server", "--appendonly", "yes"]
-  #   restart: always
+
+  pgAdmin:
+    image: dpage/pgadmin4
+    hostname: beanies-pgadmin
+    container_name: beanies-pgadmin
+    ports: 
+      - 10000:80
+    environment: # TODO
+      - PGADMIN_DEFAULT_EMAIL=
+      - PGADMIN_DEFAULT_PASSWORD=
+    depends_on:
+      - postgres
+    restart: always
 
   # Backend API service
   backend:
@@ -77,3 +81,14 @@ services:
       - dockerhost
       - frontend
     restart: always
+ 
+  # redis:
+  #   image: redis:5.0.4-alpine
+  #   hostname: beanies-redis
+  #   container_name: beanies-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - /home/bean/app/redis:/data
+  #   command: ["redis-server", "--appendonly", "yes"]
+  #   restart: always
