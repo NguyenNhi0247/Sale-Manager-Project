@@ -13,7 +13,7 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_PASSWORD=123456x@X
-    restart: always
+    restart: on-failure
   
   pgAdmin:
     image: dpage/pgadmin4
@@ -26,25 +26,32 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=123456x@X
     depends_on:
       - postgres
-    restart: always
+    restart: on-failure
  
   # Backend API service
   backend:
-    image: beanies-backend:latest
+    image: lnquy/python:3.7-alpine-flask
     hostname: beanies-backend
     container_name: beanies-backend
     ports:
       - "9090:9090"
     links:
-      # - frontend:frontend
       - postgres:postgres
     depends_on:
       - postgres
-    restart: always
+    volumes:
+      - ../src/backend:/home/app
+    working_dir: /home/app/
+    command: [ sh, -c, "source backend-env/bin/activate && python3 -m flask run --host=0.0.0.0 --port=9090" ]
+    user: ${CURRENT_UID}
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_DEBUG=1
+    restart: on-failure
  
   # Web frontend service
   frontend:
-    image: beanies-frontend:latest
+    image: node:10.16-alpine
     hostname: beanies-frontend
     container_name: beanies-frontend
     ports:
@@ -52,12 +59,17 @@ services:
     links:
       - backend:backend
       - postgres:postgres
+    volumes:
+      - ../src/frontend:/home/app
+    working_dir: /home/app/
+    command: [ sh, -c, "yarn serve" ]
+    user: ${CURRENT_UID}
     environment:
       # BACKEND
       - BACKEND_ADDRESS=http://backend:9090
     depends_on:
       - backend
-    restart: always
+    restart: on-failure
 
   # Allow NGINX proxy to access host network so it can forward requests for
   # executioner service that is running on host level (not inside Docker network).
@@ -80,7 +92,7 @@ services:
     depends_on:
       - dockerhost
       - frontend
-    restart: always
+    restart: on-failure
 
   # redis:
   #   image: redis:5.0.4-alpine
@@ -91,4 +103,4 @@ services:
   #   volumes:
   #     - ~/beanies/redis:/data
   #   command: ["redis-server", "--appendonly", "yes"]
-  #   restart: always
+  #   restart: on-failure

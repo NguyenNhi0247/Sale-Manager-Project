@@ -23,7 +23,7 @@ fe-setup-env:
 # Start local development environment by running docker-compose.
 docker-compose:
 	cd deployment; \
-	docker-compose up
+	CURRENT_UID=$(id -u):$(id -g) docker-compose up
 
 # Manually start frontend and backend services for local development.
 fe-start-dev: 
