@@ -7,8 +7,10 @@ likes the header, footer...
 
     <!-- Child pages will be rendered here based on the URL path. Take a look on router.js file -->
     <v-content>
-      <v-container fluid>
-        <router-view></router-view>
+      <v-container fluid class="pa-0 ma-0">
+        <transition name="fade" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </v-container>
     </v-content>
 
@@ -18,13 +20,13 @@ likes the header, footer...
 </template>
 
 <script>
-import Header from "../../components/Header"
-import Footer from "../../components/Footer"
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 export default {
   components: {
     "my-header": Header,
-    "my-footer": Footer,
+    "my-footer": Footer
   },
   data() {
     return {
