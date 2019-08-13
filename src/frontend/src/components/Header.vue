@@ -47,9 +47,9 @@
       </v-list>
     </v-menu>
 
-    <v-badge overlap top color="#FFB84A" style="margin-top: 5px !important">
+    <v-badge :value="counter > 0" overlap top color="#FFB84A" style="margin-top: 5px !important">
       <template v-slot:badge>
-        <span>2</span>
+        <span>{{ counter }}</span>
       </template>
       <v-btn
         class="ma-2 text-none"
@@ -64,9 +64,12 @@
 </template>
 
 <script>
+import { eventBus } from "../event";
+
 export default {
   name: "my-header",
   data: () => ({
+    counter: 0,
     menuItems: [
       { title: "Profile" },
       { title: "Settings" },
@@ -82,6 +85,11 @@ export default {
       // Take a look on router.js file.
       this.$router.push({ name: "checkout" });
     }
+  },
+  created() {
+    eventBus.$on("addBookToCart", data => {
+      this.counter++;
+    });
   }
 };
 </script>
