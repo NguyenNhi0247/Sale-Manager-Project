@@ -8,7 +8,7 @@ services:
     hostname: beanies-postgres
     container_name: beanies-postgres
     volumes:
-      - ~/beanies/postgres:/var/lib/postgresql/data
+      - ~/tmp/beanies/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
@@ -101,6 +101,6 @@ services:
   #   ports:
   #     - "6379:6379"
   #   volumes:
-  #     - ~/beanies/redis:/data
+  #     - ~/tmp/beanies/redis:/data
   #   command: ["redis-server", "--appendonly", "yes"]
   #   restart: on-failure
