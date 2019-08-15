@@ -87,7 +87,7 @@ export default {
     }
   },
   created() {
-    eventBus.$on("addBookToCart", data => {
+    eventBus.$on("addBookToCart", () => {
       this.counter++;
     });
   }

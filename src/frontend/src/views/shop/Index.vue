@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import {eventBus} from "../../event"
+import { eventBus } from "../../event";
 
 export default {
   name: "index",
@@ -276,7 +276,7 @@ export default {
       this.$router.push({ path: `/product/${book.id}` });
     },
     addToCart(book) {
-      eventBus.bookAddedToCart(book)
+      eventBus.bookAddedToCart(book);
     },
     categoryClicked(category) {
       alert(category.name + " clicked");
