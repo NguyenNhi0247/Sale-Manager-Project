@@ -5,6 +5,7 @@ import Index from './views/shop/Index.vue'
 import Product from './views/shop/Product.vue'
 import Checkout from './views/shop/Checkout.vue'
 import Payment from './views/shop/Payment.vue'
+import API from './views/shop/API.vue'
 
 Vue.use(Router)
 
@@ -18,6 +19,7 @@ export default new Router({
         { name: "product", path: "/product/:id", component: Product },
         { name: "checkout", path: "/checkout", component: Checkout },
         { name: "payment", path: "/payment", component: Payment },
+        { name: "api", path: "/apis", component: API },
       ]
     },
     {
