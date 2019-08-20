@@ -48,7 +48,7 @@
                   @click.native.stop="bookClicked(book)"
                   style="cursor: pointer"
                 >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnail" />
+                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnails[0]" />
                   <v-card-title class="pb-0">{{ book.title }}</v-card-title>
                   <v-card-text class="pb-0">
                     <span>{{ book.author }}</span>
@@ -113,7 +113,7 @@
                   @click.native.stop="bookClicked(book)"
                   style="cursor: pointer"
                 >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnail" />
+                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnails[0]" />
                   <v-card-title class="pb-0">{{ book.title }}</v-card-title>
                   <v-card-text class="pb-0">
                     <span>{{ book.author }}</span>
@@ -180,22 +180,20 @@ export default {
       // Fake data for displaying books.
       // Later then we will need to call to backend API to get the list of books from databse then
       // display it here.
-      books: [
-        
-      ],
-      colors: [
-        'primary',
-        'secondary',
-        'yellow darken-2',
-        'red',
-        'orange',
-      ],
-      model: 0,
+      books: [],
+      // colors: [
+      //   'primary',
+      //   'secondary',
+      //   'yellow darken-2',
+      //   'red',
+      //   'orange',
+      // ],
+      // model: 0,
     };
   },
   mounted() {
     this.$http
-        .get("/api/v1/get-books", axiosConfig)
+        .get("/api/v1/books", axiosConfig)
         .then(resp => {
           console.log(resp);
           this.books = resp.data;

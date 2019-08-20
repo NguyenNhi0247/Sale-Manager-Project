@@ -10,24 +10,19 @@ def get_data():
         return data
 
 
-@app.route("/api/v1/get-books", methods=["GET"])
+@app.route("/api/v1/books", methods=["GET"])
 def get_books():
     data = get_data()
     return jsonify(data)
 
 
-@app.route("/api/v1/get-book-details", methods=["POST"])
-def get_book_by_id():
-    if request.method == 'POST':
-        book_id = request.args.get('id')
-        books = get_data()
-        book_details = []
-        for book in books:
-            print(book_id)
-            if (str(book_id) == str(book['id'])):
-                book_details.append(book)
-        print(book_details)
-        return jsonify(book_details), 200
+@app.route("/api/v1/books/<id>", methods=["GET"])
+def get_book_by_id(id):
+    books = get_data()
+    for b in books:
+        if (str(id) == str(b['id'])):
+            return jsonify(b), 200
+    return jsonify(), 404
 
 
 def get_book_by_category(category_selected):
