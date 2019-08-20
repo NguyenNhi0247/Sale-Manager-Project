@@ -34,7 +34,9 @@
 
       <!-- Right section => Display list of books -->
       <v-flex xs10>
-        <!-- Best sellers - Can change this by banner/carousel later -->
+
+        
+  
         <h2>Best Sellers</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
           <v-layout wrap>
@@ -169,6 +171,7 @@
 
 <script>
 import { eventBus } from "../../event";
+import { axiosConfig } from "../../utils";
 
 export default {
   name: "index",
@@ -178,88 +181,25 @@ export default {
       // Later then we will need to call to backend API to get the list of books from databse then
       // display it here.
       books: [
-        {
-          id: 0,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 1,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 2,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 3,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 4,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        }
-      ]
+        
+      ],
+      colors: [
+        'primary',
+        'secondary',
+        'yellow darken-2',
+        'red',
+        'orange',
+      ],
+      model: 0,
     };
+  },
+  mounted() {
+    this.$http
+        .get("/api/v1/get-books", axiosConfig)
+        .then(resp => {
+          console.log(resp);
+          this.books = resp.data;
+        })
   },
   filters: {
     // Convert v to its location form, return v itself if it's not a number.
@@ -303,4 +243,8 @@ h2 {
   position: absolute;
   width: 100%;
 }
+.v-carousel, .v-carousel__item {
+  height: 330px!important;
+}
+
 </style>
