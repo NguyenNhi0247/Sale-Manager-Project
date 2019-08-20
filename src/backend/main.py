@@ -1,28 +1,32 @@
 import os
 import unittest
 
+# Database migration and app command line parameters
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
+# Blueprint manage the routes to REST APIs
 from app import blueprint
 from app.main import create_app, db
-from app.main.model import user, blacklist
+from app.main.model import user
 
+# Start application with corresponding configurations based on it running "stage" environment.
 app = create_app(os.getenv("BEANIES_ENV") or "dev")
 app.register_blueprint(blueprint)
 
 app.app_context().push()
 
+# Register app CLI parameters
 manager = Manager(app)
 
+# Database management
 migrate = Migrate(app, db)
-
 manager.add_command("db", MigrateCommand)
 
 
 @manager.command
 def run():
-    app.run(host='0.0.0.0', port="9090", debug=True)
+    app.run(host="0.0.0.0", port="9090", debug=True) # TODO: Remove debug or make it configurable
 
 
 @manager.command
