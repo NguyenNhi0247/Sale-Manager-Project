@@ -31,7 +31,8 @@ fe-start-dev:
 	yarn serve
 be-start-dev: 
 	cd src/backend; \
-	python3 main.py
+	source backend-env/bin/activate; \
+	PYTHONDONTWRITEBYTECODE=1 python3 main.py run
 
 # Build Docker image for frontend and backend services for production deployment.
 docker-build: be-build-docker fe-build-docker

@@ -1,35 +1,39 @@
-from flask import Flask, request, jsonify
+import os
+import unittest
 
-app = Flask(__name__)
+from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager
+
+from app import blueprint
+from app.main import create_app, db
+from app.main.model import user, blacklist
+
+app = create_app(os.getenv("BEANIES_ENV") or "dev")
+app.register_blueprint(blueprint)
+
+app.app_context().push()
+
+manager = Manager(app)
+
+migrate = Migrate(app, db)
+
+manager.add_command("db", MigrateCommand)
 
 
-@app.route("/")
-def hello_world():
-    return "Hello, World!"
+@manager.command
+def run():
+    app.run(host='0.0.0.0', port="9090", debug=True)
 
 
-@app.route("/api/v1/ping")
-def ping():
-    return "pong"
-
-
-@app.route("/api/v1/json")
-def json():
-    return jsonify({"username": "Quy", "email": "a@a.com", "id": 111})
-
-
-@app.route("/api/v1/post", methods=["POST"])
-def postAPI():
-    # Have to ask for the request Content-Type header first before decoding JSON.
-    if request.is_json:
-        data = request.get_json()
-        print(
-            "Request data: {}".format(data), flush=True
-        )  # Force Flask to flush log to stdout immediately instead of buffer it
-    else:
-        print("Unknown request data", flush=True)
-    return "ok"
+@manager.command
+def test():
+    """Runs the unit tests."""
+    tests = unittest.TestLoader().discover("app/test", pattern="test*.py")
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        return 0
+    return 1
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="9090")
+    manager.run()
