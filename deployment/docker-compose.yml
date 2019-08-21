@@ -24,13 +24,15 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@local.dev
       - PGADMIN_DEFAULT_PASSWORD=123456x@X
+    logging:
+      driver: none
     depends_on:
       - postgres
     restart: on-failure
  
   # Backend API service
   backend:
-    image: lnquy/python:3.7-alpine-flask
+    image: python:3.6
     hostname: beanies-backend
     container_name: beanies-backend
     ports:
@@ -42,11 +44,23 @@ services:
     volumes:
       - ../src/backend:/home/app
     working_dir: /home/app/
-    command: [ sh, -c, "source backend-env/bin/activate && python3 -m flask run --host=0.0.0.0 --port=9090" ]
+    command: [ /bin/bash, -c, "source /home/app/backend-env/bin/activate && pip3 install -r requirements.txt && python3 main.py run" ]
+    # command: >
+    #   /bin/bash -c "source backend-env/bin/activate && 
+    #                 python3 main.py run"
     user: ${CURRENT_UID}
     environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - BEANIES_ENV=dev
       - FLASK_APP=main.py
       - FLASK_DEBUG=1
+      - FLASK_ENV=dev
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=123456x@X
+      - POSTGRES_DATABASE=beanies
     restart: on-failure
  
   # Web frontend service
