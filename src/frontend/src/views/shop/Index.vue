@@ -34,7 +34,9 @@
 
       <!-- Right section => Display list of books -->
       <v-flex xs10>
-        <!-- Best sellers - Can change this by banner/carousel later -->
+
+
+
         <h2>Best Sellers</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
           <v-layout wrap>
@@ -46,7 +48,7 @@
                   @click.native.stop="bookClicked(book)"
                   style="cursor: pointer"
                 >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnail" />
+                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnails[0]" />
                   <v-card-title class="pb-0">{{ book.title }}</v-card-title>
                   <v-card-text class="pb-0">
                     <span>{{ book.author }}</span>
@@ -111,7 +113,7 @@
                   @click.native.stop="bookClicked(book)"
                   style="cursor: pointer"
                 >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnail" />
+                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnails[0]" />
                   <v-card-title class="pb-0">{{ book.title }}</v-card-title>
                   <v-card-text class="pb-0">
                     <span>{{ book.author }}</span>
@@ -169,97 +171,23 @@
 
 <script>
 import { eventBus } from "../../event";
+import { axiosConfig } from "../../utils";
 
 export default {
   name: "index",
   data() {
     return {
-      // Fake data for displaying books.
-      // Later then we will need to call to backend API to get the list of books from databse then
-      // display it here.
-      books: [
-        {
-          id: 0,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 1,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 2,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 3,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 4,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        }
-      ]
+      books: [],
+
     };
+  },
+  mounted() {
+    this.$http
+        .get("/api/v1/books", axiosConfig)
+        .then(resp => {
+          console.log(resp);
+          this.books = resp.data;
+        })
   },
   filters: {
     // Convert v to its location form, return v itself if it's not a number.
