@@ -9,13 +9,14 @@ def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
     if not user:
         new_user = User(
-            public_id=str(uuid.uuid4()),
             email=data['email'],
             username=data['username'],
             password=data['password'],
-            registered_on=datetime.datetime.utcnow()
         )
+        app.logger.info("HIT 1")
         save_changes(new_user)
+        app.logger.info("HIT 2")
+        app.logger.info("HIT 3")
         return generate_token(new_user)
     else:
         response_object = {

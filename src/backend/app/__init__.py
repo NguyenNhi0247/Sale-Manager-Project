@@ -2,6 +2,7 @@ from flask_restplus import Api
 from flask import Blueprint
 
 from .main.controller.user_controller import api as user_ns
+from .main.controller.book_controller import api as book_ns
 
 blueprint = Blueprint("api", __name__)
 
@@ -13,3 +14,4 @@ api = Api(
 )
 
 api.add_namespace(user_ns, path="/api/v1/users")
+api.add_namespace(book_ns, path="/api/v1/books")

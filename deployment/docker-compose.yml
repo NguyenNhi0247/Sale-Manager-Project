@@ -24,6 +24,8 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@local.dev
       - PGADMIN_DEFAULT_PASSWORD=123456x@X
+    logging:
+      driver: none
     depends_on:
       - postgres
     restart: on-failure
@@ -53,6 +55,7 @@ services:
       - BEANIES_ENV=dev
       - FLASK_APP=main.py
       - FLASK_DEBUG=1
+      - FLASK_ENV=dev
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_USERNAME=postgres
