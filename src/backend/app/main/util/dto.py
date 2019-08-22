@@ -22,7 +22,7 @@ class BookDto:
             "id": fields.Integer(description="book identifier"),
             "title": fields.String(required=True, description="user username"),
             "subtitle": fields.String(description="user email address"),
-            "thumbails": fields.List(fields.String),
+            "thumbnails": fields.List(fields.String),
             "description": fields.String(description="user password"),
             "long_description": fields.String(description="long description"),
             "price": fields.Float(),

@@ -34,13 +34,10 @@
 
       <!-- Right section => Display list of books -->
       <v-flex xs10>
-
-
-
         <h2>Best Sellers</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
-          <v-layout wrap>
-            <v-flex xs3 v-for="book in books" :key="book.id">
+          <v-layout wrap v-if="bestSellers.length > 0">
+            <v-flex xs3 v-for="book in bestSellers" :key="book.id">
               <v-hover v-slot:default="{ hover }">
                 <v-card
                   :elevation="hover ? 24 : 2"
@@ -48,7 +45,7 @@
                   @click.native.stop="bookClicked(book)"
                   style="cursor: pointer"
                 >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnails[0]" />
+                  <v-img :aspect-ratio="16/9" height="250" :src="getDefaultThumbnail(book.thumbnails)" />
                   <v-card-title class="pb-0">{{ book.title }}</v-card-title>
                   <v-card-text class="pb-0">
                     <span>{{ book.author }}</span>
@@ -104,8 +101,8 @@
         <v-divider class="mt-5 mb-3"></v-divider>
         <h2>Children</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
-          <v-layout wrap>
-            <v-flex xs3 v-for="book in books" :key="book.id">
+          <v-layout wrap v-if="childrenBooks.length > 0">
+            <v-flex xs3 v-for="book in childrenBooks" :key="book.id">
               <v-hover v-slot:default="{ hover }">
                 <v-card
                   :elevation="hover ? 24 : 2"
@@ -133,9 +130,9 @@
                         class="grey--text pl-2"
                       >{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</div>
                     </v-layout>
-                    <!-- <div>{{ book.description }}</div> -->
-                    <!-- Categories -->
-                    <!-- <v-chip
+                    <!-- <div>{{ book.description }}</div>
+                    Categories
+                    <v-chip
                           class="mr-1"
                           link
                           :href="category.url"
@@ -143,7 +140,7 @@
                           ripple
                           v-for="(category, idx) in book.categories"
                           :key="idx"
-                    >{{ category.name }}</v-chip>-->
+                    >{{ category.name }}</v-chip> -->
                   </v-card-text>
 
                   <v-divider class="mx-3"></v-divider>
@@ -177,17 +174,31 @@ export default {
   name: "index",
   data() {
     return {
-      books: [],
-
+      bestSellers: [],
+      childrenBooks: []
     };
   },
   mounted() {
     this.$http
-        .get("/api/v1/books", axiosConfig)
-        .then(resp => {
-          console.log(resp);
-          this.books = resp.data;
-        })
+      .get("/api/v1/books?limit=10&offset=0", axiosConfig)
+      .then(resp => {
+        console.log(resp.data);
+        this.bestSellers = resp.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    // TODO: Get list of children books ONLY
+    this.$http
+      .get("/api/v1/books?limit=5&offset=50", axiosConfig)
+      .then(resp => {
+        console.log(resp.data);
+        this.childrenBooks = resp.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   filters: {
     // Convert v to its location form, return v itself if it's not a number.
@@ -209,6 +220,9 @@ export default {
     categoryClicked(category) {
       alert(category.name + " clicked");
       // TODO
+    },
+    getDefaultThumbnail(thumbnails) {
+      return (thumbnails && thumbnails.length > 0) ? thumbnails[0] : "https://salt.tikicdn.com/cache/w1200/ts/product/60/5f/0c/1322d346b88a6940b8c93d105dec840d.jpg"
     }
   }
 };

@@ -14,17 +14,19 @@ log = logging.getLogger("book.controller")
 log.setLevel(logging.DEBUG)
 
 
-# GET/POST /api/v1/books
+# GET/POST /api/v1/books?limit=5&offset=10
 @api.route("/")
 class ListBook(Resource):
     @api.doc("list_of_book")
-    @api.marshal_list_with(_book, envelope="data")
+    @api.marshal_list_with(_book) # Serialize/Encode/Marshal JSON
     def get(self):
         """List all registered users"""
-        books = get_book()
-        print("=============")
-        print(books[:10])
-        return books[:10]
+        limit = request.args.get("limit")
+        if limit == None:
+            limit = 10
+        offset = request.args.get("offset")  
+        books = get_book(limit, offset)
+        return books
 
 #     @api.expect(_user, validate=True)
 #     @api.response(201, "User successfully created.")
@@ -38,7 +40,9 @@ class ListBook(Resource):
 #             log.exception("failed to save book")
 
 
-# GET /api/v1/books/:uid
+# GET /api/v1/books/:uid?limit=10&offset=5
+# uid: URL param
+# limit/offset: query param
 @api.route("/<int:bid>")
 @api.param("bid", "Book identifier")
 @api.response(404, "Book not found.")
