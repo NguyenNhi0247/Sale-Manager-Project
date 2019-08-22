@@ -34,11 +34,10 @@
 
       <!-- Right section => Display list of books -->
       <v-flex xs10>
-        <!-- Best sellers - Can change this by banner/carousel later -->
         <h2>Best Sellers</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
-          <v-layout wrap>
-            <v-flex xs3 v-for="book in books" :key="book.id">
+          <v-layout wrap v-if="bestSellers.length > 0">
+            <v-flex xs3 v-for="book in bestSellers" :key="book.id">
               <v-hover v-slot:default="{ hover }">
                 <v-card
                   :elevation="hover ? 24 : 2"
@@ -46,7 +45,7 @@
                   @click.native.stop="bookClicked(book)"
                   style="cursor: pointer"
                 >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnail" />
+                  <v-img :aspect-ratio="16/9" height="250" :src="getDefaultThumbnail(book.thumbnails)" />
                   <v-card-title class="pb-0">{{ book.title }}</v-card-title>
                   <v-card-text class="pb-0">
                     <span>{{ book.author }}</span>
@@ -102,8 +101,8 @@
         <v-divider class="mt-5 mb-3"></v-divider>
         <h2>Children</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
-          <v-layout wrap>
-            <v-flex xs3 v-for="book in books" :key="book.id">
+          <v-layout wrap v-if="childrenBooks.length > 0">
+            <v-flex xs3 v-for="book in childrenBooks" :key="book.id">
               <v-hover v-slot:default="{ hover }">
                 <v-card
                   :elevation="hover ? 24 : 2"
@@ -111,7 +110,7 @@
                   @click.native.stop="bookClicked(book)"
                   style="cursor: pointer"
                 >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnail" />
+                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnails[0]" />
                   <v-card-title class="pb-0">{{ book.title }}</v-card-title>
                   <v-card-text class="pb-0">
                     <span>{{ book.author }}</span>
@@ -131,9 +130,9 @@
                         class="grey--text pl-2"
                       >{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</div>
                     </v-layout>
-                    <!-- <div>{{ book.description }}</div> -->
-                    <!-- Categories -->
-                    <!-- <v-chip
+                    <!-- <div>{{ book.description }}</div>
+                    Categories
+                    <v-chip
                           class="mr-1"
                           link
                           :href="category.url"
@@ -141,7 +140,7 @@
                           ripple
                           v-for="(category, idx) in book.categories"
                           :key="idx"
-                    >{{ category.name }}</v-chip>-->
+                    >{{ category.name }}</v-chip> -->
                   </v-card-text>
 
                   <v-divider class="mx-3"></v-divider>
@@ -169,97 +168,37 @@
 
 <script>
 import { eventBus } from "../../event";
+import { axiosConfig } from "../../utils";
 
 export default {
   name: "index",
   data() {
     return {
-      // Fake data for displaying books.
-      // Later then we will need to call to backend API to get the list of books from databse then
-      // display it here.
-      books: [
-        {
-          id: 0,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 1,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 2,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 3,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        },
-        {
-          id: 4,
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" }
-          ]
-        }
-      ]
+      bestSellers: [],
+      childrenBooks: []
     };
+  },
+  mounted() {
+    this.$http
+      .get("/api/v1/books?limit=10&offset=0", axiosConfig)
+      .then(resp => {
+        console.log(resp.data);
+        this.bestSellers = resp.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    // TODO: Get list of children books ONLY
+    this.$http
+      .get("/api/v1/books?limit=5&offset=50", axiosConfig)
+      .then(resp => {
+        console.log(resp.data);
+        this.childrenBooks = resp.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   filters: {
     // Convert v to its location form, return v itself if it's not a number.
@@ -281,6 +220,9 @@ export default {
     categoryClicked(category) {
       alert(category.name + " clicked");
       // TODO
+    },
+    getDefaultThumbnail(thumbnails) {
+      return (thumbnails && thumbnails.length > 0) ? thumbnails[0] : "https://salt.tikicdn.com/cache/w1200/ts/product/60/5f/0c/1322d346b88a6940b8c93d105dec840d.jpg"
     }
   }
 };
