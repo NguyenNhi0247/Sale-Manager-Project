@@ -49,6 +49,6 @@ class User(Resource):
             if user is None:
                 return '', 404
             else:
-                return omit_empty(user)
+                return user
         except Exception as e:
             log.exception("failed to get user")
