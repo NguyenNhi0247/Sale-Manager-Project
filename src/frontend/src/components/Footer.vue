@@ -1,5 +1,6 @@
 <template>
   <v-footer dark padless>
+
     <v-card flat tile class="deep-purple accent-4 white--text text-center">
       <v-card-text>
         <v-btn v-for="icon in icons" :key="icon" class="mx-4 white--text" icon>
@@ -7,9 +8,17 @@
         </v-btn>
       </v-card-text>
 
-      <v-card-text
-        class="white--text pt-0"
-      >Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet. Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</v-card-text>
+      <div class="flex-row">
+        <v-flex xs12>
+            <h4>CUSTOMER SUPPORT</h4>
+            <span style="color:red;">Order hotline:</span> 1800-6963 <p>(Free, 8-21h including T7, CN)</p>
+
+        </v-flex>
+
+
+
+
+      </div>
 
       <v-divider></v-divider>
 

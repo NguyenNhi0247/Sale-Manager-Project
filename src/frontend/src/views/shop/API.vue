@@ -26,7 +26,7 @@ export default {
     callAPI() {
       // Call Backend API: GET /api/v1/json
       this.$http
-        .get("/api/v1/json", axiosConfig)
+        .get("/api/v1/users/tester", axiosConfig)
         .then(resp => {
           console.log(resp);
           this.user = resp.data;

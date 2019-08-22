@@ -20,10 +20,25 @@ fe-setup-env:
 	yarn; \
 	cd ../..
 
+clean-env:
+	cd src/backend; \
+	rm -rf backend-env; \
+	cd ../frontend; \
+	rm -rf node_modules
+	cd ../..
+
 # Start local development environment by running docker-compose.
 docker-compose:
 	cd deployment; \
 	CURRENT_UID=$(id -u):$(id -g) docker-compose up
+
+stop-docker-compose:
+	cd deployment; \
+	CURRENT_UID=$(id -u):$(id -g) docker-compose stop
+
+clean-docker-compose:
+	cd deployment; \
+	CURRENT_UID=$(id -u):$(id -g) docker-compose rm -s -f
 
 # Manually start frontend and backend services for local development.
 fe-start-dev: 
