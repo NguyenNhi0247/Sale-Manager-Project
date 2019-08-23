@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar fixed color="deep-purple accent-4 white--text" dark>
+  <v-app-bar fixed elevation="2" color="deep-purple accent-4 white--text" dark>
     <v-img
       src="../assets/logo.svg"
       aspect-ratio="1/1"

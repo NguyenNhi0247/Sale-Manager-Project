@@ -1,32 +1,71 @@
 <template>
   <v-container fluid>
+    <v-breadcrumbs class="pt-1" :items="breadcrumbItems" large></v-breadcrumbs>
+
     <v-layout wrap>
-      <v-flex xs4>
-        <v-img height="250" :src="book.thumbnails[0]" />
+      <v-flex offset-2 xs4>
+        <v-img height="400" contain :src="book.thumbnails[0]" />
       </v-flex>
 
-      <v-flex xs8>
-        <h2>{{ book.title }}</h2>
-        <p>Author: {{ book.authors[0] }}</p>
-        <div>
+      <v-flex xs4>
+        <p class="display-1">{{ book.title }}</p>
+        <p v-if="book.sub_title" class="subtitle-1 py-0 mt-n2 mb-1">{{ book.sub_title }}</p>
+        <v-layout
+          v-if="book.total_rating_point && book.total_rated"
+          row
+          wrap
+          align-center
+          class="pa-0"
+        >
           <v-rating
+            class="pl-2"
             color="yellow"
             readonly
+            dense
+            small
             half-increments
             :value="book.total_rating_point/book.total_rated"
           ></v-rating>
-          <span>{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</span>
-        </div>
-        <h3 class="pricing">{{ book.price | toLocaleString }} ₫</h3>
+          <span
+            class="pt-1 pl-2"
+          >{{ getRatingPoint(book.total_rating_point, book.total_rated) }} ({{ book.total_rated }})</span>
+        </v-layout>
+        <p class="pt-2 pb-0 mb-2 body-2">
+          Author<span v-if="book.authors.length > 1">s</span>:
+          <span style="color: #304FFE">{{ book.authors.join(", ") }}</span>
+        </p>
 
-        <div class="quantity-toggle">
-          <v-btn @click="decrement()">&mdash;</v-btn>
-          <input style="width: 30px;padding-left: 10px;" type="text" :value="quantity" readonly />
-          <v-btn @click="increment()">&#xff0b;</v-btn>
-        </div>
-        <v-btn depressed large color="error">
-          <v-icon left>mdi-cart</v-icon>Buy
-        </v-btn>
+        <v-divider></v-divider>
+
+        <p class="title red-highlight py-4">{{ book.price | toLocaleString }} ₫</p>
+
+        <v-layout align-left class="pa-0 ma-0 mt-n3">
+          <v-flex>
+            <v-text-field
+              v-model="quantity"
+              small
+              prepend-icon="mdi-minus"
+              append-outer-icon="mdi-plus"
+              style="max-width: 120px"
+              :value="quantity"
+              outlined
+              @click:append-outer="increment"
+              @click:prepend="decrement"
+              :rules="[quantityRules.required, quantityRules.isNumeric, quantityRules.valueRange]"
+            />
+          </v-flex>
+          <v-flex class="ma-0 pa-0 ml-n2">
+            <v-btn class="mt-1" depressed large dark color="red">
+              <v-icon left>mdi-cart</v-icon>Buy
+            </v-btn>
+          </v-flex>
+          <v-flex class="ma-0 pa-0 ml-n3">
+            <v-btn class="mt-1" depressed large dark outlined color="blue accent-4">
+              <v-icon left>mdi-eye-check-outline</v-icon>Preview
+            </v-btn>
+          </v-flex>
+          <v-spacer></v-spacer>
+        </v-layout>
 
         <v-alert type="warning" class="mt-5" width="450px">
           Please select the shipping address.
@@ -90,7 +129,7 @@
         <p>{{ book.total_rated }} (comment)</p>
       </v-flex>
 
-      <v-flex xs4 class="mt-15">
+      <!-- <v-flex xs4 class="mt-15">
         <p class="mb-0">
           5
           <v-icon left color="yellow">mdi-star</v-icon>
@@ -116,7 +155,7 @@
           <v-icon left color="yellow">mdi-star</v-icon>
           <vm-progress :percentage="20">20%</vm-progress>
         </p>
-      </v-flex>
+      </v-flex>-->
 
       <v-flex xs4 class="mt-15">
         <h4>Share your preview</h4>
@@ -134,16 +173,17 @@
         </v-avatar>
       </v-flex>
 
-      <v-flex xs8>
+      <!-- <v-flex xs8>
         <v-rating color="yellow" readonly half-increments value="4"></v-rating>
         <div class="grey--text pl-2">abc</div>
-      </v-flex>
+      </v-flex>-->
     </v-layout>
   </v-container>
 </template>
 
 
 <script>
+import Vue from "vue";
 import { axiosConfig } from "../../utils";
 
 export default {
@@ -153,8 +193,36 @@ export default {
         thumbnails: [],
         authors: []
       },
-      quantity: 1
+      quantity: 1,
+      breadcrumbItems: [
+        {
+          text: "Home",
+          to: "/"
+        },
+        {
+          text: "Books",
+          to: "/books"
+        },
+        {
+          text: "",
+          disabled: true,
+          to: "#"
+        }
+      ],
+      quantityRules: {
+        required: value => !!value || "Required.",
+        isNumeric: value => !isNaN(value) || "Number only",
+        valueRange: value =>
+          (parseInt(value) >= 1 && parseInt(value) <= 100) || "1-100"
+      }
     };
+  },
+  watch: {
+    book(value) {
+      let title =
+        value && value.title ? value.title : "Book is your best friend";
+      Vue.set(this.breadcrumbItems[2], "text", title);
+    }
   },
   mounted() {
     this.id = this.$route.params.id;
@@ -174,14 +242,22 @@ export default {
       // TODO
     },
     increment() {
+      if (this.quantity == 100) {
+        return;
+      }
       this.quantity++;
     },
     decrement() {
       if (this.quantity === 1) {
-        alert("Quantity not allowed");
-      } else {
-        this.quantity--;
+        return;
       }
+      this.quantity--;
+    },
+    getRatingPoint(totalRatingPoint, totalRatedTime) {
+      if (totalRatedTime === 0) {
+        return 0;
+      }
+      return parseFloat((totalRatingPoint / totalRatedTime).toFixed(1));
     }
   },
   filters: {
@@ -198,26 +274,11 @@ export default {
 </script>
 
 <style scoped>
-h2 {
-  color: blue;
-  font-weight: 300;
-  font-size: 2rem;
+.red-highlight {
+  color: #ff3425;
 }
 
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  opacity: 0.75;
-  position: absolute;
-  width: 100%;
-}
-
-.pricing {
-  color: red;
-}
-.p-preview {
-  margin-bottom: 0px;
-  font-size: 10px;
+.v-input__control {
+  min-height: 30px !important;
 }
 </style>

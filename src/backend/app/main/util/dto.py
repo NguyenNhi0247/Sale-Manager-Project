@@ -21,7 +21,7 @@ class BookDto:
         {
             "id": fields.Integer(description="book identifier"),
             "title": fields.String(required=True, description="user username"),
-            "subtitle": fields.String(description="user email address"),
+            "sub_title": fields.String(description="user email address"),
             "thumbnails": fields.List(fields.String),
             "description": fields.String(description="user password"),
             "long_description": fields.String(description="long description"),

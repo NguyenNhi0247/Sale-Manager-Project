@@ -23,7 +23,7 @@
             readonly
           ></v-rating>
           <div
-            class="grey--text pl-2"
+            class="grey--text pl-2 pt-1"
           >{{ getRatingPoint(book.total_rating_point, book.total_rated) }} ({{ book.total_rated }})</div>
         </v-layout>
         <!-- <div>{{ book.description }}</div> -->
@@ -44,7 +44,7 @@
         <v-spacer></v-spacer>
         <v-btn
           v-if="!isAlreadyInCart"
-          color="deep-purple accent-4"
+          color="blue accent-4"
           light
           text
           @click.native.prevent.stop="addBookToCart(book)"
@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import { eventBus } from "../event";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
