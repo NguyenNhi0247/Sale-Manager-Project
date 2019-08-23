@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import { eventBus } from "../../event";
 import { axiosConfig } from "../../utils";
 
 import BookCard from "../../components/BookCard";

@@ -15,7 +15,7 @@
           <div class="my-3 subtitle-2 black--text">{{ book.price | toLocaleString }} ₫</div>
           <v-spacer></v-spacer>
           <v-rating
-            :value="book.total_rating_point / book.total_rated"
+            :value="getRatingPoint(book.total_rating_point, book.total_rated)"
             color="amber"
             half-increments
             dense
@@ -24,7 +24,7 @@
           ></v-rating>
           <div
             class="grey--text pl-2"
-          >{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</div>
+          >{{ getRatingPoint(book.total_rating_point, book.total_rated) }} ({{ book.total_rated }})</div>
         </v-layout>
         <!-- <div>{{ book.description }}</div> -->
         <!-- Categories -->
@@ -42,8 +42,18 @@
       <v-divider class="mx-3 mt-1"></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="#0078D9" light text @click.native.prevent.stop="addToCart(book)" ripple>
-          <v-icon small>mdi-cart-outline</v-icon>&nbsp;Add to cart
+        <v-btn
+          v-if="!isAlreadyInCart"
+          color="deep-purple accent-4"
+          light
+          text
+          @click.native.prevent.stop="addBookToCart(book)"
+          ripple
+        >
+          <v-icon small>mdi-cart-plus</v-icon>&nbsp;Add to cart
+        </v-btn>
+        <v-btn v-else color="orange accent-4" light text @click.native.prevent.stop="removeBookFromCart(book)">
+          <v-icon small>mdi-cart-remove</v-icon>&nbsp;Remove From Cart
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -51,17 +61,45 @@
 </template>
 
 <script>
+import { eventBus } from "../event";
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "book-card",
   props: {
     book: {}
   },
+  data() {
+    return {
+      isAlreadyInCart: false
+    };
+  },
+  computed: {
+    ...mapGetters(["getCartItemIDs"])
+  },
+  watch: {
+    getCartItemIDs(ids) {
+      for (let i = 0; i < ids.length; i++) {
+        if (this.book.id == ids[i]) {
+          this.isAlreadyInCart = true
+          return
+        }
+      }
+      this.isAlreadyInCart = false
+    }
+  },
   methods: {
+    ...mapMutations(["addToCart", "removeFromCart"]),
     bookClicked(book) {
       this.$router.push({ path: `/product/${book.id}` });
     },
-    addToCart(book) {
-      eventBus.bookAddedToCart(book);
+    addBookToCart(book) {
+      this.addToCart(book); // Save book to global vuex store
+      //   eventBus.bookAddedToCart(book); // TODO
+    },
+    removeBookFromCart(book) {
+      this.removeFromCart(book);
+      //   eventBus.bookRemovedCart(book); // TODO
     },
     categoryClicked(category) {
       alert(category.name + " clicked");
@@ -71,6 +109,12 @@ export default {
       return thumbnails && thumbnails.length > 0
         ? thumbnails[0]
         : "https://salt.tikicdn.com/cache/w1200/ts/product/60/5f/0c/1322d346b88a6940b8c93d105dec840d.jpg";
+    },
+    getRatingPoint(totalRatingPoint, totalRatedTime) {
+      if (totalRatedTime === 0) {
+        return 0;
+      }
+      return parseFloat((totalRatingPoint / totalRatedTime).toFixed(1));
     }
   },
   filters: {
