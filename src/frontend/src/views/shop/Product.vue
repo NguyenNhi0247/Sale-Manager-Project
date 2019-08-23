@@ -17,7 +17,7 @@
           ></v-rating>
           <span>{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</span>
         </div>
-        <h3 class="pricing">{{ book.price | toLocaleString }} VND</h3>
+        <h3 class="pricing">{{ book.price | toLocaleString }} ₫</h3>
 
         <div class="quantity-toggle">
           <v-btn @click="decrement()">&mdash;</v-btn>

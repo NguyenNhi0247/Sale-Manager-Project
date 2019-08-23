@@ -5,7 +5,7 @@ from flask_restplus import Resource
 
 from ..util.dto import BookDto
 from ..util.response import omit_empty
-from ..service.book_service import get_book_by_id, get_book
+from ..service.book_service import get_book_by_id, list_books
 
 api = BookDto.api
 _book = BookDto.book
@@ -14,18 +14,21 @@ log = logging.getLogger("book.controller")
 log.setLevel(logging.DEBUG)
 
 
-# GET/POST /api/v1/books?limit=5&offset=10
+# Get list of books: GET /api/v1/books?limit=5&offset=10
+# Query params: limit, offset
 @api.route("/")
-class ListBook(Resource):
-    @api.doc("list_of_book")
+class BookList(Resource):
+    @api.doc("list_of_books")
+    # @api.expect(_user, validate=True)
+    @api.response(501, "Failed to load list of books")
     @api.marshal_list_with(_book) # Serialize/Encode/Marshal JSON
     def get(self):
-        """List all registered users"""
+        """Get list of books with limit and offset"""
         limit = request.args.get("limit")
         if limit == None:
             limit = 10
         offset = request.args.get("offset")  
-        books = get_book(limit, offset)
+        books = list_books(limit, offset)
         return books
 
 #     @api.expect(_user, validate=True)
@@ -40,9 +43,8 @@ class ListBook(Resource):
 #             log.exception("failed to save book")
 
 
-# GET /api/v1/books/:uid?limit=10&offset=5
-# uid: URL param
-# limit/offset: query param
+# Get book details by ID: GET /api/v1/books/:bid
+# URL param: bid (book ID)
 @api.route("/<int:bid>")
 @api.param("bid", "Book identifier")
 @api.response(404, "Book not found.")
