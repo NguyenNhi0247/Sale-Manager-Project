@@ -1,17 +1,21 @@
-from flask import make_response, jsonify
+import json
+from sqlalchemy.ext import mutable
+from sqlalchemy.types import TypeDecorator
 
-def custom_error(message, status_code): 
-    return make_response(jsonify(message), status_code)
 
-def omit_empty(d):
-    """
-    Delete keys with the value ``None`` in a dictionary, recursively.
+class JsonEncodedDict(TypeDecorator):
+    """Enables JSON storage by encoding and decoding on the fly."""
 
-    This alters the input so you may wish to ``copy`` the dict first.
-    """
-    for key, value in list(d.items()):
+    def process_bind_param(self, value, dialect):
         if value is None:
-            del d[key]
-        elif isinstance(value, dict):
-            del_none(value)
-    return d 
+            return "{}"
+        else:
+            return json.dumps(value)
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return {}
+        else:
+            return json.loads(value)
+
+mutable.MutableDict.associate_with(JsonEncodedDict)

@@ -1,160 +1,177 @@
 <template>
   <v-container fluid>
-    <v-layout wrap>
-      <v-flex xs4>
-        <v-img height="250" :src="book.thumbnails[0]" />
-      </v-flex>
+    <v-breadcrumbs class="pt-1" :items="breadcrumbItems" large></v-breadcrumbs>
 
-      <v-flex xs8>
-        <h2>{{ book.title }}</h2>
-        <p>Author: {{ book.authors[0] }}</p>
-        <div>
-          <v-rating
-            color="yellow"
-            readonly
-            half-increments
-            :value="book.total_rating_point/book.total_rated"
-          ></v-rating>
-          <span>{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</span>
-        </div>
-        <h3 class="pricing">{{ book.price | toLocaleString }} VND</h3>
+    <!-- Book image, title, pricing... -->
+    <v-container v-if="book && book.id" fluid class="pa-0 ma-0">
+      <v-layout wrap class="pb-6 pt-5">
+        <v-flex offset-2 xs4>
+          <v-img height="400" contain :src="book.thumbnails[0]" />
+        </v-flex>
 
-        <div class="quantity-toggle">
-          <v-btn @click="decrement()">&mdash;</v-btn>
-          <input style="width: 30px;padding-left: 10px;" type="text" :value="quantity" readonly />
-          <v-btn @click="increment()">&#xff0b;</v-btn>
-        </div>
-        <v-btn depressed large color="error">
-          <v-icon left>mdi-cart</v-icon>Buy
-        </v-btn>
+        <v-flex xs4>
+          <p class="display-1">{{ book.title }}</p>
+          <p v-if="book.sub_title" class="b-title py-0 mt-n2 mb-1">{{ book.sub_title }}</p>
+          <v-layout
+            v-if="book.total_rating_point && book.total_rated"
+            row
+            wrap
+            align-center
+            class="pa-0"
+          >
+            <v-rating
+              class="pl-2"
+              color="yellow"
+              readonly
+              dense
+              small
+              half-increments
+              :value="book.total_rating_point/book.total_rated"
+            ></v-rating>
+            <span
+              class="pt-1 pl-2"
+            >{{ getRatingPoint(book.total_rating_point, book.total_rated) }} ({{ book.total_rated }})</span>
+          </v-layout>
+          <p class="pt-2 pb-0 mb-2 body-2">
+            Author<span v-if="book.authors.length > 1">s</span>:
+            <span style="color: #304FFE">{{ book.authors.join(", ") }}</span>
+          </p>
 
-        <v-alert type="warning" class="mt-5" width="450px">
-          Please select the shipping address.
-          <a href="#">Type Address</a>
-        </v-alert>
-      </v-flex>
-    </v-layout>
+          <v-divider></v-divider>
 
-    <v-divider class="mt-5 mb-5"></v-divider>
+          <p class="title red-highlight py-4">{{ book.price | toLocaleString }} ₫</p>
 
-    <v-layout wrap>
-      <v-flex xs12>
-        <h2>Details</h2>
+          <v-layout align-left class="pa-0 ma-0 mt-n3">
+            <v-flex>
+              <v-text-field
+                class="quantity-input"
+                v-model="quantity"
+                small
+                prepend-icon="mdi-minus"
+                append-outer-icon="mdi-plus"
+                :value="quantity"
+                outlined
+                @click:append-outer="increment"
+                @click:prepend="decrement"
+                :rules="[quantityRules.required, quantityRules.isNumeric, quantityRules.valueRange]"
+              />
+            </v-flex>
+            <v-flex class="ma-0 pa-0 ml-n2">
+              <v-btn class="mt-1" depressed large dark color="red">
+                <v-icon left>mdi-cart</v-icon>Buy
+              </v-btn>
+            </v-flex>
+            <v-flex class="ma-0 pa-0 ml-n3">
+              <v-btn class="mt-1" depressed large dark outlined color="blue accent-4">
+                <v-icon left>mdi-eye-check-outline</v-icon>Preview
+              </v-btn>
+            </v-flex>
+            <v-spacer></v-spacer>
+          </v-layout>
+        </v-flex>
+      </v-layout>
 
-        <v-simple-table>
-          <tbody>
-            <tr>
-              <td>Pulisher</td>
-              <td>{{ book.publisher }}</td>
-            </tr>
-            <tr>
-              <td>Authors</td>
-              <td>{{ book.authors[0] }}</td>
-            </tr>
-            <tr>
-              <td>Pagination</td>
-              <td>{{ book.pagination }}</td>
-            </tr>
-            <tr>
-              <td>Published At</td>
-              <td>{{ book.published_at }}</td>
-            </tr>
-            <tr>
-              <td>Published Place</td>
-              <td>{{ book.published_place }}</td>
-            </tr>
-          </tbody>
-        </v-simple-table>
-      </v-flex>
+      <!-- Book information -->
+      <v-layout wrap class="mt-6 pt-6 px-5">
+        <v-flex xs12 md8>
+          <p class="title">Information</p>
 
-      <v-flex xs12>
-        <h2>Introduction</h2>
-        <p>{{ book.description }}</p>
-        <p>{{ book.long_description }}</p>
-      </v-flex>
+          <v-simple-table>
+            <tbody>
+              <tr>
+                <td>Pulisher</td>
+                <td>{{ book.publisher }}</td>
+              </tr>
+              <tr>
+                <td>Authors</td>
+                <td>{{ book.authors.join(", ") }}</td>
+              </tr>
+              <!-- <tr> TODO
+                <td>Ebook formats</td>
+                <td>{{ book.ebook_formats.join(", ") }}</td>
+              </tr>-->
+              <tr>
+                <td>Categories</td>
+                <td>{{ book.categories.join(", ") }}</td>
+              </tr>
+              <tr>
+                <td>Pagination</td>
+                <td>{{ book.pagination }}</td>
+              </tr>
+              <tr>
+                <td>Published At</td>
+                <td>{{ book.published_at }}</td>
+              </tr>
+              <tr>
+                <td>Published Place</td>
+                <td>{{ book.published_place }}</td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+        </v-flex>
+      </v-layout>
 
-      <v-divider class="mt-10 mb-10"></v-divider>
+      <!-- Book introduction -->
+      <v-layout wrap class="mt-6 pt-6 px-5">
+        <v-flex xs12 md8>
+          <p class="title">Introduction</p>
+          <p class="body-2" style="white-space: pre-wrap;">{{ book.description }}</p>
+          <p class="body-2" style="white-space: pre-wrap;">{{ book.long_description }}</p>
+        </v-flex>
+      </v-layout>
 
-      <v-flex xs4>
-        <h2>Preview</h2>
+      <!-- Review, others -->
+      <v-layout wrap class="mt-6 pt-6 px-5">
+        <v-flex xs12 md8>
+          <p class="title">Reviews</p>
+          <h3>// TODO: WIP</h3>
+        </v-flex>
+      </v-layout>
+    </v-container>
 
-        <h4>Average Review</h4>
-
-        <h1 color="error">{{ book.total_rating_point }}/{{ book.total_rated }}</h1>
-        <v-rating
-          color="yellow"
-          readonly
-          half-increments
-          :value="book.total_rating_point/book.total_rated"
-        ></v-rating>
-        <p>{{ book.total_rated }} (comment)</p>
-      </v-flex>
-
-      <v-flex xs4 class="mt-15">
-        <p class="mb-0">
-          5
-          <v-icon left color="yellow">mdi-star</v-icon>
-          <vm-progress :percentage="0">0%</vm-progress>
-        </p>
-        <p class="mb-0">
-          4
-          <v-icon left color="yellow">mdi-star</v-icon>
-          <vm-progress :percentage="70">70%</vm-progress>
-        </p>
-        <p class="mb-0">
-          3
-          <v-icon left color="yellow">mdi-star</v-icon>
-          <vm-progress :percentage="30">30%</vm-progress>
-        </p>
-        <p class="mb-0">
-          2
-          <v-icon left color="yellow">mdi-star</v-icon>
-          <vm-progress :percentage="30">30%</vm-progress>
-        </p>
-        <p class="mb-0">
-          1
-          <v-icon left color="yellow">mdi-star</v-icon>
-          <vm-progress :percentage="20">20%</vm-progress>
-        </p>
-      </v-flex>
-
-      <v-flex xs4 class="mt-15">
-        <h4>Share your preview</h4>
-        <v-btn depressed color="yellow" center>
-          <v-icon left>mdi-pencil</v-icon>Write your preview
-        </v-btn>
-      </v-flex>
-
-      <v-divider class="mt-5 mb-5"></v-divider>
-
-      <v-flex xs4>
-        <v-avatar slot="offset" class="mx-auto d-block" size="130">
-          <img src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg" />
-          <p>nhi</p>
-        </v-avatar>
-      </v-flex>
-
-      <v-flex xs8>
-        <v-rating color="yellow" readonly half-increments value="4"></v-rating>
-        <div class="grey--text pl-2">abc</div>
-      </v-flex>
-    </v-layout>
+    <v-container v-else>No book data</v-container>
   </v-container>
 </template>
 
 
 <script>
+import Vue from "vue";
 import { axiosConfig } from "../../utils";
 
 export default {
   data() {
     return {
-      book: {
-        thumbnails: [],
-        authors: []
-      },
-      quantity: 1
+      book: null,
+      quantity: 1,
+      breadcrumbItems: [
+        {
+          text: "Home",
+          to: "/"
+        },
+        {
+          text: "Books",
+          to: "/books"
+        },
+        {
+          text: "",
+          disabled: true,
+          to: "#"
+        }
+      ],
+      quantityRules: {
+        required: value => !!value || "Required.",
+        isNumeric: value => !isNaN(value) || "Number only",
+        valueRange: value =>
+          (parseInt(value) >= 1 && parseInt(value) <= 100) || "1-100"
+      }
     };
+  },
+  watch: {
+    book(value) {
+      let title =
+        value && value.title ? value.title : "Book is your best friend";
+      Vue.set(this.breadcrumbItems[2], "text", title);
+    }
   },
   mounted() {
     this.id = this.$route.params.id;
@@ -174,14 +191,22 @@ export default {
       // TODO
     },
     increment() {
+      if (this.quantity == 100) {
+        return;
+      }
       this.quantity++;
     },
     decrement() {
       if (this.quantity === 1) {
-        alert("Quantity not allowed");
-      } else {
-        this.quantity--;
+        return;
       }
+      this.quantity--;
+    },
+    getRatingPoint(totalRatingPoint, totalRatedTime) {
+      if (totalRatedTime === 0) {
+        return 0;
+      }
+      return parseFloat((totalRatingPoint / totalRatedTime).toFixed(1));
     }
   },
   filters: {
@@ -198,26 +223,37 @@ export default {
 </script>
 
 <style scoped>
-h2 {
-  color: blue;
+.red-highlight {
+  color: #ff3425;
+}
+
+.b-title {
+  font-size: 1.2rem;
   font-weight: 300;
-  font-size: 2rem;
+  color: #777;
+}
+</style>
+
+<style>
+/* .v-text-field--outlined fieldset,.v-input__slot fieldset {
+  height: 40px !important;
+} */
+
+.quantity-input {
+  max-width: 120px;
 }
 
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  opacity: 0.75;
-  position: absolute;
-  width: 100%;
+.quantity-input,
+.quantity-input fieldset {
+  height: 40px !important;
 }
 
-.pricing {
-  color: red;
+.quantity-input .v-input__slot {
+  margin-top: 10px;
 }
-.p-preview {
-  margin-bottom: 0px;
-  font-size: 10px;
+
+.quantity-input .v-text-field__slot input {
+  padding-top: 0;
+  padding-bottom: 16px;
 }
 </style>

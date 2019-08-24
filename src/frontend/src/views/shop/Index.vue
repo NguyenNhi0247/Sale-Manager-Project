@@ -34,130 +34,32 @@
 
       <!-- Right section => Display list of books -->
       <v-flex xs10>
-        <h2>Best Sellers</h2>
+        <!-- Promotion banners -->
+        <v-carousel cycle continuos height="350" hide-delimiter-background show-arrows-on-hover>
+          <v-carousel-item
+            v-for="(item, i) in banners"
+            :key="i"
+            :src="item.img"
+            :to="item.url"
+            reverse-transition="fade-transition"
+            transition="fade-transition"
+          ></v-carousel-item>
+        </v-carousel>
+
+        <h2 class="mt-5 pt-3">New Books</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
-          <v-layout wrap v-if="bestSellers.length > 0">
-            <v-flex xs3 v-for="book in bestSellers" :key="book.id">
-              <v-hover v-slot:default="{ hover }">
-                <v-card
-                  :elevation="hover ? 24 : 2"
-                  ripple
-                  @click.native.stop="bookClicked(book)"
-                  style="cursor: pointer"
-                >
-                  <v-img :aspect-ratio="16/9" height="250" :src="getDefaultThumbnail(book.thumbnails)" />
-                  <v-card-title class="pb-0">{{ book.title }}</v-card-title>
-                  <v-card-text class="pb-0">
-                    <span>{{ book.author }}</span>
-
-                    <v-layout class="mt-0 pt-0" align-center>
-                      <div class="my-3 subtitle-1 black--text">{{ book.price | toLocaleString }} VND</div>
-                      <v-spacer></v-spacer>
-                      <v-rating
-                        :value="book.total_rating_point / book.total_rated"
-                        color="amber"
-                        half-increments
-                        dense
-                        size="12"
-                        readonly
-                      ></v-rating>
-                      <div
-                        class="grey--text pl-2"
-                      >{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</div>
-                    </v-layout>
-                    <!-- <div>{{ book.description }}</div> -->
-                    <!-- Categories -->
-                    <!-- <v-chip
-                          class="mr-1"
-                          link
-                          :href="category.url"
-                          small
-                          ripple
-                          v-for="(category, idx) in book.categories"
-                          :key="idx"
-                    >{{ category.name }}</v-chip>-->
-                  </v-card-text>
-
-                  <v-divider class="mx-3"></v-divider>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="#0078D9"
-                      light
-                      text
-                      @click.native.prevent.stop="addToCart(book)"
-                      ripple
-                    >
-                      <v-icon small>mdi-cart-outline</v-icon>&nbsp;Add to cart
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-hover>
+          <v-layout row wrap justify-space-between align-end v-if="newBooks.length > 0">
+            <v-flex d-flex xs3 v-for="book in newBooks" :key="book.id">
+              <book-card :book="book"></book-card>
             </v-flex>
           </v-layout>
         </v-container>
 
-        <!-- Example of a category -->
-        <v-divider class="mt-5 mb-3"></v-divider>
-        <h2>Children</h2>
+        <h2 class="mt-5 pt-3">Best Sellers</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
-          <v-layout wrap v-if="childrenBooks.length > 0">
-            <v-flex xs3 v-for="book in childrenBooks" :key="book.id">
-              <v-hover v-slot:default="{ hover }">
-                <v-card
-                  :elevation="hover ? 24 : 2"
-                  ripple
-                  @click.native.stop="bookClicked(book)"
-                  style="cursor: pointer"
-                >
-                  <v-img :aspect-ratio="16/9" height="250" :src="book.thumbnails[0]" />
-                  <v-card-title class="pb-0">{{ book.title }}</v-card-title>
-                  <v-card-text class="pb-0">
-                    <span>{{ book.author }}</span>
-
-                    <v-layout class="mt-0 pt-0" align-center>
-                      <div class="my-3 subtitle-1 black--text">{{ book.price | toLocaleString }} VND</div>
-                      <v-spacer></v-spacer>
-                      <v-rating
-                        :value="book.total_rating_point / book.total_rated"
-                        color="amber"
-                        half-increments
-                        dense
-                        size="12"
-                        readonly
-                      ></v-rating>
-                      <div
-                        class="grey--text pl-2"
-                      >{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</div>
-                    </v-layout>
-                    <!-- <div>{{ book.description }}</div>
-                    Categories
-                    <v-chip
-                          class="mr-1"
-                          link
-                          :href="category.url"
-                          small
-                          ripple
-                          v-for="(category, idx) in book.categories"
-                          :key="idx"
-                    >{{ category.name }}</v-chip> -->
-                  </v-card-text>
-
-                  <v-divider class="mx-3"></v-divider>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="#0078D9"
-                      light
-                      text
-                      @click.native.prevent.stop="addToCart(book)"
-                      ripple
-                    >
-                      <v-icon small>mdi-cart-outline</v-icon>&nbsp;Add to cart
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-hover>
+          <v-layout row wrap justify-space-between align-end v-if="bestSellers.length > 0">
+            <v-flex d-flex xs3 v-for="book in bestSellers" :key="book.id">
+              <book-card :book="book"></book-card>
             </v-flex>
           </v-layout>
         </v-container>
@@ -167,20 +69,62 @@
 </template>
 
 <script>
-import { eventBus } from "../../event";
 import { axiosConfig } from "../../utils";
+
+import BookCard from "../../components/BookCard";
 
 export default {
   name: "index",
+  components: {
+    "book-card": BookCard
+  },
   data() {
     return {
+      banners: [
+        {
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/01/71/a9/6ac55f6662bd04bbd4ff8ab9e2d37732.jpg",
+          url: "/product/80"
+        },
+        {
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/c1/73/8b/0b114d3c8f057d06ff460f0ec719f0bb.jpg",
+          url: "/product/85"
+        },
+        {
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/ac/72/8e/d4c7f4c7b95b4b03485a315667c000aa.jpg",
+          url: "/product/90"
+        },
+        {
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/a6/ed/d8/60bbc7ad46d7f1bc89d3e1a7cebe81f3.jpg",
+          url: "/product/33"
+        },
+        {
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/21/27/6b/5e0d5e9f477032844bee301dc0cf5198.jpg",
+          url: "/product/40"
+        }
+      ],
       bestSellers: [],
-      childrenBooks: []
+      newBooks: []
     };
   },
   mounted() {
+    // TODO: Get list of new books ONLY
     this.$http
-      .get("/api/v1/books?limit=10&offset=0", axiosConfig)
+      .get("/api/v1/books?limit=4&offset=27", axiosConfig)
+      .then(resp => {
+        console.log(resp.data);
+        this.newBooks = resp.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.$http
+      .get("/api/v1/books?limit=8&offset=40", axiosConfig)
       .then(resp => {
         console.log(resp.data);
         this.bestSellers = resp.data;
@@ -188,42 +132,6 @@ export default {
       .catch(err => {
         console.log(err);
       });
-
-    // TODO: Get list of children books ONLY
-    this.$http
-      .get("/api/v1/books?limit=5&offset=50", axiosConfig)
-      .then(resp => {
-        console.log(resp.data);
-        this.childrenBooks = resp.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  },
-  filters: {
-    // Convert v to its location form, return v itself if it's not a number.
-    // E.g.: 50000 => 50,000
-    toLocaleString(v) {
-      if (isNaN(v)) {
-        return v;
-      }
-      return v.toLocaleString();
-    }
-  },
-  methods: {
-    bookClicked(book) {
-      this.$router.push({ path: `/product/${book.id}` });
-    },
-    addToCart(book) {
-      eventBus.bookAddedToCart(book);
-    },
-    categoryClicked(category) {
-      alert(category.name + " clicked");
-      // TODO
-    },
-    getDefaultThumbnail(thumbnails) {
-      return (thumbnails && thumbnails.length > 0) ? thumbnails[0] : "https://salt.tikicdn.com/cache/w1200/ts/product/60/5f/0c/1322d346b88a6940b8c93d105dec840d.jpg"
-    }
   }
 };
 </script>
@@ -234,15 +142,6 @@ export default {
 h2 {
   color: #0078d9;
   font-weight: 300;
-  font-size: 2rem;
-}
-
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  opacity: 0.75;
-  position: absolute;
-  width: 100%;
+  font-size: 1.8rem;
 }
 </style>

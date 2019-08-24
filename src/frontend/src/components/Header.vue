@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="deep-purple accent-4 white--text" dark>
+  <v-app-bar fixed elevation="2" color="deep-purple accent-4 white--text" dark>
     <v-img
       src="../assets/logo.svg"
       aspect-ratio="1/1"
@@ -47,9 +47,9 @@
       </v-list>
     </v-menu>
 
-    <v-badge :value="counter > 0" overlap top color="#FFB84A" style="margin-top: 5px !important">
+    <v-badge :value="getCartItemQuantity > 0" overlap top color="yellow accent-4" style="margin-top: 5px !important">
       <template v-slot:badge>
-        <span>{{ counter }}</span>
+        <span>{{ getCartItemQuantity }}</span>
       </template>
       <v-btn
         class="ma-2 text-none"
@@ -64,18 +64,20 @@
 </template>
 
 <script>
-import { eventBus } from "../event";
+import { mapGetters } from "vuex"
 
 export default {
   name: "my-header",
   data: () => ({
-    counter: 0,
     menuItems: [
       { title: "Profile" },
       { title: "Settings" },
       { title: "Logout" }
     ]
   }),
+  computed: {
+    ...mapGetters(["getCartItemQuantity"])
+  },
   methods: {
     toIndexPage() {
       this.$router.push({ name: "index" });
@@ -85,11 +87,6 @@ export default {
       // Take a look on router.js file.
       this.$router.push({ name: "checkout" });
     }
-  },
-  created() {
-    eventBus.$on("addBookToCart", () => {
-      this.counter++;
-    });
   }
 };
 </script>
