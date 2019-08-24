@@ -4,7 +4,6 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import BookDto
-from ..util.response import omit_empty
 from ..service.book_service import get_book_by_id, list_books
 
 api = BookDto.api

@@ -6,7 +6,7 @@ likes the header, footer...
     <my-header></my-header>
 
     <!-- Child pages will be rendered here based on the URL path. Take a look on router.js file -->
-    <v-content style="margin-top: 70px">
+    <v-content style="margin-top: 65px">
       <v-container fluid class="pa-0 ma-0" style="background-color: #F4F4F4">
         <transition name="fade" mode="out-in">
           <router-view></router-view>
