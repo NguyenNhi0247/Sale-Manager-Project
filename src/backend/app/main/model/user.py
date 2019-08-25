@@ -3,23 +3,40 @@ import datetime
 from ..config import key
 import jwt
 
+import logging
+log = logging.getLogger("user.model")
+log.setLevel(logging.DEBUG)
+
+# User role
+# 1. Admin
+# 2. Merchant
+# 3. User
+# 4. Anonymous
+
 
 class User(db.Model):
     """ User Model for storing user related details """
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), primary_key=True, unique=True, nullable=False)
     email = db.Column(db.String(500), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    avatar = db.Column(db.String(1000))
+    role = db.Column(db.Integer(), nullable=False)
+    display_name = db.Column(db.String(500))
+    date_of_birth = db.Column(db.DateTime())
+    created_at = db.Column(db.DateTime())
+    updated_at = db.Column(db.DateTime())
+    is_deleted = db.Column(db.Boolean())
+    deleted_at = db.Column(db.DateTime())
 
-    @property
-    def password(self):
-        raise AttributeError("password: write-only field")
+    # @property
+    # def password(self):
+    #     raise AttributeError("password: write-only field")
 
-    @password.setter
-    def password(self, passwd):
+    def set_password(self, passwd):
         self.password = flask_bcrypt.generate_password_hash(passwd).decode("utf-8")
 
     def check_password(self, passwd):
@@ -33,8 +50,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                "exp": datetime.datetime.utcnow()
-                + datetime.timedelta(days=1, seconds=5),
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),
                 "iat": datetime.datetime.utcnow(),
                 "sub": user_id,
             }

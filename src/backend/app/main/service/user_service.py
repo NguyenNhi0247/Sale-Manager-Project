@@ -1,27 +1,36 @@
 import uuid
 import datetime
+import logging
 
 from app.main import db
 from app.main.model.user import User
 
+log = logging.getLogger("user.service")
+log.setLevel(logging.DEBUG)
+
 
 def save_new_user(data):
-    user = User.query.filter_by(email=data['email']).first()
+    user = get_a_user(data['username'])
     if not user:
+        now = datetime.datetime.now()
         new_user = User(
-            email=data['email'],
-            username=data['username'],
-            password=data['password'],
+            email=data["email"],
+            username=data["username"],
+            password=data["password"],
+            avatar=data["avatar"],
+            role=data["role"],
+            display_name=data["display_name"],
+            date_of_birth=data["date_of_birth"],
+            created_at=now,
+            updated_at=now,
+            is_deleted=False,
         )
-        app.logger.info("HIT 1")
         save_changes(new_user)
-        app.logger.info("HIT 2")
-        app.logger.info("HIT 3")
         return generate_token(new_user)
     else:
         response_object = {
-            'status': 'fail',
-            'message': 'User already exists. Please Log in.',
+            "status": "fail",
+            "message": "User already exists. Please Log in.",
         }
         return response_object, 409
 
@@ -39,15 +48,15 @@ def generate_token(user):
         # generate the auth token
         auth_token = User.encode_auth_token(user.id)
         response_object = {
-            'status': 'success',
-            'message': 'Successfully registered.',
-            'Authorization': auth_token.decode()
+            "status": "success",
+            "message": "Successfully registered.",
+            "Authorization": auth_token.decode(),
         }
         return response_object, 201
     except Exception as e:
         response_object = {
-            'status': 'fail',
-            'message': 'Some error occurred. Please try again.'
+            "status": "fail",
+            "message": "Some error occurred. Please try again.",
         }
         return response_object, 401
 
