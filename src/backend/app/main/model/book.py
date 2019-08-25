@@ -1,5 +1,5 @@
 import datetime
-from .. import db, flask_bcrypt
+from .. import db
 from sqlalchemy.dialects import postgresql
 
 
