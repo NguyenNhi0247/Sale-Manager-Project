@@ -3,7 +3,7 @@ import os
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import BookDto
+from ..util.dto.book import BookDto
 from ..service.book_service import get_book_by_id, list_books
 
 api = BookDto.api

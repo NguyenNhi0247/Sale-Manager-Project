@@ -33,7 +33,8 @@
             >{{ getRatingPoint(book.total_rating_point, book.total_rated) }} ({{ book.total_rated }})</span>
           </v-layout>
           <p class="pt-2 pb-0 mb-2 body-2">
-            Author<span v-if="book.authors.length > 1">s</span>:
+            Author
+            <span v-if="book.authors.length > 1">s</span>:
             <span style="color: #304FFE">{{ book.authors.join(", ") }}</span>
           </p>
 
@@ -86,13 +87,13 @@
                 <td>Authors</td>
                 <td>{{ book.authors.join(", ") }}</td>
               </tr>
-              <!-- <tr> TODO
-                <td>Ebook formats</td>
-                <td>{{ book.ebook_formats.join(", ") }}</td>
-              </tr>-->
               <tr>
                 <td>Categories</td>
                 <td>{{ book.categories.join(", ") }}</td>
+              </tr>
+              <tr>
+                <td>Ebook formats</td>
+                <td>{{ book.ebook_formats | toEbookFormatsList }}</td>
               </tr>
               <tr>
                 <td>Pagination</td>
@@ -217,6 +218,13 @@ export default {
         return v;
       }
       return v.toLocaleString();
+    },
+    toEbookFormatsList(v) {
+      let s = "";
+      for (let f of v) {
+        s += f.type + ", ";
+      }
+      return s.replace(/\, $/, "");
     }
   }
 };
