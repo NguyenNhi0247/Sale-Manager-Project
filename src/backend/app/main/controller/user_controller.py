@@ -1,55 +1,75 @@
 import logging
 import os
 import datetime
+import flask
 from flask import request
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user
+from ..service.user_service import (
+    create_user,
+    list_users_by_status,
+    get_user_by_username,
+)
 
 api = UserDto.api
-_user = UserDto.user
 
 log = logging.getLogger("user.controller")
 log.setLevel(logging.DEBUG)
 
 
-# GET/POST /api/v1/users
 @api.route("/")
 class UserList(Resource):
-    @api.doc("list_of_registered_users")
-    @api.marshal_list_with(_user)
+    # GET /api/v1/users?status=[all/active/deleted]
+    @api.doc(
+        "List all users based on status (all/active/deleted)",
+        responses={200: "Success", 500: "Internal Server Error"},
+    )
+    @api.marshal_list_with(UserDto.list_user_response)
     def get(self):
-        """List all registered users"""
-        return get_all_users()
+        """List all users based on status (all/active/deleted)"""
+        status = flask.request.args.get("status")
+        if status is None:
+            status = "active"
+        log.error(status)
+        return list_users_by_status(status)
 
-    @api.expect(_user, validate=True)
-    @api.response(201, "User successfully created.")
-    @api.doc("create a new user")
+    # POST /api/v1/users
+    @api.doc(
+        "Create a new user",
+        responses={
+            201: "User created",
+            400: "Invalid user",
+            500: "Internal Server Error",
+        },
+    )
+    @api.expect(UserDto.create_user_request, validate=True)
     def post(self):
-        """Creates a new User """
+        """Creates a new user """
         try:
             data = request.json
-            log.error(data)
-            return save_new_user(data=data)
+            log.debug(data)
+            return create_user(data=data)
         except Exception as e:
-            log.exception("failed to save user")
+            log.exception("failed to create user")
 
 
-# GET /api/v1/users/:uid
 @api.route("/<string:uid>")
 @api.param("uid", "Username")
-@api.response(404, "User not found.")
 class User(Resource):
-    @api.doc("get a user")
-    @api.marshal_with(_user)
+    # GET /api/v1/users/:uid
+    @api.doc(
+        "Get user details by username",
+        responses={200: "Success", 404: "User not found", 500: "Internal Server Error"},
+        params={"uid": "Username"},
+    )
+    @api.marshal_with(UserDto.list_user_response)
     def get(self, uid):
-        """get a user given its identifier"""
+        """Get user details by its username"""
         try:
-            user = get_a_user(uid)
+            user = get_user_by_username(uid)
             if user is None:
-                return '', 404
-            else:
-                return user
+                return "", 404
+            return user
         except Exception as e:
             log.exception("failed to get user")
