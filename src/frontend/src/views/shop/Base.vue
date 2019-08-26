@@ -26,7 +26,7 @@ import Footer from "../../components/Footer";
 export default {
   components: {
     "my-header": Header,
-    "my-footer": Footer
+    "my-footer": Footer,
   },
   data() {
     return {

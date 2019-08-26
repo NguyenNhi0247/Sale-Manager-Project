@@ -10,6 +10,7 @@ from app import blueprint
 from app.main import create_app, db
 from app.main.model import user
 
+
 # Start application with corresponding configurations based on it running "stage" environment.
 app = create_app(os.getenv("BEANIES_ENV") or "dev")
 app.register_blueprint(blueprint)
@@ -26,7 +27,9 @@ manager.add_command("db", MigrateCommand)
 
 @manager.command
 def run():
-    app.run(host="0.0.0.0", port="9090", debug=True) # TODO: Remove debug or make it configurable
+    app.run(
+        host="0.0.0.0", port="9090", debug=True
+    )  # TODO: Remove debug or make it configurable
 
 
 @manager.command

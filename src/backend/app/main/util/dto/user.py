@@ -20,8 +20,8 @@ class UserDto:
         },
     )
 
-    create_user_request = api.model(
-        "create_user_request",
+    register_request = api.model(
+        "register_request",
         {
             "username": fields.String(required=True),
             "email": fields.String(required=True),
@@ -43,5 +43,13 @@ class UserDto:
             "updated_at": fields.DateTime(),
             "is_deleted": fields.Boolean(),
             "deleted_at": fields.DateTime(),
+        },
+    )
+
+    login_request = api.model(
+        "login_request",
+        {
+            "account": fields.String(required=True),
+            "password": fields.String(required=True),
         },
     )

@@ -1,5 +1,9 @@
 <template>
   <v-app>
+    <!-- Global components -->
+    <snackbar></snackbar>
+    <login-modal></login-modal>
+
     <transition name="fade" mode="out-in">
       <router-view />
     </transition>
@@ -7,9 +11,16 @@
 </template>
 
 <script>
+import LoginModal from "./components/modals/LoginModal";
+import Snackbar from "./components/Snackbar";
+
 export default {
   name: "App",
-  data: () => ({})
+  components: {
+    "login-modal": LoginModal,
+    snackbar: Snackbar
+  },
+  data: () => ({}),
 };
 </script>
 

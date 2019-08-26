@@ -7,7 +7,6 @@ from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
 from ..service.user_service import (
-    create_user,
     list_users_by_status,
     get_user_by_username,
 )
@@ -33,25 +32,6 @@ class UserList(Resource):
             status = "active"
         log.error(status)
         return list_users_by_status(status)
-
-    # POST /api/v1/users
-    @api.doc(
-        "Create a new user",
-        responses={
-            201: "User created",
-            400: "Invalid user",
-            500: "Internal Server Error",
-        },
-    )
-    @api.expect(UserDto.create_user_request, validate=True)
-    def post(self):
-        """Creates a new user """
-        try:
-            data = request.json
-            log.debug(data)
-            return create_user(data=data)
-        except Exception as e:
-            log.exception("failed to create user")
 
 
 @api.route("/<string:uid>")

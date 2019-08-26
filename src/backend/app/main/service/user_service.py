@@ -1,16 +1,20 @@
 import uuid
 from datetime import datetime, timezone
 import logging
+from flask import abort, jsonify
 
 from app.main import db
 from app.main.model.user import User
 from ..util.password import PasswordCrypt
+from ..util.jwt import encode_auth_token
+
+from ..util.error import NotFound, InternalServerError, BadRequest
 
 log = logging.getLogger("user.service")
 log.setLevel(logging.DEBUG)
 
 
-def create_user(data):
+def register_user(data):
     user = get_user_by_username(data["username"])
     if not user:
         now = datetime.now()
@@ -30,13 +34,18 @@ def create_user(data):
             deleted_at=now,
         )
         save_changes(new_user)
-        return generate_token(new_user)
-    else:
-        response_object = {
-            "status": "fail",
-            "message": "User already exists. Please login.",
-        }
-        return response_object, 409
+        return get_user_by_username(data["username"])
+
+    return Conflict("User already existed")
+
+
+def login_user(data):
+    user = get_user_by_account(data["account"])
+    if not user:
+        return BadRequest("User not found")
+    if not PasswordCrypt.check(user.password, data["password"]):
+        return BadRequest("Invalid credentials")
+    return generate_token(user)
 
 
 def list_users_by_status(status="active"):
@@ -52,22 +61,28 @@ def get_user_by_username(username):
     return User.query.filter_by(username=username).first()
 
 
+def get_user_by_account(account):
+    return (
+        User.query.filter_by(is_deleted=False)
+        .filter((User.username == account) | (User.email == account))
+        .first()
+    )
+
+
 def generate_token(user):
     try:
         # generate the auth token
-        auth_token = User.encode_auth_token(user.id)
-        response_object = {
-            "status": "success",
-            "message": "Successfully registered.",
-            "Authorization": auth_token.decode(),
-        }
+        auth_token = encode_auth_token(
+            {"id": user.id, "username": user.username, "role": user.role}
+        )
+        response_object = {"status": "success", "token": auth_token.decode()}
         return response_object, 201
     except Exception as e:
         response_object = {
             "status": "fail",
             "message": "Some error occurred. Please try again.",
         }
-        return response_object, 401
+        return response_object, 500
 
 
 def save_changes(data):
