@@ -15,7 +15,7 @@
 import LoginModal from "./components/modals/LoginModal";
 import LogoutModal from "./components/modals/LogoutModal";
 import Snackbar from "./components/Snackbar";
-import {mapGetters, mapMutations} from "vuex"
+import { mapMutations } from "vuex"
 
 export default {
   name: "App",

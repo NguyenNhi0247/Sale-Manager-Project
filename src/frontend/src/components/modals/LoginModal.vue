@@ -217,7 +217,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setAuthUser", "setSettings", "setAvatar", "setAuthUser"]),
-    async login(loginType) {
+    login() {
       if (!this.$refs.localForm.validate()) {
         return;
       }
@@ -234,9 +234,10 @@ export default {
           this.whoami(); // Load user detail and store to cookie
         })
         .catch(err => {
+          console.log("ERR", err.response)
           this.isLoginLoading = false;
           let em = err.message;
-          if (err.response) {
+          if (err && err.response) {
             em = err.response.data.message;
           }
           eventBus.snackbarShown({

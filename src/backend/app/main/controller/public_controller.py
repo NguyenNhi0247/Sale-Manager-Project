@@ -6,12 +6,7 @@ from ..service.user_service import login_user, register_user, get_user_by_userna
 from ..util.dto.public import PublicDto
 from ..util.dto.user import UserDto
 from ..util.jwt import decode_auth_token
-from ..util.error import (
-    BadRequest,
-    Unauthorized,
-    InternalServerError,
-    raiseIfExcept,
-)
+from ..util.error import raiseIfExcept
 
 
 api = PublicDto.api
@@ -73,16 +68,3 @@ class UserLogout(Resource):
         """User logout """
         # TODO: Put token to blacklist and does other logic if necessary
         return "Ok", 200
-
-
-@api.errorhandler(BadRequest)
-@api.errorhandler(Unauthorized)
-def handle_error(error):
-    return error.to_dict(), getattr(error, "code")
-
-
-@api.errorhandler
-def default_error_handler(error):
-    """Returns Internal server error"""
-    error = InternalServerError()
-    return error.to_dict(), getattr(error, "code", 500)

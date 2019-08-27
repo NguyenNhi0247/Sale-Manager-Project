@@ -8,12 +8,7 @@ from flask_restplus import Resource
 from ..util.dto.user import UserDto
 from ..util.jwt import decode_auth_token
 from ..service.user_service import list_users_by_status, get_user_by_username
-from ..util.error import (
-    BadRequest,
-    Unauthorized,
-    InternalServerError,
-    raiseIfExcept,
-)
+from ..util.error import raiseIfExcept
 
 
 api = UserDto.api
@@ -86,16 +81,3 @@ class Whoami(Resource):
         ret = get_user_by_username(ret["username"])
         raiseIfExcept(ret)
         return ret
-
-
-@api.errorhandler(Unauthorized)
-@api.errorhandler(BadRequest)
-def handle_error(error):
-    return error.to_dict(), getattr(error, "code")
-
-
-@api.errorhandler
-def default_error_handler(error):
-    """Returns Internal server error"""
-    error = InternalServerError()
-    return error.to_dict(), getattr(error, "code", 500)

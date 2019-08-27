@@ -138,6 +138,7 @@
 <script>
 import Vue from "vue";
 import { axiosConfig } from "../../utils";
+import { eventBus } from "../../event";
 
 export default {
   data() {
@@ -232,7 +233,7 @@ export default {
       for (let f of v) {
         s += f.type + ", ";
       }
-      return s.replace(/\, $/, "");
+      return s.replace(/, $/, "");
     }
   }
 };

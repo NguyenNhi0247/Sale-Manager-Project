@@ -13,8 +13,8 @@ class BaseError(Exception):
     def to_dict(self):
         rv = dict(self.payload or ())
         rv["message"] = self.message
-        # rv["status_code"] = self.code
-        # rv["status"] = HTTPStatus(self.code).phrase
+        rv["status_code"] = self.code
+        rv["status"] = HTTPStatus(self.code).phrase
         return rv
 
 

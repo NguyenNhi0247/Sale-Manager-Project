@@ -5,12 +5,7 @@ from flask_restplus import Resource
 
 from ..util.dto.book import BookDto
 from ..service.book_service import get_book_by_id, list_books
-from ..util.error import (
-    BadRequest,
-    Unauthorized,
-    InternalServerError,
-    raiseIfExcept,
-)
+from ..util.error import raiseIfExcept
 
 
 api = BookDto.api
@@ -68,16 +63,3 @@ class Book(Resource):
                 return book
         except Exception as e:
             log.exception("failed to get book")
-
-
-@api.errorhandler(Unauthorized)
-@api.errorhandler(BadRequest)
-def handle_error(error):
-    return error.to_dict(), getattr(error, "code")
-
-
-@api.errorhandler
-def default_error_handler(error):
-    """Returns Internal server error"""
-    error = InternalServerError()
-    return error.to_dict(), getattr(error, "code", 500)
