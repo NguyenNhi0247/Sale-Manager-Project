@@ -184,6 +184,14 @@ export default {
       })
       .catch(err => {
         console.log(err);
+        let em = err.message;
+        if (err.response) {
+          em = err.response.data.message;
+        }
+        eventBus.snackbarShown({
+          type: "error",
+          msg: `Cannot get book details. ${em}`
+        });
       });
   },
   methods: {

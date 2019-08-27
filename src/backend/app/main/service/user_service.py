@@ -7,8 +7,13 @@ from app.main import db
 from app.main.model.user import User
 from ..util.password import PasswordCrypt
 from ..util.jwt import encode_auth_token
+from ..util.error import (
+    BadRequest,
+    Unauthorized,
+    InternalServerError,
+    raiseIfExcept,
+)
 
-from ..util.error import NotFound, InternalServerError, BadRequest
 
 log = logging.getLogger("user.service")
 log.setLevel(logging.DEBUG)
@@ -36,7 +41,7 @@ def register_user(data):
         save_changes(new_user)
         return get_user_by_username(data["username"])
 
-    return Conflict("User already existed")
+    return BadRequest("User already existed")
 
 
 def login_user(data):

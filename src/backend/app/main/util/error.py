@@ -34,20 +34,20 @@ class Unauthorized(BaseError):
         self.payload = payload
 
 
-class NotFound(BaseError):
-    def __init__(self, message="Not found", payload=None):
-        BaseError.__init__(self)
-        self.code = 404
-        self.message = message
-        self.payload = payload
+# class NotFound(BaseError):
+#     def __init__(self, message="Not found", payload=None):
+#         BaseError.__init__(self)
+#         self.code = 404
+#         self.message = message
+#         self.payload = payload
 
 
-class Conflict(BaseError):
-    def __init__(self, message="Conflict", payload=None):
-        BaseError.__init__(self)
-        self.code = 409
-        self.message = message
-        self.payload = payload
+# class Conflict(BaseError):
+#     def __init__(self, message="Conflict", payload=None):
+#         BaseError.__init__(self)
+#         self.code = 409
+#         self.message = message
+#         self.payload = payload
 
 
 class InternalServerError(BaseError):

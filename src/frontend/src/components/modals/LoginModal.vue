@@ -57,7 +57,6 @@
                     @click.native="login()"
                     :disabled="!localValid"
                     :loading="isLoginLoading"
-                    dark
                     class="px-3 white--text"
                   >Login</v-btn>
                 </v-card-actions>
@@ -128,7 +127,7 @@
                   <v-btn text @click.native="dialog = false">Cancel</v-btn>
                   <v-btn
                     color="deep-purple accent-4"
-                    @click.native="register"
+                    @click.native="register()"
                     :disabled="!regValid"
                     :loading="isRegLoading"
                     class="px-3 white--text"
@@ -154,7 +153,7 @@ export default {
   name: "login-modal",
   data() {
     return {
-      dialog: true,
+      dialog: false,
       localValid: false,
       regValid: false,
       showLoginPwd: false,
@@ -217,7 +216,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setAuthUser", "setSettings", "setAvatar"]),
+    ...mapMutations(["setAuthUser", "setSettings", "setAvatar", "setAuthUser"]),
     async login(loginType) {
       if (!this.$refs.localForm.validate()) {
         return;
@@ -233,26 +232,16 @@ export default {
           this.setCookie("beanies_token", resp.data.token);
 
           this.whoami(); // Load user detail and store to cookie
-
-          this.dialog = false;
-          eventBus.snackbarShown({
-            type: "success",
-            msg: "Login successfully"
-          });
-          eventBus.userLoggedIn(); // Notify other components to update if necessary
         })
         .catch(err => {
           this.isLoginLoading = false;
-          if (err.response && err.response.data) {
-            eventBus.snackbarShown({
-              type: "error",
-              msg: err.response.data.message
-            });
-            return;
+          let em = err.message;
+          if (err.response) {
+            em = err.response.data.message;
           }
           eventBus.snackbarShown({
             type: "error",
-            msg: "Login failed. " + err.message
+            msg: `Login failed. ${em}`
           });
         });
     },
@@ -282,14 +271,14 @@ export default {
         })
         .catch(err => {
           this.isRegLoading = false;
-          let eb = "";
           console.log(err);
+          let em = err.message;
           if (err.response) {
-            eb = err.response.data;
+            em = err.response.data.message;
           }
           eventBus.snackbarShown({
             type: "error",
-            msg: "Register failed. " + eb
+            msg: `Register failed. ${em}`
           });
         });
     },
@@ -299,28 +288,32 @@ export default {
         .get("/api/v1/users/whoami", headers)
         .then(resp => {
           console.log(resp);
-          let user = this.cloneObject(resp.data);
-          let cookie = JSON.stringify({
-            id: user.id,
-            username: user.username,
-            role: user.role,
-            display_name: user.display_name
-          });
-          console.log(cookie)
-          this.setCookie("beanies_user", window.btoa(cookie));
+
+          let user = {
+            id: resp.data.id,
+            username: resp.data.username,
+            role: resp.data.role,
+            display_name: resp.data.display_name
+          }
+          this.setAuthUser(user)
+          this.setCookie("beanies_user", window.btoa(JSON.stringify(user)));
+
+          eventBus.snackbarShown({
+            type: "success",
+            msg: `Welcome back, ${user.display_name}!`
+          }); 
+          eventBus.userLoggedIn(); // Notify other components to update if necessary
+          this.dialog = false;
         })
         .catch(err => {
           console.log(err);
-          if (err.response && err.response.data) {
-            eventBus.snackbarShown({
-              type: "error",
-              msg: err.response.data.message
-            });
-            return;
+          let em = err.message;
+          if (err.response) {
+            em = err.response.data.message;
           }
           eventBus.snackbarShown({
             type: "error",
-            msg: "Cannot get user info. " + err.message
+            msg: `Cannot load user information. ${em}`
           });
         });
     },

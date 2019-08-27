@@ -9,8 +9,6 @@ from ..util.jwt import decode_auth_token
 from ..util.error import (
     BadRequest,
     Unauthorized,
-    NotFound,
-    Conflict,
     InternalServerError,
     raiseIfExcept,
 )
@@ -63,9 +61,22 @@ class UserLogin(Resource):
         return {"status": "success", "token": ret}, 200
 
 
-@api.errorhandler(NotFound)
-@api.errorhandler(Unauthorized)
+@api.route("/logout")
+class UserLogout(Resource):
+    # POST /api/v1/logout
+    @api.doc(
+        "User logout",
+        responses={200: "Success", 500: "Internal Server Error"},
+        security="apikey",
+    )
+    def post(self):
+        """User logout """
+        # TODO: Put token to blacklist and does other logic if necessary
+        return "Ok", 200
+
+
 @api.errorhandler(BadRequest)
+@api.errorhandler(Unauthorized)
 def handle_error(error):
     return error.to_dict(), getattr(error, "code")
 

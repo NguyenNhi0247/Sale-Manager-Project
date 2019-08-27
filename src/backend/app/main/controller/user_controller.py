@@ -6,12 +6,11 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
+from ..util.jwt import decode_auth_token
 from ..service.user_service import list_users_by_status, get_user_by_username
 from ..util.error import (
     BadRequest,
     Unauthorized,
-    NotFound,
-    Conflict,
     InternalServerError,
     raiseIfExcept,
 )
@@ -89,7 +88,6 @@ class Whoami(Resource):
         return ret
 
 
-@api.errorhandler(NotFound)
 @api.errorhandler(Unauthorized)
 @api.errorhandler(BadRequest)
 def handle_error(error):

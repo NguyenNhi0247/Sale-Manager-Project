@@ -8,8 +8,6 @@ from ..service.book_service import get_book_by_id, list_books
 from ..util.error import (
     BadRequest,
     Unauthorized,
-    NotFound,
-    Conflict,
     InternalServerError,
     raiseIfExcept,
 )
@@ -72,7 +70,6 @@ class Book(Resource):
             log.exception("failed to get book")
 
 
-@api.errorhandler(NotFound)
 @api.errorhandler(Unauthorized)
 @api.errorhandler(BadRequest)
 def handle_error(error):
