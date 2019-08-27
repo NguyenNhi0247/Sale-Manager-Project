@@ -5,14 +5,33 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 from .config import config_by_name
+from .util.error import (
+    BadRequest,
+    Unauthorized,
+    InternalServerError,
+    raiseIfExcept,
+)
 
 db = SQLAlchemy()
 flask_bcrypt = Bcrypt()
 
+app = Flask(__name__)
+
+@app.errorhandler(BadRequest)
+@app.errorhandler(Unauthorized)
+def handle_error(error):
+    return error.to_dict(), getattr(error, "code")
+
+
+@app.errorhandler
+def default_error_handler(error):
+    """Returns Internal server error"""
+    error = InternalServerError()
+    return error.to_dict(), getattr(error, "code", 500)
+
 
 def create_app(config_name):
-    app = Flask(__name__)
-    CORS(app) # Allow APIs to be called from browser's frontend
+    CORS(app)  # Allow APIs to be called from browser's frontend
     app.config.from_object(config_by_name[config_name])
     app.url_map.strict_slashes = False
     app.logger.setLevel(logging.DEBUG)
@@ -21,3 +40,12 @@ def create_app(config_name):
     flask_bcrypt.init_app(app)
 
     return app
+
+
+@app.before_request
+def clear_trailing():
+    from flask import redirect, request
+
+    rp = request.path
+    if rp != "/" and rp.endswith("/"):
+        return redirect(rp[:-1])

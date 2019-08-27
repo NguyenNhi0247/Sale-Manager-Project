@@ -1,6 +1,8 @@
 import os
 import unittest
 
+from flask import url_for
+
 # Database migration and app command line parameters
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
@@ -9,7 +11,6 @@ from flask_script import Manager
 from app import blueprint
 from app.main import create_app, db
 from app.main.model import user
-
 
 # Start application with corresponding configurations based on it running "stage" environment.
 app = create_app(os.getenv("BEANIES_ENV") or "dev")

@@ -5,20 +5,21 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    cart: []
+    cart: [],
+    authUser: null
   },
   getters: {
-    getCart(state) {
+    cart(state) {
       return state.cart
     },
-    getCartItemIDs(state) {
+    cartItemIDs(state) {
       let ids = []
       for (const item of state.cart) {
         ids.push(item.id)
       }
       return ids
     },
-    getCartItemQuantity(state) {
+    cartItemQuantity(state) {
       let quantity = 0
       for (let i = 0; i < state.cart.length; i++) {
         if (!state.cart[i].quantity) {
@@ -27,7 +28,10 @@ export default new Vuex.Store({
         quantity += state.cart[i].quantity
       }
       return quantity
-    }
+    },
+    authUser: (state) => {
+      return state.authUser
+    },
   },
   mutations: {
     addToCart(state, newItem) {
@@ -54,6 +58,9 @@ export default new Vuex.Store({
           return
         }
       }
-    }
+    },
+    setAuthUser (state, user) {
+      state.authUser = user
+    },
   }
 })

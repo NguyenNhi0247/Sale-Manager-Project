@@ -138,6 +138,7 @@
 <script>
 import Vue from "vue";
 import { axiosConfig } from "../../utils";
+import { eventBus } from "../../event";
 
 export default {
   data() {
@@ -184,6 +185,14 @@ export default {
       })
       .catch(err => {
         console.log(err);
+        let em = err.message;
+        if (err.response) {
+          em = err.response.data.message;
+        }
+        eventBus.snackbarShown({
+          type: "error",
+          msg: `Cannot get book details. ${em}`
+        });
       });
   },
   methods: {
@@ -224,7 +233,7 @@ export default {
       for (let f of v) {
         s += f.type + ", ";
       }
-      return s.replace(/\, $/, "");
+      return s.replace(/, $/, "");
     }
   }
 };

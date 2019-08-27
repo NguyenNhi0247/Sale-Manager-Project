@@ -7,8 +7,13 @@ from app.main import db
 from app.main.model.user import User
 from ..util.password import PasswordCrypt
 from ..util.jwt import encode_auth_token
+from ..util.error import (
+    BadRequest,
+    Unauthorized,
+    InternalServerError,
+    raiseIfExcept,
+)
 
-from ..util.error import NotFound, InternalServerError, BadRequest
 
 log = logging.getLogger("user.service")
 log.setLevel(logging.DEBUG)
@@ -36,7 +41,7 @@ def register_user(data):
         save_changes(new_user)
         return get_user_by_username(data["username"])
 
-    return Conflict("User already existed")
+    return BadRequest("User already existed")
 
 
 def login_user(data):
@@ -75,14 +80,10 @@ def generate_token(user):
         auth_token = encode_auth_token(
             {"id": user.id, "username": user.username, "role": user.role}
         )
-        response_object = {"status": "success", "token": auth_token.decode()}
-        return response_object, 201
+        return auth_token.decode()
     except Exception as e:
-        response_object = {
-            "status": "fail",
-            "message": "Some error occurred. Please try again.",
-        }
-        return response_object, 500
+        log.error(e)
+        return InternalServerError("Failed to generate JWT Wtoken")
 
 
 def save_changes(data):

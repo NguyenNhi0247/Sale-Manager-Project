@@ -70,6 +70,8 @@
 
 <script>
 import { axiosConfig } from "../../utils";
+import { eventBus } from "../../event";
+import { mapGetters } from "vuex";
 
 import BookCard from "../../components/BookCard";
 
@@ -111,6 +113,12 @@ export default {
       newBooks: []
     };
   },
+  computed: {
+    ...mapGetters(["authUser"]),
+    isAuth() {
+      return this.authUser && this.authUser.id && true;
+    }
+  },
   mounted() {
     // TODO: Get list of new books ONLY
     this.$http
@@ -121,6 +129,14 @@ export default {
       })
       .catch(err => {
         console.log(err);
+        let em = err.message;
+        if (err.response) {
+          em = err.response.data.message;
+        }
+        eventBus.snackbarShown({
+          type: "error",
+          msg: `Cannot get book list. ${em}`
+        });
       });
 
     this.$http
@@ -131,6 +147,14 @@ export default {
       })
       .catch(err => {
         console.log(err);
+        let em = err.message;
+        if (err.response) {
+          em = err.response.data.message;
+        }
+        eventBus.snackbarShown({
+          type: "error",
+          msg: `Cannot get book list. ${em}`
+        });
       });
   }
 };
