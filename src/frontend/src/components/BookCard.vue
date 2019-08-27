@@ -52,7 +52,13 @@
         >
           <v-icon small>mdi-cart-plus</v-icon>&nbsp;Add to cart
         </v-btn>
-        <v-btn v-else color="orange accent-4" light text @click.native.prevent.stop="removeBookFromCart(book)">
+        <v-btn
+          v-else
+          color="orange accent-4"
+          light
+          text
+          @click.native.prevent.stop="removeBookFromCart(book)"
+        >
           <v-icon small>mdi-cart-remove</v-icon>&nbsp;Remove From Cart
         </v-btn>
       </v-card-actions>
@@ -62,6 +68,7 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { eventBus } from "../event";
 
 export default {
   name: "book-card",
@@ -74,17 +81,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getCartItemIDs"])
+    ...mapGetters(["cartItemIDs", "authUser"]),
+    isAuth() {
+      return this.authUser && this.authUser.id && true;
+    }
   },
   watch: {
-    getCartItemIDs(ids) {
+    cartItemIDs(ids) {
       for (let i = 0; i < ids.length; i++) {
         if (this.book.id == ids[i]) {
-          this.isAlreadyInCart = true
-          return
+          this.isAlreadyInCart = true;
+          return;
         }
       }
-      this.isAlreadyInCart = false
+      this.isAlreadyInCart = false;
     }
   },
   methods: {
@@ -93,10 +103,18 @@ export default {
       this.$router.push({ path: `/product/${book.id}` });
     },
     addBookToCart(book) {
+      if (!this.isAuth) {
+        eventBus.loginModalShown();
+        return;
+      }
       this.addToCart(book); // Save book to global vuex store
       //   eventBus.bookAddedToCart(book); // TODO
     },
     removeBookFromCart(book) {
+      if (!this.isAuth) {
+        eventBus.loginModalShown();
+        return;
+      }
       this.removeFromCart(book);
       //   eventBus.bookRemovedCart(book); // TODO
     },

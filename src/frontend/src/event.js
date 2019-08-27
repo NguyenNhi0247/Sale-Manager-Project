@@ -4,7 +4,22 @@ export const eventBus = new Vue({
     methods: {
         bookAddedToCart(book) {
             this.$emit('addBookToCart', book)
-        }
+        },
+        snackbarShown(data) {
+            this.$emit('showSnackbar', data)
+        },
+        loginModalShown() {
+            this.$emit('showLoginModal')
+        },
+        userLoggedIn() {
+            this.$emit('loginUser')
+        },
+        logoutModalShown() {
+            this.$emit('showLogoutModal')
+        },
+        userLoggedOut() {
+            this.$emit('logoutUser')
+        },
     }
 })
  

@@ -1,6 +1,8 @@
 import os
 import unittest
 
+from flask import url_for
+
 # Database migration and app command line parameters
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
@@ -26,7 +28,9 @@ manager.add_command("db", MigrateCommand)
 
 @manager.command
 def run():
-    app.run(host="0.0.0.0", port="9090", debug=True) # TODO: Remove debug or make it configurable
+    app.run(
+        host="0.0.0.0", port="9090", debug=True
+    )  # TODO: Remove debug or make it configurable
 
 
 @manager.command

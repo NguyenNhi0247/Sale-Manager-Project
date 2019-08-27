@@ -5,6 +5,13 @@ from flask_restplus import Resource
 
 from ..util.dto.book import BookDto
 from ..service.book_service import get_book_by_id, list_books
+from ..util.error import (
+    BadRequest,
+    Unauthorized,
+    InternalServerError,
+    raiseIfExcept,
+)
+
 
 api = BookDto.api
 _book = BookDto.book
@@ -20,15 +27,16 @@ class BookList(Resource):
     @api.doc("list_of_books")
     # @api.expect(_user, validate=True)
     @api.response(501, "Failed to load list of books")
-    @api.marshal_list_with(_book) # Serialize/Encode/Marshal JSON
+    @api.marshal_list_with(_book)  # Serialize/Encode/Marshal JSON
     def get(self):
         """Get list of books with limit and offset"""
         limit = request.args.get("limit")
         if limit == None:
             limit = 10
-        offset = request.args.get("offset")  
+        offset = request.args.get("offset")
         books = list_books(limit, offset)
         return books
+
 
 #     @api.expect(_user, validate=True)
 #     @api.response(201, "User successfully created.")
@@ -51,12 +59,25 @@ class Book(Resource):
     @api.doc("Get book by ID")
     @api.marshal_with(_book)
     def get(self, bid):
-        """get a user given its identifier"""
+        """Get book details by its id"""
         try:
             book = get_book_by_id(bid)
             if book is None:
-                return '', 404
+                return "", 404
             else:
                 return book
         except Exception as e:
             log.exception("failed to get book")
+
+
+@api.errorhandler(Unauthorized)
+@api.errorhandler(BadRequest)
+def handle_error(error):
+    return error.to_dict(), getattr(error, "code")
+
+
+@api.errorhandler
+def default_error_handler(error):
+    """Returns Internal server error"""
+    error = InternalServerError()
+    return error.to_dict(), getattr(error, "code", 500)

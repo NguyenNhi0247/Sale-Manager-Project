@@ -1,17 +1,30 @@
 from flask_restplus import Api
 from flask import Blueprint
 
-from .main.controller.user_controller import api as user_ns
-from .main.controller.book_controller import api as book_ns
+from app.main.controller.public_controller import api as public_ns
+from app.main.controller.book_controller import api as book_ns
+from app.main.controller.user_controller import api as user_ns
 
-blueprint = Blueprint("api", __name__)
+
+blueprint = Blueprint("v1", __name__)
+
+authorizations = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
 
 api = Api(
     blueprint,
-    title="FLASK RESTPLUS API BOILER-PLATE WITH JWT",
+    title="BOOKSTORE PROJECT",
+    description="an online E-book shopping site",
     version="1.0",
-    description="a boilerplate for flask restplus web service",
+    doc="/api/v1/apidoc",
+    authorizations=authorizations
 )
 
+api.add_namespace(public_ns, path="/api/v1")
 api.add_namespace(user_ns, path="/api/v1/users")
 api.add_namespace(book_ns, path="/api/v1/books")
