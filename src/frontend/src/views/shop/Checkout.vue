@@ -1,15 +1,12 @@
 <template>
   <div>
     <v-card  >
-    <v-card-title class="text-center justify-center py-6">
-      <h4 class="font-weight-bold display-3 basil--text">Checkout</h4>
-    </v-card-title>
-
     <v-tabs
       v-model="tab"
       background-color="transparent"
        
       grow
+      class="mt-10"
     >
       <v-tab>
         1. Shopping Cart
@@ -37,7 +34,7 @@
                 md8
                 sm12  >
                 <h2 class="title font-weight-light mb-4"><b>Shopping Cart</b></h2>
-                <hr width="700" class="mb-5">
+                <!-- <hr width="700" class="mb-5"> -->
                 <v-card
                   class="mt-5"
                   max-width="700"
@@ -46,21 +43,31 @@
                   <v-simple-table v-for="book in selectedBook" :key="book.id">
                     <tr>
                       <td>
-                        <v-img height="100" width="100" :src="book.thumbnails[0]" />
-
+                        <v-flex offset-2 xs4>
+                          <v-img height="150" width="120" contain :src="book.thumbnails[0]" />
+                        </v-flex>
                       </td>
                       <td width="300">
                         <h4><p style="color:blue">{{ book.title }}</p></h4>
-                        <p>{{ book.description }}</p>
+                        <!-- <p>{{ book.description }}</p> -->
                         <h3><p style="color:red">{{ book.price | toLocaleString }} VND</p></h3>
 
                       </td>
                       <td>
-                        <div class="quantity-toggle">
-                          <v-btn @click="decrement()">&mdash;</v-btn>
-                          <input style="width: 30px;padding-left: 10px;" type="text" :value="quantity" readonly />
-                          <v-btn @click="increment()">&#xff0b;</v-btn>
-                        </div>
+                        <v-flex>
+                          <v-text-field
+                            class="quantity-input"
+                            v-model="quantity"
+                            small
+                            prepend-icon="mdi-minus"
+                            append-outer-icon="mdi-plus"
+                            :value="quantity"
+                            outlined
+                            @click:append-outer="increment"
+                            @click:prepend="decrement"
+                            :rules="[quantityRules.required, quantityRules.isNumeric, quantityRules.valueRange]"
+                          />
+                        </v-flex>
                       </td>
                     </tr>
                     
@@ -74,7 +81,7 @@
                 sm12
                 >
                 <h2 class="title font-weight-light mb-5"><b>Summary</b></h2>
-                <hr width="350" class="mb-4">
+                <!-- <hr width="350" class="mb-4"> -->
                 <v-card
                   class=""
                   max-width="344"
@@ -117,7 +124,7 @@
                 </v-card>
               </v-flex>
             </v-layout>
-            <hr width="720" class="mb-5">
+            <!-- <hr width="720" class="mb-5"> -->
               <div class="ml-10">
                 <v-btn color="red" class='mr-5 mb-5'>Cancel</v-btn>
                 <v-btn color="primary" class="mb-5">Pay Now</v-btn>
@@ -141,7 +148,7 @@
                 md8
                 sm12  >
                 <h2 class="title font-weight-light mb-4"><b>Shipping Details</b></h2>
-                <hr width="810" class="mb-3">
+                <!-- <hr width="810" class="mb-3"> -->
                 <v-card
                   class="mt-5"
                   max-width="800"
@@ -214,11 +221,13 @@
                 sm12
                 >
                 <h2 class="title font-weight-light mb-4"><b>Summary</b></h2>
-                <hr width="400" class="mb-4">
+                <!-- <hr width="400" class="mb-4"> -->
                 <v-simple-table v-for="book in selectedBook" :key="book.id">
                   <tr>
                     <td class="pb-3" width="120">
-                      <v-img height="100" width="100" :src="book.thumbnails[0]" />
+                      <v-flex offset-2 xs4>
+                        <v-img height="150" width="150" contain :src="book.thumbnails[0]" />
+                      </v-flex>
                     </td>
                     <td>
                       <h4><p style="color:blue">{{ book.title }}</p></h4>
@@ -226,7 +235,7 @@
                     </td>
                   </tr>
                 </v-simple-table>
-                <hr width="400" class="mb-4">
+                <!-- <hr width="400" class="mb-4"> -->
                  <v-card
                   class="ml-5"
                   max-width="350"
@@ -269,7 +278,7 @@
                 </v-card>
               
               </v-flex>
-              <hr width="810" class="mb-0">
+              <!-- <hr width="810" class="mb-0"> -->
             </v-layout>
               
              <div class="ml-10">
@@ -295,7 +304,7 @@
                 md8
                 sm12  >
                 <h2 class="title font-weight-light mb-4"><b>Payment Method</b></h2>
-                <hr width="810" class="mb-4">
+                <!-- <hr width="810" class="mb-4"> -->
                 <!--<v-radio-group >-->
                 <v-card
                   class="mt-5 mr-10"
@@ -333,7 +342,7 @@
                  </v-simple-table>
                 </v-card>
 
-                <hr width="810" class="mt-6">
+                <!-- <hr width="810" class="mt-6"> -->
 
                 <v-card
                   class="mt-6 mr-10"
@@ -361,11 +370,13 @@
                 sm12
                 >
                 <h2 class="title font-weight-light mb-4"><b>Summary</b></h2>
-                <hr width="400" class="mb-5 mt-0">
+                <!-- <hr width="400" class="mb-5 mt-0"> -->
                 <v-simple-table v-for="book in selectedBook" :key="book.id">
                   <tr>
                     <td class="pb-3" width="120">
-                      <v-img height="100" width="100" :src="book.thumbnails[0]" />
+                      <v-flex offset-2 xs4>
+                          <v-img height="150" contain :src="book.thumbnails[0]" />
+                        </v-flex>
                     </td>
                     <td>
                       <h4><p style="color:blue">{{ book.title }}</p></h4>
@@ -373,7 +384,7 @@
                     </td>
                   </tr>
                 </v-simple-table>
-                <hr width="400" class="mb-4">
+                <!-- <hr width="400" class="mb-4"> -->
                  <v-card
                   class="ml-5"
                   max-width="350"
@@ -416,7 +427,7 @@
                 </v-card> 
               
               </v-flex>
-              <hr width="810" class="mb-0">
+              <!-- <hr width="810" class="mb-0"> -->
             </v-layout>
               
               <div class="ml-10">
@@ -428,10 +439,6 @@
         </v-card>
       </v-tab-item>
     </v-tabs-items>
-
-    
-
-    
 
     
   </v-card>
@@ -450,6 +457,12 @@ export default {
       quantity: 1,
       tab: null,
       VtextField: null,
+       quantityRules: {
+        required: value => !!value || "Required.",
+        isNumeric: value => !isNaN(value) || "Number only",
+        valueRange: value =>
+          (parseInt(value) >= 1 && parseInt(value) <= 100) || "1-100"
+      }
     };
   },
   mounted() {
@@ -466,14 +479,16 @@ export default {
   },
   methods: {
     increment() {
+      if (this.quantity == 100) {
+        return;
+      }
       this.quantity++;
     },
     decrement() {
       if (this.quantity === 1) {
-        alert("Quantity not allowed");
-      } else {
-        this.quantity--;
+        return;
       }
+      this.quantity--;
     }
   },
   filters: {
@@ -496,4 +511,30 @@ export default {
   .basil--text {
     color: #356859 !important;
   }
+</style>
+
+<style>
+/* .v-text-field--outlined fieldset,.v-input__slot fieldset {
+  height: 40px !important;
+} */
+
+.quantity-input {
+  max-width: 120px;
+  padding-left: 10px;
+}
+
+.quantity-input,
+.quantity-input fieldset {
+  height: 40px !important;
+}
+
+.quantity-input .v-input__slot {
+  margin-top: 10px;
+}
+
+.quantity-input .v-text-field__slot input {
+  padding-top: 0;
+  padding-bottom: 16px;
+  padding-left: 10px;
+}
 </style>
