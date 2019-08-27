@@ -296,7 +296,7 @@ export default {
     whoami() {
       let headers = this.getAuthHeader();
       this.$http
-        .get("/api/v1/whoami", headers)
+        .get("/api/v1/users/whoami", headers)
         .then(resp => {
           console.log(resp);
           let user = this.cloneObject(resp.data);

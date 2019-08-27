@@ -75,14 +75,10 @@ def generate_token(user):
         auth_token = encode_auth_token(
             {"id": user.id, "username": user.username, "role": user.role}
         )
-        response_object = {"status": "success", "token": auth_token.decode()}
-        return response_object, 201
+        return auth_token.decode()
     except Exception as e:
-        response_object = {
-            "status": "fail",
-            "message": "Some error occurred. Please try again.",
-        }
-        return response_object, 500
+        log.error(e)
+        return InternalServerError("Failed to generate JWT Wtoken")
 
 
 def save_changes(data):

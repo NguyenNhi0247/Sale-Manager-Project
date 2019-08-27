@@ -2,7 +2,7 @@ from flask_restplus import Namespace, fields
 
 
 class UserDto:
-    api = Namespace("users", description="user related operations")
+    api = Namespace("users", description="User related operations")
     list_user_response = api.model(
         "list_user_response",
         {
@@ -17,15 +17,6 @@ class UserDto:
             "updated_at": fields.DateTime(),
             "is_deleted": fields.Boolean(),
             "deleted_at": fields.DateTime(),
-        },
-    )
-
-    register_request = api.model(
-        "register_request",
-        {
-            "username": fields.String(required=True),
-            "email": fields.String(required=True),
-            "password": fields.String(required=True),
         },
     )
 
@@ -45,11 +36,4 @@ class UserDto:
             "deleted_at": fields.DateTime(),
         },
     )
-
-    login_request = api.model(
-        "login_request",
-        {
-            "account": fields.String(required=True),
-            "password": fields.String(required=True),
-        },
-    )
+    
