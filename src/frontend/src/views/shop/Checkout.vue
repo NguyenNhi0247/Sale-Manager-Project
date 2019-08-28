@@ -44,7 +44,7 @@
                     <tr>
                       <td>
                         <v-flex offset-2 xs4>
-                          <v-img height="150" width="120" contain :src="book.thumbnails[0]" />
+                          <v-img height="120" width="120" contain :src="book.thumbnails[0]" />
                         </v-flex>
                       </td>
                       <td width="300">
@@ -126,8 +126,8 @@
             </v-layout>
             <!-- <hr width="720" class="mb-5"> -->
               <div class="ml-10">
-                <v-btn color="red" class='mr-5 mb-5'>Cancel</v-btn>
-                <v-btn color="primary" class="mb-5">Pay Now</v-btn>
+                <v-btn color="red" class='btn-cancel'>Cancel</v-btn>
+                <v-btn color="primary" class="btn-next">Pay Now</v-btn>
               </div>
             
 
@@ -212,7 +212,10 @@
                   
                 </v-simple-table>
               </v-card>
-                
+                <div class="ml-5 mt-10">
+                  <v-btn color="red" class='btn-cancel'>Cancel</v-btn>
+                  <v-btn color="primary" class="btn-next">Next</v-btn>
+                </div>
                 
               </v-flex>
 
@@ -223,10 +226,10 @@
                 <h2 class="title font-weight-light mb-4"><b>Summary</b></h2>
                 <!-- <hr width="400" class="mb-4"> -->
                 <v-simple-table v-for="book in selectedBook" :key="book.id">
-                  <tr>
-                    <td class="pb-3" width="120">
+                  <tr class="mb-0 mt-0">
+                    <td class="pb-3" width="100">
                       <v-flex offset-2 xs4>
-                        <v-img height="150" width="150" contain :src="book.thumbnails[0]" />
+                        <v-img height="80" width="120" contain :src="book.thumbnails[0]" />
                       </v-flex>
                     </td>
                     <td>
@@ -281,12 +284,6 @@
               <!-- <hr width="810" class="mb-0"> -->
             </v-layout>
               
-             <div class="ml-10">
-                <v-btn color="red" class='mr-5 mb-5'>Cancel</v-btn>
-                <v-btn color="primary" class="mb-5">Pay Now</v-btn>
-              </div>
-            
-
           </v-card-text>
         </v-card>
       </v-tab-item>
@@ -308,12 +305,11 @@
                 <!--<v-radio-group >-->
                 <v-card
                   class="mt-5 mr-10"
-                  
                 >
                  <v-simple-table class="pb-10">
                   <tr width="500" >
                     <v-radio label="Credit Cart" value="credit-cart" class="mr-3 mt-6 ml-3"></v-radio>
-                    <p class="ml-10"> Pay with Credit Cart </p>
+                    <!-- <p class="ml-10"> Pay with Credit Cart </p> -->
                   </tr>
                   <tr>
                    <td width="500">
@@ -351,8 +347,8 @@
                  <v-simple-table>
                   <tr>
                     <td width="600">
-                      <v-radio label="Payal" value="payment" class="mr-3 mt-4 ml-3"></v-radio>
-                      <p class="ml-10"> Pay by Paypal</p>
+                      <v-radio label="Payal" value="payment" class="mr-3 mt-4 ml-3 mb-4"></v-radio>
+                      <!-- <p class="ml-10"> Pay by Paypal</p> -->
                     </td>
 
                     <td>
@@ -361,7 +357,30 @@
                   </tr>
                  </v-simple-table>
                 </v-card>
+
+                <v-card
+                  class="mt-6 mr-10"
+                  
+                >
+                 <v-simple-table>
+                  <tr>
+                    <td width="600">
+                      <v-radio label="Cash" value="cash" class="mr-3 mt-4 ml-3 mb-4"></v-radio>
+                      <!-- <p class="ml-10"> Pay by Paypal</p> -->
+                    </td>
+
+                    <td>
+                      <v-img width="100" height="30" src="https://www.marondahomes.com/blog/wp-content/uploads/2015/10/holding-money.jpg" />
+                    </td>
+                  </tr>
+                 </v-simple-table>
+                </v-card>
                 
+
+              <div class="ml-5 mt-10">
+                <v-btn color="red" class='btn-cancel'>Cancel</v-btn>
+                <v-btn color="primary" class="btn-next">Pay Now</v-btn>
+              </div>
                 <!--</v-radio-group>-->
               </v-flex>
 
@@ -370,13 +389,13 @@
                 sm12
                 >
                 <h2 class="title font-weight-light mb-4"><b>Summary</b></h2>
-                <!-- <hr width="400" class="mb-5 mt-0"> -->
+                <!-- <hr width="400" class="mb-4"> -->
                 <v-simple-table v-for="book in selectedBook" :key="book.id">
-                  <tr>
-                    <td class="pb-3" width="120">
+                  <tr class="mb-0 mt-0">
+                    <td class="pb-3" width="100">
                       <v-flex offset-2 xs4>
-                          <v-img height="150" contain :src="book.thumbnails[0]" />
-                        </v-flex>
+                        <v-img height="80" width="120" contain :src="book.thumbnails[0]" />
+                      </v-flex>
                     </td>
                     <td>
                       <h4><p style="color:blue">{{ book.title }}</p></h4>
@@ -424,17 +443,12 @@
                     
                     </tr>
                   </v-simple-table>
-                </v-card> 
+                </v-card>
               
               </v-flex>
               <!-- <hr width="810" class="mb-0"> -->
             </v-layout>
-              
-              <div class="ml-10">
-                <v-btn color="red" class='mr-5 mb-5'>Cancel</v-btn>
-                <v-btn color="primary" class="mb-5">Pay Now</v-btn>
-              </div>
-            
+
           </v-card-text>
         </v-card>
       </v-tab-item>
@@ -510,6 +524,14 @@ export default {
   }
   .basil--text {
     color: #356859 !important;
+  }
+  .btn-cancel{
+    margin-right: 8px;
+    /* margin-bottom: 5px; */
+    color: white;
+  }
+  .btn-next{
+    margin-bottom: 0px;
   }
 </style>
 
