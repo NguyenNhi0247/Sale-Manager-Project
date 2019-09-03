@@ -28,7 +28,7 @@ class Cart(Resource):
         },
     )
     @api.expect(BookCartDto.book_cart, validate=True)
-    @api.marshal_with(CartDto.list_user_response)
+    @api.marshal_with(CartDto.cart)
     def post(self):
         """Insert book to Cart"""
         try:
