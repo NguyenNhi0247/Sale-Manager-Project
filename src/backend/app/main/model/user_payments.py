@@ -11,7 +11,7 @@ class UserPayments(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     uid = db.Column(db.Integer)
     type = db.Column(db.String(100))
-    is_default = db.Column(db.Boolean()
+    is_default = db.Column(db.Boolean())
     cart_number = db.Column(db.String(100))
     cart_holder = db.Column(db.String(100))
     valid_date = db.Column(db.DateTime())
