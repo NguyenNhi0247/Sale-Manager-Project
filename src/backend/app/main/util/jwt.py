@@ -37,3 +37,11 @@ def decode_auth_token(auth_token):
         return Unauthorized("Token expired")
     except jwt.InvalidTokenError:
         return Unauthorized("Invalid token")
+
+def get_user_id_by_token(token):
+    if token is None or token == "":
+        raise Unauthorized("Token must be provided in Authorization header")
+    if token.startswith("Bearer "):
+        token = token[len("Bearer ") :]
+    data = decode_auth_token(token)
+    return data["id"]

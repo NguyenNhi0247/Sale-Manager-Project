@@ -12,5 +12,5 @@ class BookCarts(db.Model):
     book_id = db.Column(db.Integer)
     cart_id = db.Column(db.Integer)
     price = db.Column(db.Numeric(), nullable=False)
-    quality = db.Column(db.Integer)
+    quantity = db.Column(db.Integer)
     updated_at = db.Column(db.DateTime())

@@ -6,7 +6,7 @@
       background-color="transparent"
        
       grow
-      class="mt-10"
+      class="mt-3"
     >
       <v-tab>
         1. Shopping Cart

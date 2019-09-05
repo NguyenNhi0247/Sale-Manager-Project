@@ -9,7 +9,7 @@ class Cart(db.Model):
     __tablename__ = "carts"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = (db.Integer)
+    user_id = db.Column(db.Integer())
     created_at = db.Column(db.DateTime())
     updated_at = db.Column(db.DateTime())
     is_deleted = db.Column(db.Boolean())
