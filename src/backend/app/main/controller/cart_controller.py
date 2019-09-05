@@ -7,7 +7,7 @@ from flask_restplus import Resource
 from ..util.dto.cart import CartDto
 from ..util.dto.book_cart import BookCartDto
 
-from ..service.cart_service import insert_book_to_cart
+from ..service.cart_service import insert_book_to_cart, get_user_id_by_token
 from ..util.error import raiseIfExcept
 
 
@@ -27,14 +27,27 @@ class Cart(Resource):
             500: "Internal Server Error",
         },
     )
-    @api.expect(BookCartDto.book_cart, validate=True)
-    @api.marshal_with(CartDto.cart)
+    @api.expect(CartDto.add_book_request, validate=True) # Request
     def post(self):
         """Insert book to Cart"""
         try:
-            user_id = flask.request.args.get("user_id")
-            book_id = flask.request.args.get("book_id")
-            insert_book_to_cart(user_id, book_id)
+            token = request.headers.get("Authorization")
+            data = request.get_json()
+            
+            user_id = get_user_id_by_token(token)
+            book_id = data.get("book_id", None)
+            price = data.get("price", None)
+            quatity = data.get("quatity", None)
+            print("=========")
+            print(type(data))
+            print(book_id)
+            if book_id:
+                insert_book_to_cart(user_id, book_id, price, quatity)
+            
+            # insert_book_to_cart(user_id, book_id)
             return {}
         except Exception as exception:
             log.exception("failed to insert book to cart {}".format(exception))
+
+# Input: userID (token <- header)
+# {book_id, price, quantity}

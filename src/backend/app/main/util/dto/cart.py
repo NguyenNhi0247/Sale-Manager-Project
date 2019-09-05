@@ -5,14 +5,11 @@ from flask_restplus import Namespace, fields
 
 class CartDto:
     api = Namespace("carts", description="Cart related operations")
-    cart = api.model(
-        "cart",
+    add_book_request = api.model(
+        "add_book_request",
         {
-            "id": fields.Integer(description="cart identifier"),
-            "user_id": fields.Integer(),
-            "created_at": fields.DateTime(),
-            "updated_at": fields.DateTime(),
-            "is_deleted": fields.Boolean(),
-            "deleted_at": fields.DateTime(),
+            "book_id": fields.Integer(),
+            "price": fields.Float(),
+            "quantity": fields.Integer(),
         },
     )

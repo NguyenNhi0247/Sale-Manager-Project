@@ -107,6 +107,16 @@ export default {
         eventBus.loginModalShown();
         return;
       }
+      let headers = this.getAuthHeader();
+      console.log("=========")
+      console.log(book.id)
+      this.$http
+        .post("/api/v1/carts/insert-book", JSON.stringify({"book_id": book.id, "price": book.price, "quatity": 1}), headers)
+        .then(resp => {
+          console.log(resp);
+        }),
+
+
       this.addToCart(book); // Save book to global vuex store
       //   eventBus.bookAddedToCart(book); // TODO
     },
