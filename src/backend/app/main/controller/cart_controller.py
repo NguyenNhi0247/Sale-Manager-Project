@@ -43,11 +43,6 @@ class Cart(Resource):
             print(book_id)
             if book_id:
                 insert_book_to_cart(user_id, book_id, price, quatity)
-            
-            # insert_book_to_cart(user_id, book_id)
             return {}
         except Exception as exception:
             log.exception("failed to insert book to cart {}".format(exception))
-
-# Input: userID (token <- header)
-# {book_id, price, quantity}

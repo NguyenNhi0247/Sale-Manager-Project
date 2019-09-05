@@ -108,8 +108,6 @@ export default {
         return;
       }
       let headers = this.getAuthHeader();
-      console.log("=========")
-      console.log(book.id)
       this.$http
         .post("/api/v1/carts/insert-book", JSON.stringify({"book_id": book.id, "price": book.price, "quatity": 1}), headers)
         .then(resp => {
