@@ -45,17 +45,17 @@ def insert_book_to_cart(uid, book_id, price, quantity):
     )
     save_changes(new_bookcart)
 
-def get_book_selected_by_user_id(uid):
+# TODO
+def get_books_from_user_cart(uid):
     cart = get_cart_by_user_id(uid)
     result = []
     if cart:
         list_book_cart = get_book_carts_by_card_id(cart.id)
         for book_cart in list_book_cart:
-            book = get_book_by_id(book_cart.id)
+            book = get_book_by_id(book_cart.book_id)
             result.append(book)
         return result
     return result
-
 
 def remove_book_from_cart(user_id, book_id):
     cart = get_cart_by_user_id(user_id)

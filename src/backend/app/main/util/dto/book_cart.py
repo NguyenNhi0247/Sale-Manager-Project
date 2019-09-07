@@ -5,6 +5,7 @@ from flask_restplus import Namespace, fields
 
 class BookCartDto:
     api = Namespace("bookcarts", description="BookCart related operations")
+    
     book_cart = api.model(
         "book_cart",
         {
@@ -17,13 +18,12 @@ class BookCartDto:
         },
     )
 
-    # [{"type":"txt","file_path":"_data/txt/OL16574453M.txt","file_size":577420}
-    list_book_selected = api.model(
-        "list_book_selected",
+    list_book_response = api.model(
+        "list_book_response",
         {
             "id": fields.Integer(description="book identifier"),
             "title": fields.String(required=True, description="user username"),
             "thumbnails": fields.List(fields.String),
-            "price": fields.Decimal(),
+            "price": fields.Float(),
         },
     )
