@@ -456,14 +456,19 @@ export default {
       }
       this.quantity--;
     },
-
     removefromCart(book) {
       // GET, POST, DELETE
       let headers = this.getAuthHeader();
       this.$http
-        .delete("/api/v1/carts", JSON.stringify({ book_id: book.id }), headers)
+        .delete(`/api/v1/carts?book_id=${book.id}`, headers)
         .then(resp => {
           console.log(resp);
+          // Delete success => Remove book from current cart in store cache
+          for (let i = 0; i < this.selectedBook.length; i++) {
+            if (this.selectedBook[i].id == book.id) {
+              this.selectedBook.splice(i, 1); // Remove book from list
+            }
+          }
         });
     }
   },

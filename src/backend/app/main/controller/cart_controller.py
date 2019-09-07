@@ -37,8 +37,6 @@ class BookSelected(Resource):
             token = request.headers.get("Authorization")
             user_id = get_user_id_by_token(token)
             books = get_books_from_user_cart(user_id)
-            print("=++++++")
-            print(books)
             return books
         except Exception as ex:
             log.exception("failed to get book selected {}".format(ex))
@@ -52,9 +50,9 @@ class BookSelected(Resource):
         try:
             token = request.headers.get("Authorization")
             user_id = get_user_id_by_token(token)
-            data = request.get_json()
-            book_id = data.get("book_id", None)
-            remove_book_from_cart(user_id, book_id)
+            book_id = request.args.get("book_id")
+            print(book_id)
+            remove_book_from_cart(user_id, int(book_id))
             return {}
         except Exception as ex:
             log.exception("failed to remove book{}".format(ex))

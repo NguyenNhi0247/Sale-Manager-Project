@@ -20,8 +20,10 @@ def get_book_carts_by_card_id(cart_id):
     return BookCarts.query.filter_by(cart_id=cart_id).all()
 
 def remove_book_in_book_carts(book_id):
-    return BookCarts.query.filter_by(book_id=book_id).delete()
-
+    deleted = BookCarts.query.filter_by(book_id=book_id).delete()
+    db.session.commit()
+    return deleted
+    
 def insert_book_to_cart(uid, book_id, price, quantity):
     now = datetime.now()
     cart = get_cart_by_user_id(uid)
@@ -62,6 +64,7 @@ def remove_book_from_cart(user_id, book_id):
     list_book_cart = get_book_carts_by_card_id(cart.id)
     for book_cart in list_book_cart:
         if book_cart.book_id == book_id:
+            print(book_cart)
             remove_book_in_book_carts(book_id)
     
 def save_changes(data):
