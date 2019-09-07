@@ -69,6 +69,12 @@
                           />
                         </v-flex>
                       </td>
+                      <td>
+                        <v-btn class="mx-2" fab dark small color="red" @click.native.prevent.stop="removefromCart(book)">
+                        <v-icon dark>mdi-window-close</v-icon>
+                      </v-btn>
+                        
+                      </td>
                     </tr>
                     
                   </v-simple-table>
@@ -480,16 +486,16 @@ export default {
     };
   },
   mounted() {
-    this.id = this.$route.params.id;
-    this.$http
-      .get('api/v1/books?limit=5&offset=80', axiosConfig)
-      .then(resp => {
-        console.log(resp.data);
-        this.selectedBook = resp.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+
+    let headers = this.getAuthHeader();
+      this.$http
+        .get("/api/v1/carts", headers)
+        .then(resp => {
+            this.selectedBook = resp.data;
+          }
+        )
+
+    
   },
   methods: {
     increment() {
@@ -503,7 +509,16 @@ export default {
         return;
       }
       this.quantity--;
-    }
+    },
+
+    removefromCart(book) {
+      let headers = this.getAuthHeader();
+      this.$http
+        .post("/api/v1/carts/delete-book", JSON.stringify({"book_id": book.id}), headers)
+        .then(resp => {
+          console.log(resp);
+        })
+    },
   },
   filters: {
     // Convert v to its location form, return v itself if it's not a number.

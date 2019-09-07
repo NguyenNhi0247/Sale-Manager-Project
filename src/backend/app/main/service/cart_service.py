@@ -1,4 +1,5 @@
 import logging
+import json
 from datetime import datetime, timezone
 from app.main import db
 
@@ -6,6 +7,7 @@ from app.main.model.cart import Cart
 from app.main.model.book_carts import BookCarts
 from ..util.jwt import decode_auth_token
 from app.main.service.book_service import get_book_by_id
+
 from app.main.service.user_service import get_user_by_id
 
 log = logging.getLogger("cart.service")
@@ -14,11 +16,14 @@ log.setLevel(logging.DEBUG)
 def get_cart_by_user_id(user_id):
     return Cart.query.filter_by(user_id=user_id).first()
 
+def get_book_carts_by_card_id(cart_id):
+    return BookCarts.query.filter_by(cart_id=cart_id).all()
+
+def remove_book_in_book_carts(book_id):
+    return BookCarts.query.filter_by(book_id=book_id).delete()
+
 def insert_book_to_cart(uid, book_id, price, quantity):
     now = datetime.now()
-    log.info("++")
-    log.info(uid)
-
     cart = get_cart_by_user_id(uid)
     if not cart: # Not found cart => Create new one
         new_cart = Cart(
@@ -30,8 +35,6 @@ def insert_book_to_cart(uid, book_id, price, quantity):
         )
         save_changes(new_cart)
         cart = get_cart_by_user_id(uid)
-    print("===")
-    print(cart.id)
 
     new_bookcart = BookCarts(
         book_id = book_id,
@@ -41,6 +44,25 @@ def insert_book_to_cart(uid, book_id, price, quantity):
         updated_at = now,
     )
     save_changes(new_bookcart)
+
+def get_book_selected_by_user_id(uid):
+    cart = get_cart_by_user_id(uid)
+    result = []
+    if cart:
+        list_book_cart = get_book_carts_by_card_id(cart.id)
+        for book_cart in list_book_cart:
+            book = get_book_by_id(book_cart.id)
+            result.append(book)
+        return result
+    return result
+
+
+def remove_book_from_cart(user_id, book_id):
+    cart = get_cart_by_user_id(user_id)
+    list_book_cart = get_book_carts_by_card_id(cart.id)
+    for book_cart in list_book_cart:
+        if book_cart.book_id == book_id:
+            remove_book_in_book_carts(book_id)
     
 def save_changes(data):
     db.session.add(data)
