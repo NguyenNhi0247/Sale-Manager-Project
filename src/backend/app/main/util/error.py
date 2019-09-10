@@ -33,6 +33,13 @@ class Unauthorized(BaseError):
         self.message = message
         self.payload = payload
 
+class Forbidden(BaseError):
+    def __init__(self, message="Forbidden", payload=None):
+        BaseError.__init__(self)
+        self.code = 403
+        self.message = message
+        self.payload = payload
+
 
 # class NotFound(BaseError):
 #     def __init__(self, message="Not found", payload=None):

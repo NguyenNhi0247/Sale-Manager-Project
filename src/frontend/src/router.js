@@ -2,10 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Base from './views/shop/Base.vue'
 import Index from './views/shop/Index.vue'
-import Product from './views/shop/Product.vue'
-import Checkout from './views/shop/Checkout.vue'
-import Payment from './views/shop/Payment.vue'
-import API from './views/shop/API.vue'
 
 Vue.use(Router)
 
@@ -16,10 +12,11 @@ export default new Router({
       component: Base,
       children: [
         { name: "index", path: "/", component: Index },
-        { name: "product", path: "/product/:id", component: Product },
-        { name: "checkout", path: "/checkout", component: Checkout },
-        { name: "payment", path: "/payment", component: Payment },
-        { name: "api", path: "/apis", component: API },
+        { name: "product", path: "/product/:id", component: () => import('./views/shop/Product.vue') },
+        { name: "checkout", path: "/checkout", component: () => import('./views/shop/Checkout.vue') },
+        { name: "payment", path: "/payment", component: () => import('./views/shop/Payment.vue')  },
+        { name: "user", path: "/user/:username", component: () => import('./views/shop/User.vue')  },
+        { name: "api", path: "/apis", component: () => import('./views/shop/API.vue')  },
       ]
     },
     {
