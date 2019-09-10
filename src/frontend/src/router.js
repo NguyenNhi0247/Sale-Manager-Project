@@ -13,6 +13,7 @@ export default new Router({
       children: [
         { name: "index", path: "/", component: Index },
         { name: "product", path: "/product/:id", component: () => import('./views/shop/Product.vue') },
+        { name: "reading", path: "/read/:id", component: () => import('./views/shop/Reading.vue')  },
         { name: "checkout", path: "/checkout", component: () => import('./views/shop/Checkout.vue') },
         { name: "payment", path: "/payment", component: () => import('./views/shop/Payment.vue')  },
         { name: "user", path: "/user/:username", component: () => import('./views/shop/User.vue')  },

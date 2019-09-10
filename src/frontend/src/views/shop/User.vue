@@ -62,7 +62,7 @@
         <v-container fluid grid-list-md pt-2 px-0 pb-4>
           <v-layout row wrap v-if="purchasedBooks.length > 0">
             <v-flex d-flex xs4 v-for="book in purchasedBooks" :key="book.id">
-              <book-card :book="book" isPurchased="true"></book-card>
+              <book-card :book="book" isPurchased></book-card>
             </v-flex>
           </v-layout>
           <p v-else>No book purchased</p>
@@ -80,7 +80,7 @@ import { mapGetters } from "vuex";
 import BookCard from "../../components/BookCard";
 
 export default {
-  name: "index",
+  name: "user",
   components: {
     "book-card": BookCard
   },
