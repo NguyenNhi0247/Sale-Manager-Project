@@ -21,7 +21,8 @@ app = Flask(__name__)
 @app.route("/api/v1/files/<path:filename>")
 def serve_file(filename):
     """Get file"""
-    return send_from_directory('../../_data/books', filename)
+    print(filename)
+    return send_from_directory('../../_data', filename)
 
 
 @app.errorhandler(BadRequest)

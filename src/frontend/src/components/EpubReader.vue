@@ -1,73 +1,79 @@
 <template>
-  <div>
-    <v-toolbar
-      dense
-      :color='isReadingMode ? "grey darken-3" : "deep-purple accent-3 white--text"'
-      dark
-      style="margin-top: -1px"
-      height="40"
-    >
-      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
-      <v-toolbar-title style="font-size: 15px">Alice's adventure in wonderland</v-toolbar-title>
-      <div class="flex-grow-1"></div>
-      <v-spacer></v-spacer>
-      <v-select
-        v-model="slTheme"
-        :items="slThemeItems"
-        menu-props="closeOnClick"
-        label="Theme"
-        hide-details
-        single-line
-        class="mr-3"
-        style="max-width: 90px; font-size: 12px !important"
-        height="20"
+  <v-container fluid class="pa-0 ma-0">
+    <div v-if="book">
+      <v-toolbar
         dense
+        :color="isReadingMode ? 'grey darken-3' : 'deep-purple accent-3 white--text'"
+        dark
+        style="margin-top: -1px"
+        height="40"
       >
-      <v-icon slot="prepend" small>mdi-theme-light-dark</v-icon>
-      </v-select>
+        <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+        <v-toolbar-title style="font-size: 15px">Alice's adventure in wonderland</v-toolbar-title>
+        <div class="flex-grow-1"></div>
+        <v-spacer></v-spacer>
+        <v-select
+          v-model="slTheme"
+          :items="slThemeItems"
+          menu-props="closeOnClick"
+          label="Theme"
+          hide-details
+          single-line
+          class="mr-3"
+          style="max-width: 90px; font-size: 12px !important"
+          height="20"
+          dense
+        >
+          <v-icon slot="prepend" small>mdi-theme-light-dark</v-icon>
+        </v-select>
 
-      <v-divider vertical></v-divider>
-      <v-btn icon small class="ml-3 mr-1" @click="decreaseFontSize()">
-        <v-icon small>mdi-format-font-size-decrease</v-icon>
-      </v-btn>
-      <v-btn icon small class="ml-1 mr-3" @click="increaseFontSize()">
-        <v-icon small>mdi-format-font-size-increase</v-icon>
-      </v-btn>
-      <v-divider vertical></v-divider>
-      <v-btn icon small class="ml-3 mr-1" @click="switchReadingMode()">
-        <v-icon small>{{ isReadingMode ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
-      </v-btn>
-      <v-btn icon small class="ml-1">
-        <v-icon small>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-toolbar>
+        <v-divider vertical></v-divider>
+        <v-btn icon small class="ml-3 mr-1" @click="decreaseFontSize()">
+          <v-icon small>mdi-format-font-size-decrease</v-icon>
+        </v-btn>
+        <v-btn icon small class="ml-1 mr-3" @click="increaseFontSize()">
+          <v-icon small>mdi-format-font-size-increase</v-icon>
+        </v-btn>
+        <v-divider vertical></v-divider>
+        <v-btn icon small class="ml-3 mr-1" @click="switchReadingMode()">
+          <v-icon small>{{ isReadingMode ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
+        </v-btn>
+        <v-btn icon small class="ml-1">
+          <v-icon small>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-toolbar>
 
-    <div class="epub-container">
-      <slot name="prev-btn" :goToPrevPage="goToPrevPage">
-        <div id="prev" class="arrow" @click="goToPrevPage">‹</div>
-      </slot>
-      <slot name="book-content" :ready="ready">
-        <div :id="bookArea"></div>
-      </slot>
-      <slot name="next-btn" :goToNextPage="goToNextPage">
-        <div id="next" class="arrow" @click="goToNextPage">›</div>
-      </slot>
-    </div>
-    <slot name="progress-bar" :onChange="onChange" :ready="ready">
-      <div class="epub-reading-progress-bar">
-        <input
-          size="3"
-          type="range"
-          max="100"
-          min="0"
-          step="1"
-          @change="onChange($event.target.value)"
-          :value="progress"
-        /> %
-        <input type="text" :value="progress" @change="onChange($event.target.value)" />
+      <div class="epub-container">
+        <slot name="prev-btn" :goToPrevPage="goToPrevPage">
+          <div id="prev" class="arrow" @click="goToPrevPage">‹</div>
+        </slot>
+        <slot name="book-content" :ready="ready">
+          <div :id="bookArea"></div>
+        </slot>
+        <slot name="next-btn" :goToNextPage="goToNextPage">
+          <div id="next" class="arrow" @click="goToNextPage">›</div>
+        </slot>
       </div>
-    </slot>
-  </div>
+      <!-- <slot name="progress-bar" :onChange="onChange" :ready="ready">
+        <div class="epub-reading-progress-bar">
+          <input
+            size="3"
+            type="range"
+            max="100"
+            min="0"
+            step="1"
+            @change="onChange($event.target.value)"
+            :value="progress"
+          /> %
+          <input type="text" :value="progress" @change="onChange($event.target.value)" />
+        </div>
+      </slot> -->
+    </div>
+
+    <div v-else>
+      <h3>No book data</h3>
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -149,6 +155,12 @@ export default {
     };
   },
   watch: {
+    epubUrl(val) {
+      if (val) {
+        console.log("EPUB:", val)
+        this.initialize();
+      }
+    },
     slTheme(val) {
       this.setTheme(val);
     },
@@ -298,50 +310,58 @@ export default {
         /* IE/Edge */
         document.msExitFullscreen();
       }
-    }
-  },
-  mounted() {
-    this.book = new Epub(this.epubUrl, {});
-    this.book.loaded.navigation.then(({ toc }) => {
-      this.toc = toc;
-      this.$emit("toc", this.toc);
-      this.initReader();
-      this.rendition.on("click", () => {
-        this.$emit("click");
-      });
-    });
-    this.book.ready
-      .then(() => {
-        return this.book.locations.generate();
-      })
-      .then(() => {
-        this.locations = JSON.parse(this.book.locations.save());
-        this.ready = true;
-        this.$emit("ready");
-        this.rendition.on("relocated", location => {
-          const percent = this.book.locations.percentageFromCfi(
-            location.start.cfi
-          );
-          const percentage = Math.floor(percent * 100);
-          this.progressValue = percentage;
-          this.$emit("relocated");
+    },
+    initialize() {
+      if (!this.epubUrl) {
+        return;
+      }
+
+        console.log("INIT EPUB:", this.epubUrl)
+      this.book = new Epub(this.epubUrl, {});
+      this.book.loaded.navigation.then(({ toc }) => {
+        this.toc = toc;
+        this.$emit("toc", this.toc);
+        this.initReader();
+        this.rendition.on("click", () => {
+          this.$emit("click");
         });
       });
-    this.$root.$on("showPage", cfi => {
-      this.cfi = cfi;
-      this.goToExcerpt(cfi);
-    });
-    this.$root.$on("clearHighlight", () => {
-      this.rendition.annotations.remove("epubcfi(" + this.cfi + ")");
-    });
-    window.addEventListener(
-      "resize",
-      this.debounce(() => {
-        this.resizeToScreenSize();
-      }, 250)
-    );
-    this.updateScreenSizeInfo();
+      this.book.ready
+        .then(() => {
+          return this.book.locations.generate();
+        })
+        .then(() => {
+          this.locations = JSON.parse(this.book.locations.save());
+          this.ready = true;
+          this.$emit("ready");
+          this.rendition.on("relocated", location => {
+            const percent = this.book.locations.percentageFromCfi(
+              location.start.cfi
+            );
+            const percentage = Math.floor(percent * 100);
+            this.progressValue = percentage;
+            this.$emit("relocated");
+          });
+        });
+      this.$root.$on("showPage", cfi => {
+        this.cfi = cfi;
+        this.goToExcerpt(cfi);
+      });
+      this.$root.$on("clearHighlight", () => {
+        this.rendition.annotations.remove("epubcfi(" + this.cfi + ")");
+      });
+      window.addEventListener(
+        "resize",
+        this.debounce(() => {
+          this.resizeToScreenSize();
+        }, 250)
+      );
+      this.updateScreenSizeInfo();
+    }
   },
+//   mounted() {
+//     this.initialize();
+//   },
   created() {
     window.addEventListener("keyup", this.keyListener);
   },

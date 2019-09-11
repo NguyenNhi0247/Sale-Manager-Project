@@ -47,7 +47,8 @@ export default {
   },
   data() {
     return {
-      url: "/api/v1/files/alice.epub",
+      book: null,
+      url: "",
       serchQuery: "",
       readingProgress: 20,
       openSearch: false,
@@ -77,9 +78,41 @@ export default {
     }
   },
   mounted() {
-    this.$root.$on("toc", toc => {
-      this.toc = toc;
-    });
+    this.id = this.$route.params.id;
+    this.$http
+      .get(`/api/v1/books/${this.id}`, axiosConfig)
+      .then(resp => {
+        console.log(resp.data);
+        this.book = resp.data;
+
+        let filePath = ""
+        for (let i = 0; i < this.book.ebook_formats.length; i++) {
+          let format = this.book.ebook_formats[i]
+          console.log(format)
+          if (format.type === "epub") {
+            filePath = format.file_path.replace("_data/", "")
+          }
+        }
+        if (!filePath) {
+          return
+        }
+        this.url = `/api/v1/files/${filePath}`
+      })
+      .catch(err => {
+        console.log(err);
+        let em = err.message;
+        if (err.response) {
+          em = err.response.data.message;
+        }
+        eventBus.snackbarShown({
+          type: "error",
+          msg: `Cannot get book details. ${em}`
+        });
+      });
+
+    // this.$root.$on("toc", toc => {
+    //   this.toc = toc;
+    // });
   },
   created() {
     // eventBus.$on("loginUser", () => {
