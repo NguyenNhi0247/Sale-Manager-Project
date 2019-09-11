@@ -234,7 +234,8 @@ export default {
     toEbookFormatsList(v) {
       let s = "";
       for (let f of v) {
-        s += f.type + " (" + f.file_path + "), ";
+        // s += f.type + " (" + f.file_path + "), ";
+        s += f.type + ", ";
       }
       return s.replace(/, $/, "");
     }

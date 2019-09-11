@@ -6,6 +6,7 @@
 
           <EpubReader
             bookArea="epub-reader"
+            :bookInfo="book"
             :epub-url="url"
             :progress.sync="readingProgress"
             @toc="getContent"
@@ -88,7 +89,6 @@ export default {
         let filePath = ""
         for (let i = 0; i < this.book.ebook_formats.length; i++) {
           let format = this.book.ebook_formats[i]
-          console.log(format)
           if (format.type === "epub") {
             filePath = format.file_path.replace("_data/", "")
           }

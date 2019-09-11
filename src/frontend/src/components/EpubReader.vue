@@ -9,7 +9,7 @@
         height="40"
       >
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
-        <v-toolbar-title style="font-size: 15px">Alice's adventure in wonderland</v-toolbar-title>
+        <v-toolbar-title style="font-size: 15px" v-if="bookInfo && bookInfo.title">{{ bookInfo.title }}</v-toolbar-title>
         <div class="flex-grow-1"></div>
         <v-spacer></v-spacer>
         <v-select
@@ -84,6 +84,7 @@ global.ePub = Epub;
 export default {
   name: "BookReader",
   props: {
+    bookInfo: {},
     epubUrl: {
       type: String,
       required: true
