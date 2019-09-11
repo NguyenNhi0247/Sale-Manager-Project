@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <span class="title ml-3 mr-5">
         Bookstore
-        <span class="font-weight-light">Dashboard</span>
+        <span class="font-weight-light">{{ " | " + pageTitle }}</span>
       </span>
       <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field> -->
       <!-- <div class="flex-grow-1"></div> -->
@@ -12,7 +12,7 @@
 
     <v-navigation-drawer v-model="drawer" app clipped class="elevation-5">
       <v-list dense class="grey lighten-4">
-        <template v-for="(item, i) in items">
+        <template v-for="(item, i) in navItems">
           <v-row v-if="item.heading" :key="i" align="center">
             <v-col cols="6">
               <v-subheader v-if="item.heading">{{ item.heading }}</v-subheader>
@@ -51,7 +51,7 @@ export default {
   },
   data: () => ({
     drawer: null,
-    items: [
+    navItems: [
       { id: 0, icon: "mdi-view-dashboard-outline", text: "Dashboard" },
       { divider: true },
       { heading: "Users" },
@@ -64,26 +64,32 @@ export default {
       { divider: true },
       { id: 3, icon: "mdi-settings-outline", text: "Settings" },
       { id: 4, icon: "mdi-help", text: "Help" }
-    ]
+    ],
+    pageTitle: "Dashboard"
   }),
   methods: {
     navItemClicked(id) {
       switch (id) {
         case 0: // Dashboard
           this.$router.push({ path: "/admin" });
-          break
+          this.pageTitle = "Dashboard"
+          break;
         case 1: // User management
           this.$router.push({ path: "/admin/users" });
-          break
+          this.pageTitle = "Users"
+          break;
         case 2: // Book management
           this.$router.push({ path: "/admin/books" });
-          break
+          this.pageTitle = "Books"
+          break;
         case 3: // Settings
           this.$router.push({ path: "/admin/settings" });
-          break
+          this.pageTitle = "Settings"
+          break;
         case 4: // Help
           this.$router.push({ path: "/admin/help" });
-          break
+          this.pageTitle = "Help"
+          break;
       }
     }
   }
