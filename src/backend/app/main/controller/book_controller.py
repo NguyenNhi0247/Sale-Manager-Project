@@ -63,3 +63,25 @@ class Book(Resource):
                 return book
         except Exception as e:
             log.exception("failed to get book")
+
+
+# @api.route("/<int:bid>/epub")
+# @api.param("bid", "Book identifier")
+# @api.response(404, "Book not found.")
+# class Book(Resource):
+#     @api.doc("Get EPUB file by ID")
+#     def get(self, bid):
+#         """Get book details by its id"""
+#         log.error("HIT")
+#         log.error(bid)
+#         book = get_book_by_id(bid)
+#         if book is None:
+#             return "", 404
+
+#         log.error(book)
+#         for format in book.ebook_formats:
+#             if format.type == "epub":
+#                 log.error(format)
+#                 return send_file(format.file_path, as_attachment=True)
+#         return "", 404
+            

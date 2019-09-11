@@ -86,7 +86,9 @@ export default {
   name: "book-card",
   props: {
     book: {},
-    isPurchased: false
+    isPurchased: {
+      type: Boolean
+    }
   },
   data() {
     return {

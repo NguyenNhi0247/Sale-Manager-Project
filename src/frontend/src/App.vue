@@ -1,13 +1,13 @@
 <template>
   <v-app>
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
+
     <!-- Global components -->
     <snackbar></snackbar>
     <login-modal></login-modal>
     <logout-modal></logout-modal>
-
-    <transition name="fade" mode="out-in">
-      <router-view />
-    </transition>
   </v-app>
 </template>
 
@@ -15,14 +15,14 @@
 import LoginModal from "./components/modals/LoginModal";
 import LogoutModal from "./components/modals/LogoutModal";
 import Snackbar from "./components/Snackbar";
-import { mapMutations } from "vuex"
+import { mapMutations } from "vuex";
 
 export default {
   name: "App",
   components: {
     "login-modal": LoginModal,
     "logout-modal": LogoutModal,
-    "snackbar": Snackbar
+    snackbar: Snackbar
   },
   data: () => ({}),
   methods: {
@@ -31,13 +31,13 @@ export default {
   mounted() {
     // Check cookie to detect if user already logged in or not.
     // If already logged in the save current user info to Vuex store.
-    let user = this.getCookie("beanies_user")
-    let token = this.getCookie("beanies_token")
-    console.log(user, token)
+    let user = this.getCookie("beanies_user");
+    let token = this.getCookie("beanies_token");
+    console.log(user, token);
     if (token && user) {
-      let decoded = JSON.parse(window.atob(user))
+      let decoded = JSON.parse(window.atob(user));
       if (decoded.id && true) {
-        this.setAuthUser(decoded)
+        this.setAuthUser(decoded);
       }
     }
   }
