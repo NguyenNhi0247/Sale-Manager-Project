@@ -1,5 +1,5 @@
 import logging
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -16,6 +16,13 @@ db = SQLAlchemy()
 flask_bcrypt = Bcrypt()
 
 app = Flask(__name__)
+
+# Get file: GET /api/v1/files/:path
+@app.route("/api/v1/files/<path:filename>")
+def serve_file(filename):
+    """Get file"""
+    return send_from_directory('../../_data/books', filename)
+
 
 @app.errorhandler(BadRequest)
 @app.errorhandler(Unauthorized)

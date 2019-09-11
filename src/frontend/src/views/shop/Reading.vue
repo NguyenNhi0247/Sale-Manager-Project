@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid pb-4>
+  <v-container fluid>
     <v-layout>
       <v-flex xs12>
-        <div id="app">
-          <PreferencesDropdown
+        <div id="epub-reader">
+          <!-- <PreferencesDropdown
             :themes="themes"
             :current-theme.sync="currentTheme"
             :font-size.sync="size"
@@ -12,7 +12,7 @@
           >
             <template slot="book-content" slot-scope="props">
               <button class="my-find my-content" @click="showContent">
-                <img src="/static/left-alignment.svg" alt />
+                <img src="../../assets/img/left-alignment.svg" alt />
               </button>
               <div class="search-widget1" v-if="openContent">
                 <TreeMenu :subContent="toc" />
@@ -20,7 +20,7 @@
             </template>
             <template slot="book-search" slot-scope="props">
               <button class="my-find" @click="toggleSearchWidget">
-                <img src="/static/search.svg" alt />
+                <img src="../../assets/img/search.svg" alt />
               </button>
               <div class="search-widget1" v-if="openSearch">
                 <input
@@ -40,18 +40,19 @@
                 </ul>
               </div>
             </template>
-          </PreferencesDropdown>
+          </PreferencesDropdown> -->
 
           <BookReader
+            bookArea="epub-reader"
             :epub-url="url"
             :font-size="size"
             :themes="themes"
             :theme="currentTheme"
             :progress.sync="readingProgress"
             @toc="getContent"
-            :contentBookModify="90"
+            :contentBookModify="100"
           >
-            <template slot="progress-bar" slot-scope="props">
+            <!-- <template slot="progress-bar" slot-scope="props">
               <input
                 size="3"
                 type="range"
@@ -65,9 +66,9 @@
                 type="text"
                 :value="readingProgress"
               />
-            </template>
+            </template> -->
           </BookReader>
-        </div>
+          </div>
       </v-flex>
     </v-layout>
   </v-container>
@@ -90,7 +91,7 @@ export default {
   },
   data() {
     return {
-      url: "../../assets/books/alice.epub",
+      url: "/api/v1/files/alice.epub",
       size: 80,
       currentTheme: "beige",
       themes: {
@@ -156,11 +157,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-h2 {
-  color: #0078d9;
-  font-weight: 300;
-  font-size: 1.8rem;
-}
-</style>
