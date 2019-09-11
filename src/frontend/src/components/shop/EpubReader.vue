@@ -9,7 +9,10 @@
         height="40"
       >
         <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
-        <v-toolbar-title style="font-size: 15px" v-if="bookInfo && bookInfo.title">{{ bookInfo.title }}</v-toolbar-title>
+        <v-toolbar-title
+          style="font-size: 15px"
+          v-if="bookInfo && bookInfo.title"
+        >{{ bookInfo.title }}</v-toolbar-title>
         <div class="flex-grow-1"></div>
         <v-spacer></v-spacer>
         <v-select
@@ -67,7 +70,7 @@
           /> %
           <input type="text" :value="progress" @change="onChange($event.target.value)" />
         </div>
-      </slot> -->
+      </slot>-->
     </div>
 
     <div v-else>
@@ -158,7 +161,7 @@ export default {
   watch: {
     epubUrl(val) {
       if (val) {
-        console.log("EPUB:", val)
+        console.log("EPUB:", val);
         this.initialize();
       }
     },
@@ -299,17 +302,17 @@ export default {
     },
     closeFullscreen() {
       let elem = document.documentElement;
-      if (document.exitFullscreen) {
+      if (elem.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
+      } else if (elem.mozCancelFullScreen) {
         /* Firefox */
-        document.mozCancelFullScreen();
+        elem.mozCancelFullScreen();
       } else if (document.webkitExitFullscreen) {
         /* Chrome, Safari and Opera */
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
+        elem.webkitExitFullscreen();
+      } else if (elem.msExitFullscreen) {
         /* IE/Edge */
-        document.msExitFullscreen();
+        elem.msExitFullscreen();
       }
     },
     initialize() {
@@ -317,7 +320,7 @@ export default {
         return;
       }
 
-        console.log("INIT EPUB:", this.epubUrl)
+      console.log("INIT EPUB:", this.epubUrl);
       this.book = new Epub(this.epubUrl, {});
       this.book.loaded.navigation.then(({ toc }) => {
         this.toc = toc;
@@ -360,9 +363,9 @@ export default {
       this.updateScreenSizeInfo();
     }
   },
-//   mounted() {
-//     this.initialize();
-//   },
+  //   mounted() {
+  //     this.initialize();
+  //   },
   created() {
     window.addEventListener("keyup", this.keyListener);
   },

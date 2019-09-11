@@ -39,7 +39,7 @@ import { axiosConfig } from "../../utils";
 import { eventBus } from "../../event";
 import { mapGetters } from "vuex";
 
-import EpubReader from "../../components/EpubReader";
+import EpubReader from "../../components/shop/EpubReader";
 
 export default {
   name: "reading",

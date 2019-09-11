@@ -73,7 +73,7 @@ import { axiosConfig } from "../../utils";
 import { eventBus } from "../../event";
 import { mapGetters } from "vuex";
 
-import BookCard from "../../components/BookCard";
+import BookCard from "../../components/shop/BookCard";
 
 export default {
   name: "index",

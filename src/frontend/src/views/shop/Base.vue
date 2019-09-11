@@ -20,8 +20,8 @@ likes the header, footer...
 </template>
 
 <script>
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "../../components/shop/Header";
+import Footer from "../../components/shop/Footer";
 import { mapGetters } from "vuex";
 
 export default {
