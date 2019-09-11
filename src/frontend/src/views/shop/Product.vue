@@ -63,7 +63,7 @@
               </v-btn>
             </v-flex>
             <v-flex class="ma-0 pa-0 ml-n3">
-              <v-btn class="mt-1" depressed large dark outlined color="blue accent-4">
+              <v-btn class="mt-1" depressed large dark outlined color="blue accent-4" @click="previewBook">
                 <v-icon left>mdi-eye-check-outline</v-icon>Preview
               </v-btn>
             </v-flex>
@@ -199,6 +199,9 @@ export default {
     addToCart(book) {
       alert(book.title + " added to cart...");
       // TODO
+    },
+    previewBook() {
+      this.$router.push({ path: `/read/${this.book.id}` });
     },
     increment() {
       if (this.quantity == 100) {
