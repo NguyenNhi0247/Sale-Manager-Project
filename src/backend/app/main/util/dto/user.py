@@ -40,7 +40,7 @@ class UserDto:
     user_address_request = api.model(
         "user_address_request",
         {
-            "receive_name": fields.String(),
+            "receiver_name": fields.String(),
             "address": fields.String(),
             "phone_number": fields.String(),
             "zip_code": fields.String()

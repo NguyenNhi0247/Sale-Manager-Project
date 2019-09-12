@@ -13,7 +13,7 @@
                         <td width="500">
                           <v-text-field 
                           label="Receive Name"
-                          v-model="UserAddressForm.receive_name"
+                          v-model="UserAddressForm.receiver_name"
                           @keyup.enter="addUserAddress()" />
                         </td>
                         <!-- <td>
@@ -137,7 +137,7 @@ export default {
     return {
       tab: null,
       UserAddressForm:{
-        receive_name: "",
+        receiver_name: "",
         address:"",
         zip_code:"",
         phone_number:""

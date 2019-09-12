@@ -92,16 +92,16 @@ def generate_token(user):
         return InternalServerError("Failed to generate JWT Wtoken")
 
 def get_user_address_by_user_id(user_id):
-    return UserAddresses.query.filter_by(user_id=user_id).first()
+    return UserAddresses.query.filter_by(uid=user_id).first()
 
 def get_user_payment_by_user_id(user_id):
-    return UserPayments.query.filter_by(user_id=user_id).first()
+    return UserPayments.query.filter_by(uid=user_id).first()
 
-def edit_user_address(user_id, receive_name, address, phone_number, zip_code):
+def edit_user_address(user_id, receiver_name, address, phone_number, zip_code):
     now = datetime.now()
     user_address = get_user_address_by_user_id(user_id)
     if user_address:
-        user_address.receiver_name = receive_name,
+        user_address.receiver_name = receiver_name,
         user_address.address = address,
         user_address.zip_code = zip_code,
         user_address.phone_number = phone_number,
@@ -109,7 +109,7 @@ def edit_user_address(user_id, receive_name, address, phone_number, zip_code):
     else:
         new_user_address = UserAddresses(
             uid = user_id,
-            receiver_name = receive_name,
+            receiver_name = receiver_name,
             address = address,
             is_default = False,
             zip_code = zip_code,
