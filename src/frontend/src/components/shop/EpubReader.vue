@@ -301,18 +301,17 @@ export default {
       }
     },
     closeFullscreen() {
-      let elem = document.documentElement;
-      if (elem.exitFullscreen) {
+      if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (elem.mozCancelFullScreen) {
+      } else if (document.mozCancelFullScreen) {
         /* Firefox */
-        elem.mozCancelFullScreen();
+        document.mozCancelFullScreen();
       } else if (document.webkitExitFullscreen) {
         /* Chrome, Safari and Opera */
-        elem.webkitExitFullscreen();
-      } else if (elem.msExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
         /* IE/Edge */
-        elem.msExitFullscreen();
+        document.msExitFullscreen();
       }
     },
     initialize() {

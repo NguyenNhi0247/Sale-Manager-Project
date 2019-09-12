@@ -1,17 +1,58 @@
 <template>
-  <v-container id="keep">
+  <v-container class="ma-0 pa-0" fluid>
     <v-app-bar app clipped-left color="deep-purple accent-4" dark class="elevation-2">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <span class="title ml-3 mr-5">
         Bookstore
         <span class="font-weight-light">{{ " | " + pageTitle }}</span>
       </span>
+
+      <v-spacer></v-spacer>
       <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field> -->
       <!-- <div class="flex-grow-1"></div> -->
+      <v-btn icon class="mr-3">
+        <v-icon>mdi-bell-outline</v-icon>
+      </v-btn>
+      <v-menu
+        v-if="isAuth"
+        bottom
+        offset-y
+        open-on-hover
+        open-delay="150"
+        close-on-content-click
+        transition="slide-y-transition"
+      >
+        <template v-slot:activator="{ on }">
+          <v-avatar v-on="on" class="mr-2" size="36" style="cursor: pointer">
+            <img src="https://avatars2.githubusercontent.com/u/18606262?s=180" alt="John">
+            <!-- <v-icon>mdi-account-circle</v-icon> -->
+          </v-avatar>
+        </template>
+
+        <v-list>
+          <v-subheader>{{this.authUser.display_name}}</v-subheader>
+          <v-divider></v-divider>
+          <v-list-item-group color="primary">
+            <v-list-item
+              v-for="(item, idx) in menuItems"
+              :key="idx"
+              @click.native.stop="menuItemClicked(idx)"
+              ripple
+            >
+              <v-list-item-icon class="mr-3">
+                <v-icon v-text="item.icon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app clipped class="elevation-5">
-      <v-list dense rounded class="grey lighten-4">
+    <v-navigation-drawer v-model="drawer" app clipped>
+      <v-list dense rounded class="white">
         <v-list-item-group v-model="navItemSelected" color="primary">
           <template v-for="(item, i) in navItems">
             <v-row v-if="item.heading" :key="i" align="center">
@@ -22,7 +63,7 @@
                 <v-btn small text class="grey--text">edit</v-btn>
               </v-col>
             </v-row>
-            <v-divider v-else-if="item.divider" :key="i" dark class="mt-3 mb-2 mx-3"></v-divider>
+            <v-divider v-else-if="item.divider" :key="i" dark class="mt-3 mb-2"></v-divider>
 
             <v-list-item v-else :key="i" @click="navItemClicked(item.id)" selected>
               <v-list-item-action>
@@ -48,12 +89,19 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   props: {
     source: String
   },
   data: () => ({
     drawer: null,
+    menuItems: [
+      { title: "Profile", icon: "mdi-account-circle" },
+      { title: "Settings", icon: "mdi-settings-outline" },
+      { title: "Logout", icon: "mdi-logout-variant" }
+    ],
     navItems: [
       { id: 0, icon: "mdi-view-dashboard-outline", text: "Dashboard" },
       { id: 1, divider: true },
@@ -61,7 +109,7 @@ export default {
       { id: 3, icon: "mdi-account-card-details-outline", text: "Manage users" },
       { id: 4, divider: true },
       { id: 5, heading: "Books" },
-      { id: 6, id: 2, icon: "mdi-notebook-outline", text: "Manage books" },
+      { id: 6, icon: "mdi-notebook-outline", text: "Manage books" },
       { id: 7, icon: "mdi-book-play-outline", text: "Archived" },
       { id: 8, icon: "mdi-delete-variant", text: "Deleted" },
       { id: 9, divider: true },
@@ -71,6 +119,12 @@ export default {
     navItemSelected: 0,
     pageTitle: "Dashboard"
   }),
+  computed: {
+    ...mapGetters(["authUser"]),
+    isAuth() {
+      return this.authUser && this.authUser.id && true;
+    }
+  },
   methods: {
     navItemClicked(id) {
       switch (id) {
