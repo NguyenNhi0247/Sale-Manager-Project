@@ -80,7 +80,7 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import { eventBus } from "../event";
+import { eventBus } from "../../event";
 
 export default {
   name: "book-card",
