@@ -9,7 +9,7 @@
 
     <!-- Charts -->
     <v-layout d-flex justify-space-between class="mt-5">
-      <v-flex xs8>
+      <v-flex xs8 class="mr-1">
         <v-card outlined>
           <v-container>
             <v-layout>
@@ -85,7 +85,20 @@
         </v-card>
       </v-flex>
 
-      <v-flex xs4></v-flex>
+      <v-flex xs4 class="ml-1">
+        <v-card outlined>
+          <v-container>
+            <p class="caption text-uppercase pt-1 mb-2" style="color: #818ea3">Users by device</p>
+            <v-divider class="mt-0 pt-0"></v-divider>
+
+            <v-layout class="mt-3">
+              <v-flex xs12>
+                <pie-chart :chartData="pieChartData" :options="chartOpts"></pie-chart>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -93,12 +106,14 @@
 <script>
 import StatsCard from "../../components/admin/StatsCard";
 import LineChart from "../../components/admin/LineChart";
+import PieChart from "../../components/admin/PieChart";
 
 export default {
   name: "dashboard",
   components: {
     StatsCard,
-    LineChart
+    LineChart,
+    PieChart
   },
   data: () => ({
     stats: [
@@ -122,7 +137,7 @@ export default {
       datasets: [
         {
           label: "Last month",
-          backgroundColor: ["rgba(255, 206, 86, 0.4)"],
+          backgroundColor: ['rgba(255, 99, 132, 0.3)'],
           borderDash: [5, 5],
           data: [12, 22, 67, 34, 58, 22, 29]
         },
@@ -130,6 +145,22 @@ export default {
           label: "This month",
           backgroundColor: "rgba(54, 162, 235, 0.6)",
           data: [40, 39, 55, 40, 39, 80, 40]
+        }
+      ]
+    },
+    pieChartData: {
+      labels: ["Desktop", "Tablet", "Mobile"],
+      datasets: [
+        {
+           backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 64, 0.5)'
+            ],
+          data: [2542, 342, 6312],
         }
       ]
     },
