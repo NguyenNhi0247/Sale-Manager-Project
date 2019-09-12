@@ -13,3 +13,13 @@ class CartDto:
             "quantity": fields.Integer(),
         },
     )
+
+    api = Namespace("orders", description="Order related operations")
+    order_response = api.model(
+        "order_response",
+        {
+            "total_price": fields.Float(),
+            "discount": fields.Float(),
+            "final_price": fields.Float(),
+        },
+    )

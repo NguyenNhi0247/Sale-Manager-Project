@@ -12,7 +12,7 @@ class BookCartDto:
             "id": fields.Integer(description="cart identifier"),
             "book_id": fields.Integer(),
             "cart_id": fields.Integer(),
-            "price": fields.Decimal(),
+            "price": fields.Float(),
             "quality": fields.Integer(),
             "updated_at": fields.DateTime()
         },

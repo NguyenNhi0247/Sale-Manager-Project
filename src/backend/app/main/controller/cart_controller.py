@@ -10,12 +10,13 @@ from ..util.dto.book_cart import BookCartDto
 
 # from ..util.dto.book import BookDto
 
-
 from ..service.cart_service import (
     insert_book_to_cart,
     get_books_from_user_cart,
     remove_book_from_cart,
 )
+
+# from ..service.order_service import get_or_insert_order_by_user_id
 from ..util.error import raiseIfExcept
 
 
@@ -79,3 +80,20 @@ class BookCarts(Resource):
             return {}
         except Exception as exception:
             log.exception("failed to insert book to cart {}".format(exception))
+
+# @api.route("/get-order")
+# class Order(Resource):
+#     @api.doc(
+#         "Get order details", responses={200: "Success", 500: "Internal Server Error"}
+#     )
+#     @api.marshal_list_with(CartDto.order_response)
+#     def get(self):
+#         """List book selected"""
+#         try:
+#             token = request.headers.get("Authorization")
+#             user_id = get_user_id_by_token(token)
+#             order = get_or_insert_order_by_user_id(user_id)
+            
+#             return order
+#         except Exception as ex:
+#             log.exception("failed to get book selected {}".format(ex))

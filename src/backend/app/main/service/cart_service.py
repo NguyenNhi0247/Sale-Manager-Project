@@ -5,6 +5,9 @@ from app.main import db
 
 from app.main.model.cart import Cart
 from app.main.model.book_carts import BookCarts
+from app.main.model.user_addresses import UserAddresses
+from app.main.model.user_payments import UserPayments
+
 from ..util.jwt import decode_auth_token
 from app.main.service.book_service import get_book_by_id
 
@@ -18,6 +21,9 @@ def get_cart_by_user_id(user_id):
 
 def get_book_carts_by_card_id(cart_id):
     return BookCarts.query.filter_by(cart_id=cart_id).all()
+
+def get_book_carts_by_book_id(book_id):
+    return BookCarts.query.filter_by(book_id=book_id).all()
 
 def remove_book_in_book_carts(book_id):
     deleted = BookCarts.query.filter_by(book_id=book_id).delete()
@@ -37,17 +43,21 @@ def insert_book_to_cart(uid, book_id, price, quantity):
         )
         save_changes(new_cart)
         cart = get_cart_by_user_id(uid)
+    book_carts = get_book_carts_by_card_id(cart.id)
+    book_cart = get_book_carts_by_book_id(book_id)
+    if book_cart:
+        book_carts.quantity = book_cart.quantity + quantity
+        db.session.commit()
+    else:
+        new_bookcart = BookCarts(
+            book_id = book_id,
+            cart_id = cart.id,
+            price = price,
+            quantity = quantity,
+            updated_at = now,
+        )
+        save_changes(new_bookcart)
 
-    new_bookcart = BookCarts(
-        book_id = book_id,
-        cart_id = cart.id,
-        price = price,
-        quantity = quantity,
-        updated_at = now,
-    )
-    save_changes(new_bookcart)
-
-# TODO
 def get_books_from_user_cart(uid):
     cart = get_cart_by_user_id(uid)
     result = []
@@ -58,6 +68,7 @@ def get_books_from_user_cart(uid):
             result.append(book)
         return result
     return result
+
 
 def remove_book_from_cart(user_id, book_id):
     cart = get_cart_by_user_id(user_id)

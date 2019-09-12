@@ -9,7 +9,7 @@ class UserAddresses(db.Model):
     __tablename__ = "user_addresses"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer)
+    uid = db.Column(db.Integer)
     receiver_name = db.Column(db.String(1500))
     address = db.Column(db.String(250))
     is_default = db.Column(db.Boolean())
