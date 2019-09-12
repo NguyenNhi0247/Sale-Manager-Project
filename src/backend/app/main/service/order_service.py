@@ -22,12 +22,6 @@ log.setLevel(logging.DEBUG)
 def get_order_by_user_id(user_id):
     return Order.query.filter_by(user_id=user_id).first()
 
-def get_user_payment_by_user_id(user_id):
-    return UserPayments.query.filter_by(uid=user_id).first()
-
-def get_user_address_by_user_id(user_id):
-    return UserAddresses.query.filter_by(uid=user_id).first()
-
 # def get_or_insert_order_by_user_id(uid):
 #     now = datetime.now()
 #     order = get_order_by_user_id(uid)
