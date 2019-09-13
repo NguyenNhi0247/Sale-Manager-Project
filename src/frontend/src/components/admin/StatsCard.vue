@@ -2,7 +2,7 @@
   <v-hover v-slot:default="{ hover }">
     <v-card
       class="mx-auto text-center pb-5"
-      :elevation="hover ? 10 : 0"
+      :elevation="hover ? 3 : 0"
       outlined
       ripple
       @click="cardClicked"

@@ -139,7 +139,7 @@ export default {
           label: "Last month",
           backgroundColor: ['rgba(255, 99, 132, 0.3)'],
           borderDash: [5, 5],
-          data: [12, 22, 67, 34, 58, 22, 29]
+          data: [12, 22, 67, 34, 58, 22, 30]
         },
         {
           label: "This month",

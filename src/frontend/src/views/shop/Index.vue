@@ -128,15 +128,7 @@ export default {
         this.newBooks = resp.data;
       })
       .catch(err => {
-        console.log(err);
-        let em = err.message;
-        if (err.response) {
-          em = err.response.data.message;
-        }
-        eventBus.snackbarShown({
-          type: "error",
-          msg: `Cannot get book list. ${em}`
-        });
+        this.showError(err, "Cannot get book list.")
       });
 
     this.$http
@@ -146,15 +138,7 @@ export default {
         this.bestSellers = resp.data;
       })
       .catch(err => {
-        console.log(err);
-        let em = err.message;
-        if (err.response) {
-          em = err.response.data.message;
-        }
-        eventBus.snackbarShown({
-          type: "error",
-          msg: `Cannot get book list. ${em}`
-        });
+        this.showError(err, "Cannot get book list.")
       });
   }
 };
