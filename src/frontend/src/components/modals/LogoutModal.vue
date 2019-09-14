@@ -45,20 +45,8 @@ export default {
           this.dialog = false;
         })
         .catch(err => {
-          console.log(err);
-          if (err && err.response) {
-            eventBus.snackbarShown({
-              type: "error",
-              msg: "Logout failed: " + err.response.data.message
-            });
-            this.dialog = false;
-            return;
-          }
-          eventBus.snackbarShown({
-            type: "error",
-            msg: "Logout failed: " + err.message
-          });
-          this.dialog = false;
+          this.dialog = false
+          this.showError(err, "Logout failed.")
         });
     }
   },

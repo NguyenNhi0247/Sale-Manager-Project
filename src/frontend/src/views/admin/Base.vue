@@ -24,7 +24,7 @@
       >
         <template v-slot:activator="{ on }">
           <v-avatar v-on="on" class="mr-2" size="36" style="cursor: pointer">
-            <img src="https://avatars2.githubusercontent.com/u/18606262?s=180" alt="John">
+            <img src="https://avatars2.githubusercontent.com/u/18606262?s=180" alt="John" />
             <!-- <v-icon>mdi-account-circle</v-icon> -->
           </v-avatar>
         </template>
@@ -90,6 +90,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { eventBus } from "../../event";
 
 export default {
   props: {
@@ -106,10 +107,10 @@ export default {
       { id: 0, icon: "mdi-view-dashboard-outline", text: "Dashboard" },
       { id: 1, divider: true },
       { id: 2, heading: "Users" },
-      { id: 3, icon: "mdi-account-card-details-outline", text: "Manage users" },
+      { id: 3, icon: "mdi-account-card-details-outline", text: "Manage" },
       { id: 4, divider: true },
       { id: 5, heading: "Books" },
-      { id: 6, icon: "mdi-notebook-outline", text: "Manage books" },
+      { id: 6, icon: "mdi-notebook-outline", text: "Manage" },
       { id: 7, icon: "mdi-book-play-outline", text: "Archived" },
       { id: 8, icon: "mdi-delete-variant", text: "Deleted" },
       { id: 9, divider: true },
@@ -126,6 +127,22 @@ export default {
     }
   },
   methods: {
+    menuItemClicked(idx) {
+      console.log(idx);
+      switch (idx) {
+        case 0: // Profile
+          this.$router.push({
+            name: "user",
+            params: { username: this.authUser.username }
+          });
+          break;
+        case 1: // Settings
+          break;
+        case 2: // Logout
+          eventBus.logoutModalShown();
+          break;
+      }
+    },
     navItemClicked(id) {
       switch (id) {
         case 0: // Dashboard
@@ -150,6 +167,11 @@ export default {
           break;
       }
     }
+  },
+  created() {
+    eventBus.$on("logoutUser", () => {
+      this.$router.push({ path: "/" });
+    });
   }
 };
 </script>

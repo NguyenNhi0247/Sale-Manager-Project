@@ -99,15 +99,7 @@ export default {
         this.url = `/api/v1/files/${filePath}`
       })
       .catch(err => {
-        console.log(err);
-        let em = err.message;
-        if (err.response) {
-          em = err.response.data.message;
-        }
-        eventBus.snackbarShown({
-          type: "error",
-          msg: `Cannot get book details. ${em}`
-        });
+        this.showError(err, "Cannot get book details.")
       });
 
     // this.$root.$on("toc", toc => {

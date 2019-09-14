@@ -446,15 +446,7 @@ export default {
           this.user = resp.data;
         })
         .catch(err => {
-          console.log(err);
-          let em = err.message;
-          if (err.response) {
-            em = err.response.data.message;
-          }
-          eventBus.snackbarShown({
-            type: "error",
-            msg: `Cannot get user info. ${em}`
-          });
+          this.showError(err, "Cannot get user info.")
         });
     }
   },
