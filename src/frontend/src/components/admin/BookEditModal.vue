@@ -89,7 +89,6 @@ export default {
           this.showError(err, "Cannot update book.");
           this.close();
         });
-      alert("Book saved");
     }
   },
   created() {
