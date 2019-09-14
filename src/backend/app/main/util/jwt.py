@@ -53,3 +53,11 @@ def get_username_by_token(token):
         token = token[len("Bearer ") :]
     data = decode_auth_token(token)
     return data["username"]
+
+def get_user_role_by_token(token):
+    if token is None or token == "":
+        raise Unauthorized("Token must be provided in Authorization header")
+    if token.startswith("Bearer "):
+        token = token[len("Bearer ") :]
+    data = decode_auth_token(token)
+    return data["role"]

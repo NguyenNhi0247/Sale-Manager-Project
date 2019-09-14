@@ -24,7 +24,7 @@
       >
         <template v-slot:activator="{ on }">
           <v-avatar v-on="on" class="mr-2" size="36" style="cursor: pointer">
-            <img src="https://avatars2.githubusercontent.com/u/18606262?s=180" alt="John">
+            <img src="https://avatars2.githubusercontent.com/u/18606262?s=180" alt="John" />
             <!-- <v-icon>mdi-account-circle</v-icon> -->
           </v-avatar>
         </template>
@@ -90,6 +90,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { eventBus } from "../../event";
 
 export default {
   props: {
@@ -126,6 +127,22 @@ export default {
     }
   },
   methods: {
+    menuItemClicked(idx) {
+      console.log(idx);
+      switch (idx) {
+        case 0: // Profile
+          this.$router.push({
+            name: "user",
+            params: { username: this.authUser.username }
+          });
+          break;
+        case 1: // Settings
+          break;
+        case 2: // Logout
+          eventBus.logoutModalShown();
+          break;
+      }
+    },
     navItemClicked(id) {
       switch (id) {
         case 0: // Dashboard
@@ -150,6 +167,11 @@ export default {
           break;
       }
     }
+  },
+  created() {
+    eventBus.$on("logoutUser", () => {
+      this.$router.push({ path: "/" });
+    });
   }
 };
 </script>
