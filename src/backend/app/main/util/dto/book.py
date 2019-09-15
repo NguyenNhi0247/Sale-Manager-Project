@@ -27,7 +27,6 @@ class BookDto:
             "total_rating_point": fields.Integer(),
             "total_rated": fields.Integer(),
             "total_purchased": fields.Integer(),
-            "total_purchased": fields.Integer(),
             "publisher": fields.String(),
             "published_at": fields.DateTime(),
             "published_place": fields.String(),

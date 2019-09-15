@@ -5,6 +5,8 @@ from flask import abort, jsonify
 
 from app.main import db
 from app.main.model.user import User
+from app.main.model.user_addresses import UserAddresses
+from app.main.model.user_payments import UserPayments
 from ..util.password import PasswordCrypt
 from ..util.jwt import encode_auth_token
 from ..util.error import (
@@ -66,6 +68,10 @@ def get_user_by_username(username):
     return User.query.filter_by(username=username).first()
 
 
+def get_user_by_id(uid):
+    return User.query.filter_by(id=uid).first()
+
+
 def get_user_by_account(account):
     return (
         User.query.filter_by(is_deleted=False)
@@ -84,6 +90,54 @@ def generate_token(user):
     except Exception as e:
         log.error(e)
         return InternalServerError("Failed to generate JWT Wtoken")
+
+def get_user_address_by_user_id(user_id):
+    return UserAddresses.query.filter_by(uid=user_id).first()
+
+def get_user_payment_by_user_id(user_id):
+    return UserPayments.query.filter_by(uid=user_id).first()
+
+def edit_user_address(user_id, receiver_name, address, phone_number, zip_code):
+    now = datetime.now()
+    user_address = get_user_address_by_user_id(user_id)
+    if user_address:
+        user_address.receiver_name = receiver_name,
+        user_address.address = address,
+        user_address.zip_code = zip_code,
+        user_address.phone_number = phone_number,
+        db.session.commit()    
+    else:
+        new_user_address = UserAddresses(
+            uid = user_id,
+            receiver_name = receiver_name,
+            address = address,
+            is_default = False,
+            zip_code = zip_code,
+            phone_number = phone_number,
+            updated_at = now
+        )
+        save_changes(new_user_address)
+
+def edit_user_payment(user_id, type, card_number, card_holder, valid_date):
+    now = datetime.now()
+    user_payment = get_user_payment_by_user_id(user_id)
+    if user_payment:
+        user_payment.type = type,
+        user_payment.card_number = card_number,
+        user_payment.card_holder = card_holder,
+        user_payment.valid_date = valid_date,
+        db.session.commit()    
+    else:
+        new_user_payment = UserPayments(
+            uid = user_id,
+            type = type,
+            is_default = False,
+            card_number = card_number,
+            card_holder = card_holder,
+            valid_date = valid_date,
+            updated_at = now            
+        )
+        save_changes(new_user_payment)
 
 
 def save_changes(data):

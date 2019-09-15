@@ -34,6 +34,26 @@ class UserDto:
             "updated_at": fields.DateTime(),
             "is_deleted": fields.Boolean(),
             "deleted_at": fields.DateTime(),
-        },
+        }
     )
-    
+
+    user_address_request = api.model(
+        "user_address_request",
+        {
+            "receiver_name": fields.String(),
+            "address": fields.String(),
+            "phone_number": fields.String(),
+            "zip_code": fields.String()
+        }
+    )
+
+    user_payment_request = api.model(
+        "user_payment_request",
+        {
+            "type": fields.String(),
+            "card_number": fields.String(),
+            "card_holder": fields.String(),
+            "valid_date": fields.DateTime()
+        }
+    )
+
