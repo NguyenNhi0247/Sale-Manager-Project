@@ -43,24 +43,36 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          v-if="!isAlreadyInCart"
-          color="blue accent-4"
+          v-if="isPurchased"
+          color="green accent-4"
           light
           text
-          @click.native.prevent.stop="addBookToCart(book)"
+          @click.native.prevent.stop="readBook(book)"
           ripple
         >
-          <v-icon small>mdi-cart-plus</v-icon>&nbsp;Add to cart
+          <v-icon small>mdi-eye-check-outline</v-icon>&nbsp;Read it
         </v-btn>
-        <v-btn
-          v-else
-          color="orange accent-4"
-          light
-          text
-          @click.native.prevent.stop="removeBookFromCart(book)"
-        >
-          <v-icon small>mdi-cart-remove</v-icon>&nbsp;Remove From Cart
-        </v-btn>
+        <div v-else>
+          <v-btn
+            v-if="!isAlreadyInCart"
+            color="blue accent-4"
+            light
+            text
+            @click.native.prevent.stop="addBookToCart(book)"
+            ripple
+          >
+            <v-icon small>mdi-cart-plus</v-icon>&nbsp;Add to cart
+          </v-btn>
+          <v-btn
+            v-else
+            color="orange accent-4"
+            light
+            text
+            @click.native.prevent.stop="removeBookFromCart(book)"
+          >
+            <v-icon small>mdi-cart-remove</v-icon>&nbsp;Remove From Cart
+          </v-btn>
+        </div>
       </v-card-actions>
     </v-card>
   </v-hover>
@@ -68,12 +80,15 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import { eventBus } from "../event";
+import { eventBus } from "../../event";
 
 export default {
   name: "book-card",
   props: {
-    book: {}
+    book: {},
+    isPurchased: {
+      type: Boolean
+    }
   },
   data() {
     return {
@@ -101,6 +116,9 @@ export default {
     ...mapMutations(["addToCart", "removeFromCart"]),
     bookClicked(book) {
       this.$router.push({ path: `/product/${book.id}` });
+    },
+    readBook(book) {
+      this.$router.push({ path: `/read/${book.id}` });
     },
     addBookToCart(book) {
       if (!this.isAuth) {

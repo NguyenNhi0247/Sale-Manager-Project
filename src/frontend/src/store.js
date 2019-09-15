@@ -6,7 +6,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     cart: [],
-    authUser: null
+    authUser: null,
+    showHeader: true,
+    showFooter: true,
   },
   getters: {
     cart(state) {
@@ -31,6 +33,12 @@ export default new Vuex.Store({
     },
     authUser: (state) => {
       return state.authUser
+    },
+    showHeader: (state) => {
+      return state.showHeader
+    },
+    showFooter: (state) => {
+      return state.showFooter
     },
   },
   mutations: {
@@ -61,6 +69,12 @@ export default new Vuex.Store({
     },
     setAuthUser (state, user) {
       state.authUser = user
+    },
+    setShowHeader (state, v) {
+      state.showHeader = v
+    },
+    setShowFooter (state, v) {
+      state.showFooter = v
     },
   }
 })

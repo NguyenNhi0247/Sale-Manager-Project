@@ -13,9 +13,9 @@ from ..service.user_service import (
     get_user_address_by_user_id,
     edit_user_address,
     get_user_payment_by_user_id,
-    edit_user_payment
+    edit_user_payment,
 )
-from ..util.error import raiseIfExcept
+from ..util.error import raiseIfExcept, Forbidden
 
 
 api = UserDto.api
@@ -56,13 +56,15 @@ class User(Resource):
     @api.marshal_with(UserDto.list_user_response)
     def get(self, username):
         """Get user details by its username"""
-        try:
-            user = get_user_by_username(username)
-            if user is None:
-                return "", 404
-            return user
-        except Exception as e:
-            log.exception("failed to get user")
+        token = request.headers.get("Authorization")
+        tu = get_username_by_token(token)
+        if tu != username:
+            raise Forbidden("Not allow to read other user info")
+
+        user = get_user_by_username(username)
+        if user is None:
+            return "", 404
+        return user
 
 
 @api.route("/whoami")
@@ -77,15 +79,8 @@ class Whoami(Resource):
     def get(self):
         """Decode JWT authentication token and retrieve user info"""
         token = request.headers.get("Authorization")
-        if token is None or token == "":
-            raise Unauthorized("Token must be provided in Authorization header")
-        if token.startswith("Bearer "):
-            token = token[len("Bearer ") :]
-
-        ret = decode_auth_token(token)
-        raiseIfExcept(ret)
-        log.error(ret)
-        ret = get_user_by_username(ret["username"])
+        username = get_username_by_token(token)
+        ret = get_user_by_username(username)
         raiseIfExcept(ret)
         return ret
 

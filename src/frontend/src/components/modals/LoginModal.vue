@@ -234,7 +234,7 @@ export default {
           this.whoami(); // Load user detail and store to cookie
         })
         .catch(err => {
-          console.log("ERR", err.response)
+          console.log("ERR", err.response);
           this.isLoginLoading = false;
           let em = err.message;
           if (err && err.response) {
@@ -272,15 +272,7 @@ export default {
         })
         .catch(err => {
           this.isRegLoading = false;
-          console.log(err);
-          let em = err.message;
-          if (err.response) {
-            em = err.response.data.message;
-          }
-          eventBus.snackbarShown({
-            type: "error",
-            msg: `Register failed. ${em}`
-          });
+          this.showError(err, "Register failed.");
         });
     },
     whoami() {
@@ -295,27 +287,19 @@ export default {
             username: resp.data.username,
             role: resp.data.role,
             display_name: resp.data.display_name
-          }
-          this.setAuthUser(user)
+          };
+          this.setAuthUser(user);
           this.setCookie("beanies_user", window.btoa(JSON.stringify(user)));
 
           eventBus.snackbarShown({
             type: "success",
             msg: `Welcome back, ${user.display_name}!`
-          }); 
+          });
           eventBus.userLoggedIn(); // Notify other components to update if necessary
           this.dialog = false;
         })
         .catch(err => {
-          console.log(err);
-          let em = err.message;
-          if (err.response) {
-            em = err.response.data.message;
-          }
-          eventBus.snackbarShown({
-            type: "error",
-            msg: `Cannot load user information. ${em}`
-          });
+          this.showError(err, "Cannot load user information.");
         });
     },
     clearForms() {

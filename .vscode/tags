@@ -1,0 +1,204 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BadRequest	../src/backend/app/main/util/error.py	/^class BadRequest(BaseError):$/;"	kind:class	line:21
+BaseError	../src/backend/app/main/util/error.py	/^class BaseError(Exception):$/;"	kind:class	line:4
+BaseTestCase	../src/backend/app/test/base.py	/^class BaseTestCase(TestCase):$/;"	kind:class	line:8
+Book	../src/backend/app/main/controller/book_controller.py	/^class Book(Resource):$/;"	kind:class	line:53
+Book	../src/backend/app/main/model/book.py	/^class Book(db.Model):$/;"	kind:class	line:6
+BookDto	../src/backend/app/main/util/dto/book.py	/^class BookDto:$/;"	kind:class	line:6
+BookList	../src/backend/app/main/controller/book_controller.py	/^class BookList(Resource):$/;"	kind:class	line:21
+Config	../src/backend/app/main/config.py	/^class Config:$/;"	kind:class	line:14
+DEBUG	../src/backend/app/main/config.py	/^    DEBUG = False$/;"	kind:variable	line:16
+DEBUG	../src/backend/app/main/config.py	/^    DEBUG = False$/;"	kind:variable	line:35
+DEBUG	../src/backend/app/main/config.py	/^    DEBUG = True$/;"	kind:variable	line:23
+DEBUG	../src/backend/app/main/config.py	/^    DEBUG = True$/;"	kind:variable	line:28
+DevelopmentConfig	../src/backend/app/main/config.py	/^class DevelopmentConfig(Config):$/;"	kind:class	line:22
+Forbidden	../src/backend/app/main/util/error.py	/^class Forbidden(BaseError):$/;"	kind:class	line:36
+InternalServerError	../src/backend/app/main/util/error.py	/^class InternalServerError(BaseError):$/;"	kind:class	line:60
+JsonEncodedDict	../src/backend/app/main/util/response.py	/^class JsonEncodedDict(TypeDecorator):$/;"	kind:class	line:6
+PRESERVE_CONTEXT_ON_EXCEPTION	../src/backend/app/main/config.py	/^    PRESERVE_CONTEXT_ON_EXCEPTION = False$/;"	kind:variable	line:30
+PasswordCrypt	../src/backend/app/main/util/password.py	/^class PasswordCrypt():$/;"	kind:class	line:3
+ProductionConfig	../src/backend/app/main/config.py	/^class ProductionConfig(Config):$/;"	kind:class	line:34
+PublicDto	../src/backend/app/main/util/dto/public.py	/^class PublicDto:$/;"	kind:class	line:4
+SECRET_KEY	../src/backend/app/main/config.py	/^    SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious_secret_key')$/;"	kind:variable	line:15
+SQLALCHEMY_DATABASE_URI	../src/backend/app/main/config.py	/^    SQLALCHEMY_DATABASE_URI = "postgres:\/\/{}:{}@{}:{}\/{}".format($/;"	kind:variable	line:17
+SQLALCHEMY_TRACK_MODIFICATIONS	../src/backend/app/main/config.py	/^    SQLALCHEMY_TRACK_MODIFICATIONS = False$/;"	kind:variable	line:24
+SQLALCHEMY_TRACK_MODIFICATIONS	../src/backend/app/main/config.py	/^    SQLALCHEMY_TRACK_MODIFICATIONS = False$/;"	kind:variable	line:31
+TESTING	../src/backend/app/main/config.py	/^    TESTING = True$/;"	kind:variable	line:29
+TestDevelopmentConfig	../src/backend/app/test/test_config.py	/^class TestDevelopmentConfig(TestCase):$/;"	kind:class	line:11
+TestProductionConfig	../src/backend/app/test/test_config.py	/^class TestProductionConfig(TestCase):$/;"	kind:class	line:38
+TestTestingConfig	../src/backend/app/test/test_config.py	/^class TestTestingConfig(TestCase):$/;"	kind:class	line:25
+TestUserModel	../src/backend/app/test/test_user_model.py	/^class TestUserModel(BaseTestCase):$/;"	kind:class	line:10
+TestingConfig	../src/backend/app/main/config.py	/^class TestingConfig(Config):$/;"	kind:class	line:27
+Unauthorized	../src/backend/app/main/util/error.py	/^class Unauthorized(BaseError):$/;"	kind:class	line:29
+User	../src/backend/app/main/controller/user_controller.py	/^class User(Resource):$/;"	kind:class	line:41
+User	../src/backend/app/main/model/user.py	/^class User(db.Model):$/;"	kind:class	line:15
+UserDto	../src/backend/app/main/util/dto/user.py	/^class UserDto:$/;"	kind:class	line:4
+UserList	../src/backend/app/main/controller/user_controller.py	/^class UserList(Resource):$/;"	kind:class	line:21
+UserLogin	../src/backend/app/main/controller/public_controller.py	/^class UserLogin(Resource):$/;"	kind:class	line:40
+UserLogout	../src/backend/app/main/controller/public_controller.py	/^class UserLogout(Resource):$/;"	kind:class	line:60
+UserRegister	../src/backend/app/main/controller/public_controller.py	/^class UserRegister(Resource):$/;"	kind:class	line:19
+Whoami	../src/backend/app/main/controller/user_controller.py	/^class Whoami(Resource):$/;"	kind:class	line:64
+__init__	../src/backend/app/main/util/error.py	/^    def __init__(self, message="", code=400, payload=None):$/;"	kind:member	line:7
+__init__	../src/backend/app/main/util/error.py	/^    def __init__(self, message="Bad request", payload=None):$/;"	kind:member	line:22
+__init__	../src/backend/app/main/util/error.py	/^    def __init__(self, message="Forbidden", payload=None):$/;"	kind:member	line:37
+__init__	../src/backend/app/main/util/error.py	/^    def __init__(self, message="Internal server error", payload=None):$/;"	kind:member	line:61
+__init__	../src/backend/app/main/util/error.py	/^    def __init__(self, message="Unauthorized", payload=None):$/;"	kind:member	line:30
+__init__.py	../src/backend/app/__init__.py	1;"	kind:file	line:1
+__init__.py	../src/backend/app/main/__init__.py	1;"	kind:file	line:1
+__init__.py	../src/backend/app/test/__init__.py	1;"	kind:file	line:1
+__repr__	../src/backend/app/main/model/book.py	/^    def __repr__(self):$/;"	kind:member	line:33
+__repr__	../src/backend/app/main/model/user.py	/^    def __repr__(self):$/;"	kind:member	line:33
+__tablename__	../src/backend/app/main/model/book.py	/^    __tablename__ = "books"$/;"	kind:variable	line:9
+__tablename__	../src/backend/app/main/model/user.py	/^    __tablename__ = "users"$/;"	kind:variable	line:18
+_book	../src/backend/app/main/controller/book_controller.py	/^_book = BookDto.book$/;"	kind:variable	line:12
+api	../src/backend/app/__init__.py	/^api = Api($/;"	kind:variable	line:19
+api	../src/backend/app/main/controller/book_controller.py	/^api = BookDto.api$/;"	kind:variable	line:11
+api	../src/backend/app/main/controller/public_controller.py	/^api = PublicDto.api$/;"	kind:variable	line:12
+api	../src/backend/app/main/controller/user_controller.py	/^api = UserDto.api$/;"	kind:variable	line:14
+api	../src/backend/app/main/util/dto/book.py	/^    api = Namespace("books", description="Book related operations")$/;"	kind:variable	line:7
+api	../src/backend/app/main/util/dto/public.py	/^    api = Namespace("public", description="Public APIs")$/;"	kind:variable	line:5
+api	../src/backend/app/main/util/dto/user.py	/^    api = Namespace("users", description="User related operations")$/;"	kind:variable	line:5
+app	../src/backend/app/main/__init__.py	/^app = Flask(__name__)$/;"	kind:variable	line:18
+app	../src/backend/main.py	/^app = create_app(os.getenv("BEANIES_ENV") or "dev")$/;"	kind:variable	line:16
+authorizations	../src/backend/app/__init__.py	/^    authorizations=authorizations$/;"	kind:variable	line:25
+authorizations	../src/backend/app/__init__.py	/^authorizations = {$/;"	kind:variable	line:11
+authors	../src/backend/app/main/model/book.py	/^    authors = db.Column(postgresql.ARRAY(postgresql.CHAR))$/;"	kind:variable	line:26
+avatar	../src/backend/app/main/model/user.py	/^    avatar = db.Column(db.String(1000))$/;"	kind:variable	line:24
+base.py	../src/backend/app/test/base.py	1;"	kind:file	line:1
+basedir	../src/backend/app/main/config.py	/^basedir = os.path.abspath(os.path.dirname(__file__))$/;"	kind:variable	line:6
+blueprint	../src/backend/app/__init__.py	/^blueprint = Blueprint("v1", __name__)$/;"	kind:variable	line:9
+book	../src/backend/app/main/util/dto/book.py	/^    book = api.model($/;"	kind:variable	line:17
+book.py	../src/backend/app/main/model/book.py	1;"	kind:file	line:1
+book.py	../src/backend/app/main/util/dto/book.py	1;"	kind:file	line:1
+book_controller.py	../src/backend/app/main/controller/book_controller.py	1;"	kind:file	line:1
+book_service.py	../src/backend/app/main/service/book_service.py	1;"	kind:file	line:1
+categories	../src/backend/app/main/model/book.py	/^    categories = db.Column(postgresql.ARRAY(postgresql.CHAR))$/;"	kind:variable	line:27
+check	../src/backend/app/main/util/password.py	/^    def check(hash, password):$/;"	kind:member	line:7
+clear_trailing	../src/backend/app/main/__init__.py	/^def clear_trailing():$/;"	kind:function	line:46
+config.py	../src/backend/app/main/config.py	1;"	kind:file	line:1
+config_by_name	../src/backend/app/main/config.py	/^config_by_name = dict(dev=DevelopmentConfig, test=TestingConfig, prod=ProductionConfig)$/;"	kind:variable	line:38
+create_app	../src/backend/app/main/__init__.py	/^def create_app(config_name):$/;"	kind:function	line:33
+create_app	../src/backend/app/test/base.py	/^    def create_app(self):$/;"	kind:member	line:11
+create_app	../src/backend/app/test/test_config.py	/^    def create_app(self):$/;"	kind:member	line:12
+create_app	../src/backend/app/test/test_config.py	/^    def create_app(self):$/;"	kind:member	line:26
+create_app	../src/backend/app/test/test_config.py	/^    def create_app(self):$/;"	kind:member	line:39
+created_at	../src/backend/app/main/model/book.py	/^    created_at = db.Column(db.DateTime())$/;"	kind:variable	line:28
+created_at	../src/backend/app/main/model/user.py	/^    created_at = db.Column(db.DateTime())$/;"	kind:variable	line:28
+date_of_birth	../src/backend/app/main/model/user.py	/^    date_of_birth = db.Column(db.DateTime())$/;"	kind:variable	line:27
+db	../src/backend/app/main/__init__.py	/^db = SQLAlchemy()$/;"	kind:variable	line:15
+decode_auth_token	../src/backend/app/main/util/jwt.py	/^def decode_auth_token(auth_token):$/;"	kind:function	line:23
+default_error_handler	../src/backend/app/main/__init__.py	/^def default_error_handler(error):$/;"	kind:function	line:27
+deleted_at	../src/backend/app/main/model/book.py	/^    deleted_at = db.Column(db.DateTime())$/;"	kind:variable	line:31
+deleted_at	../src/backend/app/main/model/user.py	/^    deleted_at = db.Column(db.DateTime())$/;"	kind:variable	line:31
+description	../src/backend/app/__init__.py	/^    description="an online E-book shopping site",$/;"	kind:variable	line:22
+description	../src/backend/app/main/model/book.py	/^    description = db.Column(db.String(10000))$/;"	kind:variable	line:15
+display_name	../src/backend/app/main/model/user.py	/^    display_name = db.Column(db.String(500))$/;"	kind:variable	line:26
+doc	../src/backend/app/__init__.py	/^    doc="\/api\/v1\/apidoc",$/;"	kind:variable	line:24
+ebook_format_field	../src/backend/app/main/util/dto/book.py	/^    ebook_format_field = api.model($/;"	kind:variable	line:8
+ebook_formats	../src/backend/app/main/model/book.py	/^    ebook_formats = db.Column(db.JSON())$/;"	kind:variable	line:25
+email	../src/backend/app/main/model/user.py	/^    email = db.Column(db.String(500), unique=True, nullable=False)$/;"	kind:variable	line:22
+encode_auth_token	../src/backend/app/main/util/jwt.py	/^def encode_auth_token(data):$/;"	kind:function	line:7
+error.py	../src/backend/app/main/util/error.py	1;"	kind:file	line:1
+flask_bcrypt	../src/backend/app/main/__init__.py	/^flask_bcrypt = Bcrypt()$/;"	kind:variable	line:16
+generate_token	../src/backend/app/main/service/user_service.py	/^def generate_token(user):$/;"	kind:function	line:77
+get	../src/backend/app/main/controller/book_controller.py	/^    def get(self):$/;"	kind:member	line:26
+get	../src/backend/app/main/controller/book_controller.py	/^    def get(self, bid):$/;"	kind:member	line:56
+get	../src/backend/app/main/controller/user_controller.py	/^    def get(self):$/;"	kind:member	line:29
+get	../src/backend/app/main/controller/user_controller.py	/^    def get(self):$/;"	kind:member	line:72
+get	../src/backend/app/main/controller/user_controller.py	/^    def get(self, username):$/;"	kind:member	line:50
+get_book_by_id	../src/backend/app/main/service/book_service.py	/^def get_book_by_id(bid):$/;"	kind:function	line:4
+get_user_by_account	../src/backend/app/main/service/user_service.py	/^def get_user_by_account(account):$/;"	kind:function	line:69
+get_user_by_username	../src/backend/app/main/service/user_service.py	/^def get_user_by_username(username):$/;"	kind:function	line:65
+get_user_detail_response	../src/backend/app/main/util/dto/user.py	/^    get_user_detail_response = api.model($/;"	kind:variable	line:23
+get_user_id_by_token	../src/backend/app/main/util/jwt.py	/^def get_user_id_by_token(token):$/;"	kind:function	line:41
+get_username_by_token	../src/backend/app/main/util/jwt.py	/^def get_username_by_token(token):$/;"	kind:function	line:49
+handle_error	../src/backend/app/main/__init__.py	/^def handle_error(error):$/;"	kind:function	line:22
+hash	../src/backend/app/main/util/password.py	/^    def hash(passwd):$/;"	kind:member	line:4
+id	../src/backend/app/main/model/book.py	/^    id = db.Column(db.Integer, autoincrement=True, primary_key=True)$/;"	kind:variable	line:11
+id	../src/backend/app/main/model/user.py	/^    id = db.Column(db.Integer, primary_key=True, autoincrement=True)$/;"	kind:variable	line:20
+is_deleted	../src/backend/app/main/model/book.py	/^    is_deleted = db.Column(db.Boolean())$/;"	kind:variable	line:30
+is_deleted	../src/backend/app/main/model/user.py	/^    is_deleted = db.Column(db.Boolean())$/;"	kind:variable	line:30
+jwt.py	../src/backend/app/main/util/jwt.py	1;"	kind:file	line:1
+key	../src/backend/app/main/config.py	/^key = Config.SECRET_KEY$/;"	kind:variable	line:40
+list_books	../src/backend/app/main/service/book_service.py	/^def list_books(limit=10, offset=0):$/;"	kind:function	line:8
+list_user_response	../src/backend/app/main/util/dto/user.py	/^    list_user_response = api.model($/;"	kind:variable	line:6
+list_users_by_status	../src/backend/app/main/service/user_service.py	/^def list_users_by_status(status="active"):$/;"	kind:function	line:56
+log	../src/backend/app/main/controller/book_controller.py	/^log = logging.getLogger("book.controller")$/;"	kind:variable	line:14
+log	../src/backend/app/main/controller/public_controller.py	/^log = logging.getLogger("public.controller")$/;"	kind:variable	line:14
+log	../src/backend/app/main/controller/user_controller.py	/^log = logging.getLogger("user.controller")$/;"	kind:variable	line:16
+log	../src/backend/app/main/model/user.py	/^log = logging.getLogger("user.model")$/;"	kind:variable	line:5
+log	../src/backend/app/main/service/user_service.py	/^log = logging.getLogger("user.service")$/;"	kind:variable	line:18
+login_request	../src/backend/app/main/util/dto/public.py	/^    login_request = api.model($/;"	kind:variable	line:16
+login_user	../src/backend/app/main/service/user_service.py	/^def login_user(data):$/;"	kind:function	line:47
+long_description	../src/backend/app/main/model/book.py	/^    long_description = db.Column(db.String(50000))$/;"	kind:variable	line:16
+main.py	../src/backend/main.py	1;"	kind:file	line:1
+manager	../src/backend/main.py	/^manager = Manager(app)$/;"	kind:variable	line:22
+migrate	../src/backend/main.py	/^migrate = Migrate(app, db)$/;"	kind:variable	line:25
+pagination	../src/backend/app/main/model/book.py	/^    pagination = db.Column(db.String(100))$/;"	kind:variable	line:24
+params	../src/backend/app/main/controller/user_controller.py	/^        params={"uid": "Username"},$/;"	kind:variable	line:46
+password	../src/backend/app/main/model/user.py	/^    password = db.Column(db.String(100), nullable=False)$/;"	kind:variable	line:23
+password.py	../src/backend/app/main/util/password.py	1;"	kind:file	line:1
+pgDatabase	../src/backend/app/main/config.py	/^pgDatabase = os.getenv("POSTGRES_DATABASE", "beanies")$/;"	kind:variable	line:11
+pgHost	../src/backend/app/main/config.py	/^pgHost = os.getenv("POSTGRES_HOST", "postgres")$/;"	kind:variable	line:7
+pgPassword	../src/backend/app/main/config.py	/^pgPassword = os.getenv("POSTGRES_PASSWORD", "")$/;"	kind:variable	line:10
+pgPort	../src/backend/app/main/config.py	/^pgPort = os.getenv("POSTGRES_PORT", "5432")$/;"	kind:variable	line:8
+pgUsername	../src/backend/app/main/config.py	/^pgUsername = os.getenv("POSTGRES_USERNAME", "postgres")$/;"	kind:variable	line:9
+post	../src/backend/app/main/controller/public_controller.py	/^    def post(self):$/;"	kind:member	line:31
+post	../src/backend/app/main/controller/public_controller.py	/^    def post(self):$/;"	kind:member	line:51
+post	../src/backend/app/main/controller/public_controller.py	/^    def post(self):$/;"	kind:member	line:67
+price	../src/backend/app/main/model/book.py	/^    price = db.Column(db.Numeric(), nullable=False)$/;"	kind:variable	line:17
+process_bind_param	../src/backend/app/main/util/response.py	/^    def process_bind_param(self, value, dialect):$/;"	kind:member	line:9
+process_result_value	../src/backend/app/main/util/response.py	/^    def process_result_value(self, value, dialect):$/;"	kind:member	line:15
+public.py	../src/backend/app/main/util/dto/public.py	1;"	kind:file	line:1
+public_controller.py	../src/backend/app/main/controller/public_controller.py	1;"	kind:file	line:1
+published_at	../src/backend/app/main/model/book.py	/^    published_at = db.Column(db.DateTime())$/;"	kind:variable	line:22
+published_place	../src/backend/app/main/model/book.py	/^    published_place = db.Column(db.String(500))$/;"	kind:variable	line:23
+publisher	../src/backend/app/main/model/book.py	/^    publisher = db.Column(db.String(500))$/;"	kind:variable	line:21
+raiseIfExcept	../src/backend/app/main/util/error.py	/^def raiseIfExcept(e):$/;"	kind:function	line:68
+register_request	../src/backend/app/main/util/dto/public.py	/^    register_request = api.model($/;"	kind:variable	line:7
+register_user	../src/backend/app/main/service/user_service.py	/^def register_user(data):$/;"	kind:function	line:22
+response.py	../src/backend/app/main/util/response.py	1;"	kind:file	line:1
+responses	../src/backend/app/main/controller/public_controller.py	/^        responses={$/;"	kind:variable	line:23
+responses	../src/backend/app/main/controller/public_controller.py	/^        responses={$/;"	kind:variable	line:44
+responses	../src/backend/app/main/controller/public_controller.py	/^        responses={200: "Success", 500: "Internal Server Error"},$/;"	kind:variable	line:64
+responses	../src/backend/app/main/controller/user_controller.py	/^        responses={200: "Success", 400: "Invalid token", 500: "Internal Server Error"},$/;"	kind:variable	line:68
+responses	../src/backend/app/main/controller/user_controller.py	/^        responses={200: "Success", 404: "User not found", 500: "Internal Server Error"},$/;"	kind:variable	line:45
+responses	../src/backend/app/main/controller/user_controller.py	/^        responses={200: "Success", 500: "Internal Server Error"},$/;"	kind:variable	line:25
+role	../src/backend/app/main/model/user.py	/^    role = db.Column(db.Integer(), nullable=False)$/;"	kind:variable	line:25
+run	../src/backend/main.py	/^def run():$/;"	kind:function	line:30
+save_changes	../src/backend/app/main/service/user_service.py	/^def save_changes(data):$/;"	kind:function	line:89
+security	../src/backend/app/main/controller/public_controller.py	/^        security="apikey",$/;"	kind:variable	line:65
+security	../src/backend/app/main/controller/user_controller.py	/^        security="apikey",$/;"	kind:variable	line:26
+security	../src/backend/app/main/controller/user_controller.py	/^        security="apikey",$/;"	kind:variable	line:47
+security	../src/backend/app/main/controller/user_controller.py	/^        security="apikey",$/;"	kind:variable	line:69
+setUp	../src/backend/app/test/base.py	/^    def setUp(self):$/;"	kind:member	line:15
+sub_title	../src/backend/app/main/model/book.py	/^    sub_title = db.Column(db.String(2000))$/;"	kind:variable	line:13
+tearDown	../src/backend/app/test/base.py	/^    def tearDown(self):$/;"	kind:member	line:19
+test	../src/backend/main.py	/^def test():$/;"	kind:function	line:37
+test_app_is_development	../src/backend/app/test/test_config.py	/^    def test_app_is_development(self):$/;"	kind:member	line:16
+test_app_is_production	../src/backend/app/test/test_config.py	/^    def test_app_is_production(self):$/;"	kind:member	line:43
+test_app_is_testing	../src/backend/app/test/test_config.py	/^    def test_app_is_testing(self):$/;"	kind:member	line:30
+test_config.py	../src/backend/app/test/test_config.py	1;"	kind:file	line:1
+test_decode_auth_token	../src/backend/app/test/test_user_model.py	/^    def test_decode_auth_token(self):$/;"	kind:member	line:23
+test_encode_auth_token	../src/backend/app/test/test_user_model.py	/^    def test_encode_auth_token(self):$/;"	kind:member	line:12
+test_user_model.py	../src/backend/app/test/test_user_model.py	1;"	kind:file	line:1
+thumbnails	../src/backend/app/main/model/book.py	/^    thumbnails = db.Column(postgresql.ARRAY(postgresql.CHAR))$/;"	kind:variable	line:14
+title	../src/backend/app/__init__.py	/^    title="BOOKSTORE PROJECT",$/;"	kind:variable	line:21
+title	../src/backend/app/main/model/book.py	/^    title = db.Column(db.String(500), nullable=False)$/;"	kind:variable	line:12
+to_dict	../src/backend/app/main/util/error.py	/^    def to_dict(self):$/;"	kind:member	line:13
+total_purchased	../src/backend/app/main/model/book.py	/^    total_purchased = db.Column(db.Numeric())$/;"	kind:variable	line:20
+total_rated	../src/backend/app/main/model/book.py	/^    total_rated = db.Column(db.Numeric())$/;"	kind:variable	line:19
+total_rating_point	../src/backend/app/main/model/book.py	/^    total_rating_point = db.Column(db.Numeric())$/;"	kind:variable	line:18
+updated_at	../src/backend/app/main/model/book.py	/^    updated_at = db.Column(db.DateTime())$/;"	kind:variable	line:29
+updated_at	../src/backend/app/main/model/user.py	/^    updated_at = db.Column(db.DateTime())$/;"	kind:variable	line:29
+user.py	../src/backend/app/main/model/user.py	1;"	kind:file	line:1
+user.py	../src/backend/app/main/util/dto/user.py	1;"	kind:file	line:1
+user_controller.py	../src/backend/app/main/controller/user_controller.py	1;"	kind:file	line:1
+user_service.py	../src/backend/app/main/service/user_service.py	1;"	kind:file	line:1
+username	../src/backend/app/main/model/user.py	/^    username = db.Column(db.String(50), unique=True, nullable=False)$/;"	kind:variable	line:21
+version	../src/backend/app/__init__.py	/^    version="1.0",$/;"	kind:variable	line:23

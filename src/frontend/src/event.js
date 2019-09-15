@@ -20,6 +20,12 @@ export const eventBus = new Vue({
         userLoggedOut() {
             this.$emit('logoutUser')
         },
+        bookEditModalShown(data) {
+            this.$emit('showBookEditModal', data)
+        },
+        bookUpdated(id) {
+            this.$emit('updateBook', id)
+        },
     }
 })
  

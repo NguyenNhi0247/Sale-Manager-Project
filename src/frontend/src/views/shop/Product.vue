@@ -63,7 +63,7 @@
               </v-btn>
             </v-flex>
             <v-flex class="ma-0 pa-0 ml-n3">
-              <v-btn class="mt-1" depressed large dark outlined color="blue accent-4">
+              <v-btn class="mt-1" depressed large dark outlined color="blue accent-4" @click="previewBook">
                 <v-icon left>mdi-eye-check-outline</v-icon>Preview
               </v-btn>
             </v-flex>
@@ -184,21 +184,16 @@ export default {
         this.book = resp.data;
       })
       .catch(err => {
-        console.log(err);
-        let em = err.message;
-        if (err.response) {
-          em = err.response.data.message;
-        }
-        eventBus.snackbarShown({
-          type: "error",
-          msg: `Cannot get book details. ${em}`
-        });
+        this.showError(err, "Cannot get book details.")
       });
   },
   methods: {
     addToCart(book) {
       alert(book.title + " added to cart...");
       // TODO
+    },
+    previewBook() {
+      this.$router.push({ path: `/read/${this.book.id}` });
     },
     increment() {
       if (this.quantity == 100) {
@@ -231,6 +226,7 @@ export default {
     toEbookFormatsList(v) {
       let s = "";
       for (let f of v) {
+        // s += f.type + " (" + f.file_path + "), ";
         s += f.type + ", ";
       }
       return s.replace(/, $/, "");

@@ -1,7 +1,7 @@
 <template>
   <v-app-bar fixed elevation="2" color="deep-purple accent-4 white--text" dark>
     <v-img
-      src="../assets/logo.svg"
+      src="../../assets/logo.svg"
       aspect-ratio="1/1"
       height="35"
       max-width="35"
@@ -90,7 +90,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { eventBus } from "../event";
+import { eventBus } from "../../event";
 
 export default {
   name: "my-header",
@@ -123,6 +123,7 @@ export default {
       console.log(idx);
       switch (idx) {
         case 0: // Profile
+          this.$router.push({ name: "user", params: { username: this.authUser.username } })
           break;
         case 1: // Settings
           break
