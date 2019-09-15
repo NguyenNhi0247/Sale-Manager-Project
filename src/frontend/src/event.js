@@ -5,6 +5,9 @@ export const eventBus = new Vue({
         bookAddedToCart(book) {
             this.$emit('addBookToCart', book)
         },
+        bookRemovedFromCart(book) {
+            this.$emit('removeBookFromCart', book)
+        },
         snackbarShown(data) {
             this.$emit('showSnackbar', data)
         },
@@ -28,4 +31,4 @@ export const eventBus = new Vue({
         },
     }
 })
- 
+

@@ -6,7 +6,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
-from ..util.jwt import decode_auth_token, get_user_id_by_token
+from ..util.jwt import get_user_id_by_token, get_username_by_token
 from ..service.user_service import (
     list_users_by_status,
     get_user_by_username,

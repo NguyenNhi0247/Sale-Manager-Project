@@ -5,7 +5,7 @@ from flask_restplus import Namespace, fields
 
 class BookCartDto:
     api = Namespace("bookcarts", description="BookCart related operations")
-    
+
     book_cart = api.model(
         "book_cart",
         {
@@ -13,8 +13,8 @@ class BookCartDto:
             "book_id": fields.Integer(),
             "cart_id": fields.Integer(),
             "price": fields.Float(),
-            "quality": fields.Integer(),
-            "updated_at": fields.DateTime()
+            "quantity": fields.Integer(),
+            "updated_at": fields.DateTime(),
         },
     )
 
@@ -22,7 +22,7 @@ class BookCartDto:
         "list_book_response",
         {
             "id": fields.Integer(description="book identifier"),
-            "title": fields.String(required=True, description="user username"),
+            "title": fields.String(required=True),
             "thumbnails": fields.List(fields.String),
             "price": fields.Float(),
         },

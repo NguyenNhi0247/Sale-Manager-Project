@@ -17,7 +17,7 @@ export default new Vuex.Store({
     cartItemIDs(state) {
       let ids = []
       for (const item of state.cart) {
-        ids.push(item.id)
+        ids.push(item.book_id)
       }
       return ids
     },
@@ -51,8 +51,8 @@ export default new Vuex.Store({
       }
 
       for (let i = 0; i < state.cart.length; i++) {
-        if (newItem.id === state.cart[i].id) {
-          Vue.set(state.cart[i], "quantity", state.cart[i].quantity+1) // Trigger Vuex reactive
+        if (newItem.book_id === state.cart[i].book_id) {
+          Vue.set(state.cart[i], "quantity", state.cart[i].quantity + 1) // Trigger Vuex reactive
           return
         }
       }
@@ -61,19 +61,22 @@ export default new Vuex.Store({
     },
     removeFromCart(state, removedItem) {
       for (let i = 0; i < state.cart.length; i++) {
-        if (state.cart[i].id === removedItem.id) {
+        if (state.cart[i].book_id === removedItem.book_id) {
           Vue.delete(state.cart, i)
           return
         }
       }
     },
-    setAuthUser (state, user) {
+    cleanUpCart(state) {
+      state.cart = []
+    },
+    setAuthUser(state, user) {
       state.authUser = user
     },
-    setShowHeader (state, v) {
+    setShowHeader(state, v) {
       state.showHeader = v
     },
-    setShowFooter (state, v) {
+    setShowFooter(state, v) {
       state.showFooter = v
     },
   }

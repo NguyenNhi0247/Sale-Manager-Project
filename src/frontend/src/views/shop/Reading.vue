@@ -3,7 +3,6 @@
     <v-layout>
       <v-flex xs12>
         <div id="epub-reader">
-
           <EpubReader
             bookArea="epub-reader"
             :bookInfo="book"
@@ -36,7 +35,6 @@
 
 <script>
 import { axiosConfig } from "../../utils";
-import { eventBus } from "../../event";
 import { mapGetters } from "vuex";
 
 import EpubReader from "../../components/shop/EpubReader";
@@ -86,20 +84,20 @@ export default {
         console.log(resp.data);
         this.book = resp.data;
 
-        let filePath = ""
+        let filePath = "";
         for (let i = 0; i < this.book.ebook_formats.length; i++) {
-          let format = this.book.ebook_formats[i]
+          let format = this.book.ebook_formats[i];
           if (format.type === "epub") {
-            filePath = format.file_path.replace("_data/", "")
+            filePath = format.file_path.replace("_data/", "");
           }
         }
         if (!filePath) {
-          return
+          return;
         }
-        this.url = `/api/v1/files/${filePath}`
+        this.url = `/api/v1/files/${filePath}`;
       })
       .catch(err => {
-        this.showError(err, "Cannot get book details.")
+        this.showError(err, "Cannot get book details.");
       });
 
     // this.$root.$on("toc", toc => {
