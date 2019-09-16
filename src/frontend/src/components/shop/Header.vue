@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { eventBus } from "../../event";
 
 export default {
@@ -107,7 +107,32 @@ export default {
       return this.authUser && this.authUser.id && true;
     }
   },
+  watch: {
+    authUser(val) {
+      if (val && val.id && true) {
+        this.listCartItems();
+      }
+    }
+  },
   methods: {
+    ...mapMutations(["addToCart", "cleanUpCart"]),
+    listCartItems() {
+      // Load all books added to cart and put it to global vuex store
+      this.$http
+        .get("/api/v1/carts/list", this.getAuthHeader())
+        .then(resp => {
+          console.log("LIST ITEMS IN CART", resp.data);
+
+          this.cleanUpCart();
+          for (let i = 0; i < resp.data.length; i++) {
+            this.addToCart(resp.data[i]);
+            eventBus.bookAddedToCart(resp.data[i]);
+          }
+        })
+        .catch(err => {
+          this.showError(err, "Cannot list books in cart");
+        });
+    },
     toIndexPage() {
       this.$router.push({ name: "index" });
     },
@@ -123,10 +148,13 @@ export default {
       console.log(idx);
       switch (idx) {
         case 0: // Profile
-          this.$router.push({ name: "user", params: { username: this.authUser.username } })
+          this.$router.push({
+            name: "user",
+            params: { username: this.authUser.username }
+          });
           break;
         case 1: // Settings
-          break
+          break;
         case 2: // Logout
           eventBus.logoutModalShown();
           break;
@@ -135,11 +163,14 @@ export default {
   },
   created() {
     // eventBus.$on("loginUser", () => {
-    //   this.menuItems.unshift({
-    //     title: this.authUser.display_name,
-    //     disabled: true
-    //   });
-    // });
+    //   this.listCartItems()
+    // })
+    eventBus.$on("logoutUser", () => {
+      this.cleanUpCart();
+    });
+  },
+  mounted() {
+    this.listCartItems();
   }
 };
 </script>

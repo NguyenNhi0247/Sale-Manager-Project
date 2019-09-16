@@ -104,7 +104,7 @@ export default {
   watch: {
     cartItemIDs(ids) {
       // TODO: This func only triggered once at start up
-      checkItemAlreadyInCart(ids);
+      this.checkItemAlreadyInCart(ids);
     }
   },
   methods: {
@@ -129,7 +129,7 @@ export default {
           this.getAuthHeader()
         )
         .then(resp => {
-          console.log("BOOK ADDEDTO CART", resp.data);
+          console.log("BOOK ADDED TO CART", resp.data);
           // Save book to global vuex store
           this.addToCart(jsBook);
           // Notify other components that a new book was added to cart,
@@ -194,6 +194,11 @@ export default {
         return v;
       }
       return v.toLocaleString();
+    }
+  },
+  mounted() {
+    if (this.cartItemIDs) {
+      this.checkItemAlreadyInCart(this.cartItemIDs);
     }
   }
 };

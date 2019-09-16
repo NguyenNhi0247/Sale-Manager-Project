@@ -22,8 +22,7 @@ likes the header, footer...
 <script>
 import Header from "../../components/shop/Header";
 import Footer from "../../components/shop/Footer";
-import { mapGetters, mapMutations } from "vuex";
-import { eventBus } from "../../event";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -32,44 +31,7 @@ export default {
   },
   data: () => ({}),
   computed: {
-    ...mapGetters(["showHeader", "showFooter", "authUser"])
-  },
-  watch: {
-    authUser(val) {
-      if (val && val.id && true) {
-        this.listCartItems();
-      }
-    }
-  },
-  methods: {
-    ...mapMutations(["addToCart", "cleanUpCart"]),
-    listCartItems() {
-      // Load all books added to cart and put it to global vuex store
-      this.$http
-        .get("/api/v1/carts/list", this.getAuthHeader())
-        .then(resp => {
-          console.log("LIST ITEMS IN CART", resp.data);
-          for (let i = 0; i < resp.data.length; i++) {
-            this.addToCart(resp.data[i]);
-            eventBus.bookAddedToCart(resp.data[i]);
-          }
-        })
-        .catch(err => {
-          this.showError(err, "Cannot list books in cart");
-        });
-    }
-  },
-  created() {
-    // eventBus.$on("loginUser", () => {
-    //   this.listCartItems()
-
-    // })
-    eventBus.$on("logoutUser", () => {
-      this.cleanUpCart();
-    });
-  },
-  mounted() {
-    // this.listCartItems()
+    ...mapGetters(["showHeader", "showFooter"])
   }
 };
 </script>

@@ -57,6 +57,7 @@ class BookCarts(Resource):
             token = request.headers.get("Authorization")
             user_id = get_user_id_by_token(token)
             data = request.get_json()
+            print(data)
             book_id = data.get("book_id", None)
             price = data.get("price", None)
             quantity = data.get("quantity", None)

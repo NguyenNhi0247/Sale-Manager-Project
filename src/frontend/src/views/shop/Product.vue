@@ -58,7 +58,7 @@
               />
             </v-flex>
             <v-flex class="ma-0 pa-0 ml-n2">
-              <v-btn class="mt-1" depressed large dark color="red">
+              <v-btn class="mt-1" depressed large dark color="red" @click="addBookToCart">
                 <v-icon left>mdi-cart</v-icon>Buy
               </v-btn>
             </v-flex>
@@ -146,7 +146,7 @@
 <script>
 import Vue from "vue";
 import { axiosConfig } from "../../utils";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { eventBus } from "../../event";
 
 export default {
@@ -195,7 +195,7 @@ export default {
     this.$http
       .get(`/api/v1/books/${this.id}`, axiosConfig)
       .then(resp => {
-        console.log(resp.data);
+        console.log("BOOK DETAILS", resp.data);
         this.book = resp.data;
       })
       .catch(err => {
@@ -203,13 +203,18 @@ export default {
       });
   },
   methods: {
-    addToCart(book) {
+    ...mapMutations(["addToCart"]),
+    addBookToCart() {
       if (!this.isAuth) {
         eventBus.loginModalShown();
         return;
       }
 
-      let jsBook = { book_id: book.id, price: book.price, quantity: 1 }
+      let jsBook = {
+        book_id: this.book.id,
+        price: this.book.price,
+        quantity: this.quantity
+      };
       this.$http
         .post(
           "/api/v1/carts/insert-book",

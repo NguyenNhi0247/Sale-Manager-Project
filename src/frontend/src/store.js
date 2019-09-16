@@ -52,7 +52,8 @@ export default new Vuex.Store({
 
       for (let i = 0; i < state.cart.length; i++) {
         if (newItem.book_id === state.cart[i].book_id) {
-          Vue.set(state.cart[i], "quantity", state.cart[i].quantity + 1) // Trigger Vuex reactive
+          // Trigger Vuex reactive
+          Vue.set(state.cart[i], "quantity", state.cart[i].quantity + newItem.quantity)
           return
         }
       }

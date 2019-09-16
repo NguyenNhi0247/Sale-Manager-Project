@@ -29,6 +29,13 @@ def get_book_carts_by_book_id(book_id):
     return BookCarts.query.filter_by(book_id=book_id).all()
 
 
+def get_book_cart_by_card_id_and_book_id(cart_id, book_id):
+    try:
+        return BookCarts.query.filter_by(cart_id=cart_id, book_id=book_id).one()
+    except Exception as e:
+        return None
+
+
 def remove_book_in_book_carts(book_id):
     deleted = BookCarts.query.filter_by(book_id=book_id).delete()
     db.session.commit()
@@ -48,10 +55,9 @@ def insert_book_to_cart(uid, book_id, price, quantity):
         )
         save_changes(new_cart)
         cart = get_cart_by_user_id(uid)
-    book_carts = get_book_carts_by_card_id(cart.id)
-    book_cart = get_book_carts_by_book_id(book_id)
+    book_cart = get_book_cart_by_card_id_and_book_id(cart.id, book_id)
     if book_cart:
-        book_carts.quantity = book_cart.quantity + quantity
+        book_cart.quantity += quantity
         db.session.commit()
     else:
         new_bookcart = BookCarts(
