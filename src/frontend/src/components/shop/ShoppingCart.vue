@@ -47,15 +47,15 @@
         <v-simple-table>
           <tr>
             <td class="body-1">Subtotal</td>
-            <td class="body-1">{{ summary.subTotal | toLocaleString }}₫</td>
+            <td class="body-1">{{ orderSummary.subTotal | toLocaleString }}₫</td>
           </tr>
           <tr>
             <td class="body-1">Shipping fee</td>
-            <td class="body-1">+ {{ summary.shippingFee | toShippingFeeText }}</td>
+            <td class="body-1">+ {{ orderSummary.shippingFee | toShippingFeeText }}</td>
           </tr>
           <tr>
             <td class="body-1">Discount</td>
-            <td class="body-1">- {{ summary.discount | toLocaleString }}₫ (5%)</td>
+            <td class="body-1">- {{ orderSummary.discount | toLocaleString }}₫ (5%)</td>
           </tr>
 
           <v-divider></v-divider>
@@ -64,13 +64,19 @@
             <td
               class="subtitle-1"
               style="font-weight: 500; color:red"
-            >{{ summary.total | toLocaleString }}₫</td>
+            >{{ orderSummary.total | toLocaleString }}₫</td>
           </tr>
         </v-simple-table>
 
         <div class="mt-8">
-          <v-btn color="grey" dark class="mr-3 text--white" @click="backToShopClicked">Back to shop</v-btn>
-          <v-btn color="indigo accent-4" dark @click="checkoutClicked">Checkout</v-btn>
+          <v-btn
+            color="grey"
+            dark
+            depressed
+            class="mr-3 text--white"
+            @click="backToShopClicked"
+          >Back to shop</v-btn>
+          <v-btn color="indigo accent-4" dark depressed @click="checkoutClicked">Checkout</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -82,8 +88,8 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import { eventBus } from "../event";
+import { mapGetters, mapMutations } from "vuex";
+import { eventBus } from "../../event";
 
 export default {
   name: "shopping-cart",
@@ -91,15 +97,6 @@ export default {
     return {
       cartBooks: [],
       cartBookDetails: [],
-      summary: {
-        subTotal: 0,
-        shippingFee: 0,
-        discount: 0,
-        total: 0
-      },
-      quantity: 1,
-      tab: null,
-      VtextField: null,
       quantityRules: {
         required: value => !!value || "Required.",
         isNumeric: value => !isNaN(value) || "Number only",
@@ -108,20 +105,16 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters(["orderSummary"])
+  },
   watch: {
     cartBooks(val) {
       this.calcSubTotal(val);
-    },
-    "summary.subTotal"(val) {
-      this.summary.discount = this.summary.subTotal * 0.05; // Hard-coded discount 5%
-      this.summary.total =
-        this.summary.subTotal +
-        this.summary.shippingFee -
-        this.summary.discount;
     }
   },
   methods: {
-    ...mapMutations(["removeFromCart", "nextCheckoutStep"]),
+    ...mapMutations(["removeFromCart", "nextCheckoutStep", "setOrderSummary"]),
     listCartItems() {
       // Get list of book IDs in cart
       this.$http
@@ -158,10 +151,20 @@ export default {
         });
     },
     calcSubTotal(books) {
-      this.summary.subTotal = 0;
+      let sum = {
+        subTotal: 0,
+        shippingFee: 0,
+        discount: 0,
+        total: 0
+      };
+      sum.subTotal = 0;
       for (let i = 0; i < books.length; i++) {
-        this.summary.subTotal += books[i].price * books[i].quantity;
+        sum.subTotal += books[i].price * books[i].quantity;
       }
+      sum.discount = sum.subTotal * 0.05; // Hard-coded discount 5%
+      sum.total = sum.subTotal + sum.shippingFee - sum.discount;
+
+      this.setOrderSummary(sum);
     },
     backToShopClicked() {
       this.$router.push({ path: "/" });
@@ -218,14 +221,6 @@ export default {
     }
   },
   filters: {
-    // Convert v to its location form, return v itself if it's not a number.
-    // E.g.: 50000 => 50,000
-    toLocaleString(v) {
-      if (isNaN(v)) {
-        return v;
-      }
-      return v.toLocaleString();
-    },
     toShippingFeeText(v) {
       if (!v) {
         return "0₫ (free)";

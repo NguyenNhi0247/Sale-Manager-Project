@@ -10,6 +10,12 @@ export default new Vuex.Store({
     showHeader: true,
     showFooter: true,
     checkoutStep: 1,
+    orderSummary: {
+      subTotal: 0,
+      shippingFee: 0,
+      discount: 0,
+      total: 0
+    },
   },
   getters: {
     cart(state) {
@@ -44,6 +50,9 @@ export default new Vuex.Store({
     checkoutStep: (state) => {
       return state.checkoutStep
     },
+    orderSummary: (state) => {
+      return state.orderSummary
+    }
   },
   mutations: {
     addToCart(state, newItem) {
@@ -92,6 +101,9 @@ export default new Vuex.Store({
     },
     resetCheckoutStep(state) {
       state.checkoutStep = 0
+    },
+    setOrderSummary(state, v) {
+      state.orderSummary = v
     },
   }
 })

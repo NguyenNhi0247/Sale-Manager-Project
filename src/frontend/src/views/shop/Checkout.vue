@@ -16,7 +16,7 @@
               <ShoppingCart></ShoppingCart>
             </v-stepper-content>
             <v-stepper-content step="2">
-              <ShoppingDetail></ShoppingDetail>
+              <ShippingDetail></ShippingDetail>
             </v-stepper-content>
             <v-stepper-content step="3">
               <PaymentOption></PaymentOption>
@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import ShoppingCart from "../../components/ShoppingCart";
-import ShoppingDetail from "../../components/ShoppingDetail";
-import PaymentOption from "../../components/PaymentOption";
+import ShoppingCart from "../../components/shop/ShoppingCart";
+import ShippingDetail from "../../components/shop/ShippingDetail";
+import PaymentOption from "../../components/shop/PaymentOption";
 import { mapGetters } from "vuex";
 
 export default {
@@ -40,7 +40,7 @@ export default {
   },
   components: {
     ShoppingCart: ShoppingCart,
-    ShoppingDetail: ShoppingDetail,
+    ShippingDetail: ShippingDetail,
     PaymentOption: PaymentOption
   },
   computed: {

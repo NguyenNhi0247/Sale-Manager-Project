@@ -14,7 +14,15 @@ Vue.mixin({
         },
         upperFirstChar(val) {
             return val.charAt(0).toUpperCase() + val.slice(1)
-        }
+        },
+        // Convert v to its location form, return v itself if it's not a number.
+        // E.g.: 50000 => 50,000
+        toLocaleString(v) {
+            if (isNaN(v)) {
+                return v;
+            }
+            return v.toLocaleString();
+        },
     },
     methods: {
         cloneObject(obj) {
@@ -66,6 +74,6 @@ Vue.mixin({
                 type: "error",
                 msg: msg
             });
-        }
+        },
     }
 })
