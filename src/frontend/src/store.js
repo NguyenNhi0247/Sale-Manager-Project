@@ -9,6 +9,7 @@ export default new Vuex.Store({
     authUser: null,
     showHeader: true,
     showFooter: true,
+    checkoutStep: 1,
   },
   getters: {
     cart(state) {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     },
     showFooter: (state) => {
       return state.showFooter
+    },
+    checkoutStep: (state) => {
+      return state.checkoutStep
     },
   },
   mutations: {
@@ -79,6 +83,15 @@ export default new Vuex.Store({
     },
     setShowFooter(state, v) {
       state.showFooter = v
+    },
+    nextCheckoutStep(state) {
+      state.checkoutStep++
+    },
+    backCheckoutStep(state) {
+      state.checkoutStep--
+    },
+    resetCheckoutStep(state) {
+      state.checkoutStep = 0
     },
   }
 })

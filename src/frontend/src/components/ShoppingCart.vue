@@ -1,130 +1,101 @@
 <template>
-     <v-card flat>
-            <v-card-text>
-              <v-layout row wrap class="ml-5 mb-10 mr-10" v-if="selectedBook.length > 0">
-                <v-flex md8 sm12>
-                  <h2 class="title font-weight-light mb-4">
-                    <b>Shopping Cart</b>
-                  </h2>
-                  <!-- <hr width="700" class="mb-5"> -->
-                  <v-card class="mt-5" max-width="700" outlined>
-                    <v-simple-table v-for="book in selectedBook" :key="book.id">
-                      <tr>
-                        <td>
-                          <v-flex offset-2 xs4>
-                            <v-img height="120" width="120" contain :src="book.thumbnails[0]" />
-                          </v-flex>
-                        </td>
-                        <td width="300">
-                          <h4>
-                            <p style="color:blue">{{ book.title }}</p>
-                          </h4>
-                          <!-- <p>{{ book.description }}</p> -->
-                          <h3>
-                            <p style="color:red">{{ book.price | toLocaleString }} VND</p>
-                          </h3>
-                        </td>
-                        <td>
-                          <v-flex>
-                            <v-text-field
-                              class="quantity-input"
-                              v-model="quantity"
-                              small
-                              prepend-icon="mdi-minus"
-                              append-outer-icon="mdi-plus"
-                              :value="quantity"
-                              outlined
-                              @click:append-outer="increment"
-                              @click:prepend="decrement"
-                              :rules="[quantityRules.required, quantityRules.isNumeric, quantityRules.valueRange]"
-                            />
-                          </v-flex>
-                        </td>
-                        <td>
-                          <v-btn
-                            class="mx-2"
-                            fab
-                            dark
-                            small
-                            color="red"
-                            @click.native.prevent.stop="removefromCart(book)"
-                          >
-                            <v-icon dark>mdi-window-close</v-icon>
-                          </v-btn>
-                        </td>
-                      </tr>
-                    </v-simple-table>
-                  </v-card>
-                </v-flex>
+  <v-container fluid class="pa-0 ma-0">
+    <v-layout class="mb-10" v-if="cartBooks.length > 0 && cartBookDetails.length > 0">
+      <v-flex md8 sm12 class="pr-5">
+        <v-container v-for="(book, i) in cartBookDetails" :key="i">
+          <v-layout class="align-center">
+            <v-flex xs2 @click.stop="toProductPage(book)" ripple style="cursor: pointer">
+              <v-img v-if="book.thumbnails" height="100" contain :src="book.thumbnails[0]" />
+            </v-flex>
+            <v-flex xs6 @click.stop="toProductPage(book)" ripple style="cursor: pointer">
+              <p style="color:blue">{{ book.title }}</p>
+              <p style="color:red">{{ book.price | toLocaleString }}₫</p>
+            </v-flex>
+            <v-flex xd2>
+              <v-text-field
+                class="quantity-input"
+                v-model="book.quantity"
+                small
+                prepend-icon="mdi-minus"
+                append-outer-icon="mdi-plus"
+                :value="book.quantity"
+                outlined
+                @click:append-outer="increment(i)"
+                @click:prepend="decrement(i)"
+                :rules="[quantityRules.required, quantityRules.isNumeric, quantityRules.valueRange]"
+              />
+            </v-flex>
+            <v-flex xs2>
+              <v-btn
+                class="mx-2 mt-3"
+                small
+                text
+                color="red"
+                @click.native.prevent.stop="removeBookFromCart(book)"
+              >
+                <v-icon>mdi-trash-can-outline</v-icon>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mt-5 mb-0"></v-divider>
+        </v-container>
+      </v-flex>
 
-                <v-flex md4 sm12>
-                  <h2 class="title font-weight-light mb-5">
-                    <b>Summary</b>
-                  </h2>
-                  <!-- <hr width="350" class="mb-4"> -->
-                  <v-card class max-width="344" outlined>
-                    <v-simple-table>
-                      <tr>
-                        <td>
-                          <h3>SUBTOTAL</h3>
-                        </td>
-                        <td>{{ Order.total_price }}</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <h3>SHIPPING</h3>
-                        </td>
-                        <td>
-                          <h3>FREE</h3>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <h3>DISCOUNT</h3>
-                        </td>
-                        <td>{{ Order.discount }}</td>
-                      </tr>
+      <v-divider vertical class="mx-3"></v-divider>
+      <v-flex xs4 class="pl-5">
+        <h2 class="title mb-5">Summary</h2>
+        <v-simple-table>
+          <tr>
+            <td class="body-1">Subtotal</td>
+            <td class="body-1">{{ summary.subTotal | toLocaleString }}₫</td>
+          </tr>
+          <tr>
+            <td class="body-1">Shipping fee</td>
+            <td class="body-1">{{ summary.shippingFee | toShippingFeeText }}</td>
+          </tr>
+          <tr>
+            <td class="body-1">Discount</td>
+            <td class="body-1">{{ summary.discount | toLocaleString }}₫ (5%)</td>
+          </tr>
 
-                      <tr class="pt-2">
-                        <td>
-                          <h3>
-                            <p style="color:red">TOTAL</p>
-                          </h3>
-                        </td>
-                        <td>
-                          <h2>
-                            <p style="color:red">{{ Order.final_price }}</p>
-                          </h2>
-                        </td>
-                      </tr>
-                    </v-simple-table>
-                  </v-card>
-                </v-flex>
-              </v-layout>
-              <!-- <hr width="720" class="mb-5"> -->
-              <div class="ml-10">
-                <v-btn color="red" class="btn-cancel">Cancel</v-btn>
-                <v-btn color="primary" class="btn-next">Next</v-btn>
-              </div>
-            </v-card-text>
-          </v-card>
+          <v-divider></v-divider>
+          <tr class="pt-2">
+            <td class="subtitle-1" style="font-weight: 500; color:red">Total</td>
+            <td
+              class="subtitle-1"
+              style="font-weight: 500; color:red"
+            >{{ summary.total | toLocaleString }}₫</td>
+          </tr>
+        </v-simple-table>
+
+        <div class="mt-5 mr-5 text-right">
+          <v-btn text color="grey" class="mr-3" @click="backToShopClicked">Back to shop</v-btn>
+          <v-btn color="primary" @click="checkoutClicked">Checkout</v-btn>
+        </div>
+      </v-flex>
+    </v-layout>
+
+    <v-layout v-else class="text-center">
+      <p>No item in cart yet. Please continue your shopping!</p>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-
+import { mapMutations } from "vuex";
+import { eventBus } from "../event";
 
 export default {
-    name: "shopping-cart",
+  name: "shopping-cart",
   data() {
     return {
-      selectedBook: {
-        thumbnails: [],
-        authors: []
-      },
-      Order:{
-        total_price :0,
+      cartBooks: [],
+      cartBookDetails: [],
+      summary: {
+        subTotal: 0,
+        shippingFee: 0,
         discount: 0,
-        final_price: 0
+        total: 0
       },
       quantity: 1,
       tab: null,
@@ -137,50 +108,113 @@ export default {
       }
     };
   },
-  mounted() {
-    let headers = this.getAuthHeader();
-    this.$http.get("/api/v1/carts", headers).then(resp => {
-      this.selectedBook = resp.data;
-      console.log("+++")
-      console.log(quantity)
-      total_price = 0
-
-      for (let i = 0; i < this.selectedBook.length; i++) {
-            total_price = total_price + this.selectedBook[i].price*quantity
-          }
-    });
-
-    // this.$http.get("/api/v1/carts/get-order", headers).then(resp => {
-    //   this.Order = resp.data;
-    // });
+  watch: {
+    cartBooks(val) {
+      this.calcSubTotal(val);
+    },
+    "summary.subTotal"(val) {
+      this.summary.discount = this.summary.subTotal * 0.05; // Hard-coded discount 5%
+      this.summary.total =
+        this.summary.subTotal +
+        this.summary.shippingFee -
+        this.summary.discount;
+    }
   },
   methods: {
-    increment() {
-      if (this.quantity == 100) {
-        return;
-      }
-      this.quantity++;
-    },
-    decrement() {
-      if (this.quantity === 1) {
-        return;
-      }
-      this.quantity--;
-    },
-    removefromCart(book) {
-      // GET, POST, DELETE
-      let headers = this.getAuthHeader();
+    ...mapMutations(["removeFromCart", "nextCheckoutStep"]),
+    listCartItems() {
+      // Get list of book IDs in cart
       this.$http
-        .delete(`/api/v1/carts?book_id=${book.id}`, headers)
+        .get("/api/v1/carts/list", this.getAuthHeader())
         .then(resp => {
-          console.log(resp);
+          console.log("CHECKOUT CART", resp.data);
+          this.cartBooks = resp.data;
+          this.calcSubTotal(this.cartBooks);
+          this.listCartDetails();
+        })
+        .catch(err => {
+          this.showError(err, "Cannot load list items in cart.");
+        });
+    },
+    listCartDetails() {
+      // Get list of book details
+      this.$http
+        .get("/api/v1/carts", this.getAuthHeader())
+        .then(resp => {
+          console.log("CHECKOUT CART DETAILS", resp.data);
+          this.cartBookDetails = resp.data;
+
+          // Map book quantity from cart to details
+          for (let i = 0; i < this.cartBookDetails.length; i++) {
+            for (let j = 0; j < this.cartBooks.length; j++) {
+              if (this.cartBookDetails[i].id == this.cartBooks[j].book_id) {
+                this.cartBookDetails[i].quantity = this.cartBooks[j].quantity;
+              }
+            }
+          }
+        })
+        .catch(err => {
+          this.showError(err, "Cannot load cart details.");
+        });
+    },
+    calcSubTotal(books) {
+      this.summary.subTotal = 0;
+      for (let i = 0; i < books.length; i++) {
+        this.summary.subTotal += books[i].price * books[i].quantity;
+      }
+    },
+    backToShopClicked() {
+      this.$routers.push({ path: "/" });
+    },
+    checkoutClicked() {
+      this.nextCheckoutStep();
+    },
+    increment(i) {
+      console.log("HIT", i);
+      let book = this.cartBookDetails[i];
+      if (book.quantity == 100) {
+        return;
+      }
+      book.quantity++;
+    },
+    decrement(i) {
+      let book = this.cartBookDetails[i];
+      if (book.quantity === 1) {
+        return;
+      }
+      book.quantity--;
+    },
+    removeBookFromCart(book) {
+      let ret = confirm(`Confirm remove ${book.title} from cart?`);
+      if (!ret) {
+        return;
+      }
+      this.$http
+        .delete(`/api/v1/carts/books/${book.id}`, this.getAuthHeader())
+        .then(resp => {
+          console.log("REMOVE ITEM FROM CART", resp.data);
           // Delete success => Remove book from current cart in store cache
-          for (let i = 0; i < this.selectedBook.length; i++) {
-            if (this.selectedBook[i].id == book.id) {
-              this.selectedBook.splice(i, 1); // Remove book from list
+          for (let i = 0; i < this.cartBookDetails.length; i++) {
+            if (this.cartBookDetails[i].id == book.id) {
+              let b = this.cartBookDetails[i];
+              let jsBook = {
+                book_id: b.id,
+                price: b.price,
+                quantity: b.quantity
+              };
+              this.cartBookDetails.splice(i, 1);
+              this.removeFromCart(jsBook);
+              eventBus.bookRemovedFromCart(jsBook);
+            }
+
+            if (this.cartBooks[i].book_id == book.id) {
+              this.cartBooks.splice(i, 1); // Remove book from list
             }
           }
         });
+    },
+    toProductPage(book) {
+      this.$router.push({ path: `/product/${book.id}` });
     }
   },
   filters: {
@@ -191,7 +225,16 @@ export default {
         return v;
       }
       return v.toLocaleString();
+    },
+    toShippingFeeText(v) {
+      if (!v) {
+        return "0₫ (free)";
+      }
+      return v + "₫";
     }
+  },
+  mounted() {
+    this.listCartItems();
   }
 };
 </script>
