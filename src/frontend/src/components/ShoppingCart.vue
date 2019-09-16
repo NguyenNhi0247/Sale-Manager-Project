@@ -1,15 +1,15 @@
 <template>
   <v-container fluid class="pa-0 ma-0">
     <v-layout class="mb-10" v-if="cartBooks.length > 0 && cartBookDetails.length > 0">
-      <v-flex md8 sm12 class="pr-5">
+      <v-flex md9 sm12 class="pr-5">
         <v-container v-for="(book, i) in cartBookDetails" :key="i">
           <v-layout class="align-center">
             <v-flex xs2 @click.stop="toProductPage(book)" ripple style="cursor: pointer">
               <v-img v-if="book.thumbnails" height="100" contain :src="book.thumbnails[0]" />
             </v-flex>
             <v-flex xs6 @click.stop="toProductPage(book)" ripple style="cursor: pointer">
-              <p style="color:blue">{{ book.title }}</p>
-              <p style="color:red">{{ book.price | toLocaleString }}₫</p>
+              <p class="subtitle-1" style="color: blue">{{ book.title }}</p>
+              <p class="subtitle-2" style="color: #ff3425">{{ book.price | toLocaleString }}₫</p>
             </v-flex>
             <v-flex xd2>
               <v-text-field
@@ -42,7 +42,7 @@
       </v-flex>
 
       <v-divider vertical class="mx-3"></v-divider>
-      <v-flex xs4 class="pl-5">
+      <v-flex xs3 class="pl-5">
         <h2 class="title mb-5">Summary</h2>
         <v-simple-table>
           <tr>
@@ -51,11 +51,11 @@
           </tr>
           <tr>
             <td class="body-1">Shipping fee</td>
-            <td class="body-1">{{ summary.shippingFee | toShippingFeeText }}</td>
+            <td class="body-1">+ {{ summary.shippingFee | toShippingFeeText }}</td>
           </tr>
           <tr>
             <td class="body-1">Discount</td>
-            <td class="body-1">{{ summary.discount | toLocaleString }}₫ (5%)</td>
+            <td class="body-1">- {{ summary.discount | toLocaleString }}₫ (5%)</td>
           </tr>
 
           <v-divider></v-divider>
@@ -68,9 +68,9 @@
           </tr>
         </v-simple-table>
 
-        <div class="mt-5 mr-5 text-right">
-          <v-btn text color="grey" class="mr-3" @click="backToShopClicked">Back to shop</v-btn>
-          <v-btn color="primary" @click="checkoutClicked">Checkout</v-btn>
+        <div class="mt-8">
+          <v-btn color="grey" dark class="mr-3 text--white" @click="backToShopClicked">Back to shop</v-btn>
+          <v-btn color="indigo accent-4" dark @click="checkoutClicked">Checkout</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -164,7 +164,7 @@ export default {
       }
     },
     backToShopClicked() {
-      this.$routers.push({ path: "/" });
+      this.$router.push({ path: "/" });
     },
     checkoutClicked() {
       this.nextCheckoutStep();

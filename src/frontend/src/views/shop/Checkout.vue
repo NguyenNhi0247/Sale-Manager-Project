@@ -2,7 +2,7 @@
   <v-container fluid class="pa-0 ma-0">
     <v-layout>
       <v-flex xs12>
-        <v-stepper :value="checkoutStep" class="pt-3">
+        <v-stepper :value="checkoutStep" class="pt-3" color="indigo accent-4">
           <v-stepper-header class="elevation-0" style="padding: 0 200px">
             <v-stepper-step :complete="checkoutStep > 1" step="1">Checkout cart</v-stepper-step>
             <v-divider></v-divider>

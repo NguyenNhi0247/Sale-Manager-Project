@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar fixed elevation="2" color="deep-purple accent-4 white--text" dark>
+  <v-app-bar fixed elevation="2" color="indigo accent-4 white--text" dark>
     <v-img
       src="../../assets/logo.svg"
       aspect-ratio="1/1"
@@ -14,7 +14,7 @@
     <!-- Right button group -->
     <v-text-field
       class="mr-3"
-      color="deep-purple accent-4"
+      color="indigo accent-4"
       solo-inverted
       dark
       single-line
