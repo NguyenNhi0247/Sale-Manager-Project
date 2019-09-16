@@ -87,7 +87,7 @@ class Book(Resource):
             raiseIfExcept(Unauthorized("Only admin allowed to delete book"))
             return
         delete_book(bid)
-        return "", 200
+        return {}
 
 
 # @api.route("/<int:bid>/epub")

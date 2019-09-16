@@ -58,12 +58,20 @@
               />
             </v-flex>
             <v-flex class="ma-0 pa-0 ml-n2">
-              <v-btn class="mt-1" depressed large dark color="red">
+              <v-btn class="mt-1" depressed large dark color="red" @click="addBookToCart">
                 <v-icon left>mdi-cart</v-icon>Buy
               </v-btn>
             </v-flex>
             <v-flex class="ma-0 pa-0 ml-n3">
-              <v-btn class="mt-1" depressed large dark outlined color="blue accent-4" @click="previewBook">
+              <v-btn
+                class="mt-1"
+                depressed
+                large
+                dark
+                outlined
+                color="blue accent-4"
+                @click="previewBook"
+              >
                 <v-icon left>mdi-eye-check-outline</v-icon>Preview
               </v-btn>
             </v-flex>
@@ -138,6 +146,7 @@
 <script>
 import Vue from "vue";
 import { axiosConfig } from "../../utils";
+import { mapGetters, mapMutations } from "vuex";
 import { eventBus } from "../../event";
 
 export default {
@@ -175,21 +184,54 @@ export default {
       Vue.set(this.breadcrumbItems[2], "text", title);
     }
   },
+  computed: {
+    ...mapGetters(["authUser"]),
+    isAuth() {
+      return this.authUser && this.authUser.id && true;
+    }
+  },
   mounted() {
     this.id = this.$route.params.id;
     this.$http
       .get(`/api/v1/books/${this.id}`, axiosConfig)
       .then(resp => {
-        console.log(resp.data);
+        console.log("BOOK DETAILS", resp.data);
         this.book = resp.data;
       })
       .catch(err => {
-        this.showError(err, "Cannot get book details.")
+        this.showError(err, "Cannot get book details.");
       });
   },
   methods: {
-    addToCart(book) {
-      alert(book.title + " added to cart...");
+    ...mapMutations(["addToCart"]),
+    addBookToCart() {
+      if (!this.isAuth) {
+        eventBus.loginModalShown();
+        return;
+      }
+
+      let jsBook = {
+        book_id: this.book.id,
+        price: this.book.price,
+        quantity: this.quantity
+      };
+      this.$http
+        .post(
+          "/api/v1/carts/insert-book",
+          JSON.stringify(jsBook),
+          this.getAuthHeader()
+        )
+        .then(resp => {
+          console.log("BOOK ADDED TO CART", resp.data);
+          // Save book to global vuex store
+          this.addToCart(jsBook);
+          // Notify other components that a new book was added to cart,
+          // so it can update/re-render if needed
+          eventBus.bookAddedToCart(jsBook);
+        })
+        .catch(err => {
+          this.showError(err, "Cannot add book to cart");
+        });
       // TODO
     },
     previewBook() {

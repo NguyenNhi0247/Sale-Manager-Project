@@ -14,6 +14,7 @@ from ..service.cart_service import (
     insert_book_to_cart,
     get_books_from_user_cart,
     remove_book_from_cart,
+    list_items_in_cart,
 )
 
 # from ..service.order_service import get_or_insert_order_by_user_id
@@ -42,22 +43,6 @@ class BookSelected(Resource):
         except Exception as ex:
             log.exception("failed to get book selected {}".format(ex))
 
-    @api.doc(
-        "Remove book from carts",
-        responses={200: "Success", 500: "Internal Server Error"},
-    )
-    # @api.marshal_list_with(UserDto.list_user_response)
-    def delete(self):
-        try:
-            token = request.headers.get("Authorization")
-            user_id = get_user_id_by_token(token)
-            book_id = request.args.get("book_id")
-            print(book_id)
-            remove_book_from_cart(user_id, int(book_id))
-            return {}
-        except Exception as ex:
-            log.exception("failed to remove book{}".format(ex))
-
 
 @api.route("/insert-book")
 class BookCarts(Resource):
@@ -72,6 +57,7 @@ class BookCarts(Resource):
             token = request.headers.get("Authorization")
             user_id = get_user_id_by_token(token)
             data = request.get_json()
+            print(data)
             book_id = data.get("book_id", None)
             price = data.get("price", None)
             quantity = data.get("quantity", None)
@@ -80,6 +66,42 @@ class BookCarts(Resource):
             return {}
         except Exception as exception:
             log.exception("failed to insert book to cart {}".format(exception))
+
+
+@api.route("/books/<int:bid>")
+@api.param("bid", "Book identifier")
+class BookDelete(Resource):
+    @api.doc(
+        "Delete book from cart",
+        responses={200: "Insert successfully", 500: "Internal Server Error"},
+    )
+    def delete(self, bid):
+        """Delete book from cart"""
+        try:
+            token = request.headers.get("Authorization")
+            uid = get_user_id_by_token(token)
+            remove_book_from_cart(uid, int(bid))
+            return {}
+        except Exception as exception:
+            log.exception("failed to delete book from cart {}".format(exception))
+
+
+@api.route("/list")
+class BookCarts(Resource):
+    @api.doc(
+        "List items in cart",
+        responses={200: "Insert successfully", 500: "Internal Server Error"},
+    )
+    @api.marshal_list_with(BookCartDto.book_cart)
+    def get(self):
+        """List items in cart"""
+        try:
+            token = request.headers.get("Authorization")
+            uid = get_user_id_by_token(token)
+            return list_items_in_cart(int(uid))
+        except Exception as exception:
+            log.exception("failed to insert book to cart {}".format(exception))
+
 
 # @api.route("/get-order")
 # class Order(Resource):
@@ -93,7 +115,7 @@ class BookCarts(Resource):
 #             token = request.headers.get("Authorization")
 #             user_id = get_user_id_by_token(token)
 #             order = get_or_insert_order_by_user_id(user_id)
-            
+
 #             return order
 #         except Exception as ex:
 #             log.exception("failed to get book selected {}".format(ex))

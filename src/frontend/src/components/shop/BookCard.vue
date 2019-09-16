@@ -103,13 +103,8 @@ export default {
   },
   watch: {
     cartItemIDs(ids) {
-      for (let i = 0; i < ids.length; i++) {
-        if (this.book.id == ids[i]) {
-          this.isAlreadyInCart = true;
-          return;
-        }
-      }
-      this.isAlreadyInCart = false;
+      // TODO: This func only triggered once at start up
+      this.checkItemAlreadyInCart(ids);
     }
   },
   methods: {
@@ -125,24 +120,55 @@ export default {
         eventBus.loginModalShown();
         return;
       }
-      let headers = this.getAuthHeader();
+
+      let jsBook = { book_id: book.id, price: book.price, quantity: 1 };
       this.$http
-        .post("/api/v1/carts/insert-book", JSON.stringify({"book_id": book.id, "price": book.price, "quantity": 1}), headers)
+        .post(
+          "/api/v1/carts/insert-book",
+          JSON.stringify(jsBook),
+          this.getAuthHeader()
+        )
         .then(resp => {
-          console.log(resp);
-        }),
-
-
-      this.addToCart(book); // Save book to global vuex store
-      //   eventBus.bookAddedToCart(book); // TODO
+          console.log("BOOK ADDED TO CART", resp.data);
+          // Save book to global vuex store
+          this.addToCart(jsBook);
+          // Notify other components that a new book was added to cart,
+          // so it can update/re-render if needed
+          eventBus.bookAddedToCart(jsBook);
+        })
+        .catch(err => {
+          this.showError(err, "Cannot add book to cart");
+        });
     },
     removeBookFromCart(book) {
       if (!this.isAuth) {
         eventBus.loginModalShown();
         return;
       }
-      this.removeFromCart(book);
-      //   eventBus.bookRemovedCart(book); // TODO
+
+      let jsBook = { book_id: book.id, price: book.price, quantity: 1 };
+      this.$http
+        .delete(`/api/v1/carts/books/${book.id}`, this.getAuthHeader())
+        .then(resp => {
+          console.log("BOOK REMOVED FROM CART", resp.data);
+          this.removeFromCart(jsBook); // Save book to global vuex store
+          eventBus.bookRemovedFromCart(jsBook);
+        })
+        .catch(err => {
+          this.showError(err, "Cannot remove book from cart");
+        });
+    },
+    checkItemAlreadyInCart(ids) {
+      if (!ids) {
+        return;
+      }
+      for (let i = 0; i < ids.length; i++) {
+        if (this.book.id == ids[i]) {
+          this.isAlreadyInCart = true;
+          return;
+        }
+      }
+      this.isAlreadyInCart = false;
     },
     categoryClicked(category) {
       alert(category.name + " clicked");
@@ -168,6 +194,11 @@ export default {
         return v;
       }
       return v.toLocaleString();
+    }
+  },
+  mounted() {
+    if (this.cartItemIDs) {
+      this.checkItemAlreadyInCart(this.cartItemIDs);
     }
   }
 };

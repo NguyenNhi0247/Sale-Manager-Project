@@ -6,7 +6,8 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
-from ..util.jwt import decode_auth_token, get_user_id_by_token, get_username_by_token, get_user_role_by_token
+from ..util.jwt import get_user_id_by_token, get_username_by_token, get_user_role_by_token
+
 from ..service.user_service import (
     list_users_by_status,
     get_user_by_username,
@@ -111,17 +112,18 @@ class Whoami(Resource):
         return ret
 
 
-@api.route("/address")
+@api.route("/<string:username>/addresses")
+@api.param("username", "Username")
 class Address(Resource):
     @api.doc(
         "Get user address",
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
-    @api.marshal_with(UserDto.user_address_request)
-    def get(self):
+    @api.marshal_with(UserDto.user_address_response)
+    def get(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        user_address = get_user_address_by_user_id(user_id)
+        return get_user_address_by_user_id(user_id)
         return user_address
 
     @api.doc(
@@ -129,17 +131,10 @@ class Address(Resource):
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
     @api.expect(UserDto.user_address_request, validate=True)
-    def put(self):
+    def post(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        data = request.json
-        receiver_name = data.get("receiver_name", "")
-        address = data.get("address", "")
-        phone_number = data.get("phone_number", "")
-        zip_code = data.get("zip_code", "")
-        user_address = edit_user_address(
-            user_id, receiver_name, address, phone_number, zip_code
-        )
+        edit_user_address(user_id, request.json)
         return {}
 
 

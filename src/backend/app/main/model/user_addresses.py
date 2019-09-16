@@ -9,12 +9,15 @@ class UserAddresses(db.Model):
     __tablename__ = "user_addresses"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    uid = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
     receiver_name = db.Column(db.String(1500))
     address = db.Column(db.String(250))
+    city = db.Column(db.String(250))
+    country = db.Column(db.String(250))
     is_default = db.Column(db.Boolean())
     zip_code = db.Column(db.String(10))
     phone_number = db.Column(db.String(20))
+    email = db.Column(db.String(500))
     created_at = db.Column(db.DateTime())
     updated_at = db.Column(db.DateTime())
     is_deleted = db.Column(db.Boolean())

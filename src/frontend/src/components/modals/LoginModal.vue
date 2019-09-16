@@ -5,8 +5,8 @@
         <v-tabs
           v-model="tabActive"
           fixed-tabs
-          color="deep-purple accent-4"
-          slider-color="deep-purple accent-4"
+          color="indigo accent-4"
+          slider-color="indigo accent-4"
         >
           <v-tab v-for="(t, i) in tabs" :key="i">{{ t.text }}</v-tab>
           <!-- Login by local account-->
@@ -53,7 +53,7 @@
                   <v-spacer></v-spacer>
                   <v-btn text @click.native="dialog = false">Cancel</v-btn>
                   <v-btn
-                    color="deep-purple accent-4"
+                    color="indigo accent-4"
                     @click.native="login()"
                     :disabled="!localValid"
                     :loading="isLoginLoading"
@@ -126,7 +126,7 @@
                   <v-spacer></v-spacer>
                   <v-btn text @click.native="dialog = false">Cancel</v-btn>
                   <v-btn
-                    color="deep-purple accent-4"
+                    color="indigo accent-4"
                     @click.native="register()"
                     :disabled="!regValid"
                     :loading="isRegLoading"

@@ -43,6 +43,7 @@ export default {
           eventBus.snackbarShown({ type: "success", msg: "Bye mate!" });
           eventBus.userLoggedOut();
           this.dialog = false;
+          this.$router.push({path: "/"}) // Redirect to home page
         })
         .catch(err => {
           this.dialog = false

@@ -3,7 +3,7 @@
     <v-container fluid class="ma-0 pa-0">
       <v-layout wrap class="ma-0 pa-0">
         <v-flex xs12>
-          <v-card flat tile class="deep-purple accent-4 white--text text-center">
+          <v-card flat tile class="indigo accent-4 white--text text-center">
             <v-card-text>
               <v-btn v-for="icon in icons" :key="icon" class="mx-4 white--text" icon>
                 <v-icon size="24px">{{ icon }}</v-icon>

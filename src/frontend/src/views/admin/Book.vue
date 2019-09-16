@@ -92,7 +92,7 @@ export default {
       this.$http
         .get("/api/v1/books?limit=100", headers)
         .then(resp => {
-          console.log(resp.data);
+          console.log("LIST ALl BOOKS", resp.data);
           this.tblData = resp.data;
         })
         .catch(err => {
@@ -126,6 +126,8 @@ export default {
       this.$http
         .delete(`/api/v1/books/${item.id}`, this.getAuthHeader())
         .then(resp => {
+          console.log("DELETE BOOK", resp, data);
+
           for (let i = 0; i < this.tblData.length; i++) {
             let book = this.tblData[i];
             if (book.id == item.id) {

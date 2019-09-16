@@ -1,50 +1,50 @@
 <template>
-  <div>
-    <v-card>
-      <v-tabs v-model="tab" background-color="transparent" grow class="mt-3">
-        <v-tab>1. Shopping Cart</v-tab>
-        <v-tab>2. Shopping Details</v-tab>
-        <v-tab>3. Payment Options</v-tab>
-      </v-tabs>
+  <v-container fluid class="pa-0 ma-0">
+    <v-layout>
+      <v-flex xs12>
+        <v-stepper :value="checkoutStep" class="pt-3" color="indigo accent-4">
+          <v-stepper-header class="elevation-0" style="padding: 0 200px">
+            <v-stepper-step :complete="checkoutStep > 1" step="1">Checkout cart</v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step :complete="checkoutStep > 2" step="2">Shipping address</v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step step="3">Payment</v-stepper-step>
+          </v-stepper-header>
 
-      <v-tabs-items v-model="tab">
-        <!--Shopping Cart tab-->
-
-        <v-tab-item>
-          <ShoppingCart></ShoppingCart>
-        </v-tab-item>
-
-        <!-- Shipping Details tab -->
-
-        <v-tab-item>
-          <ShoppingDetail></ShoppingDetail>
-        </v-tab-item>
-
-        <!-- Payment Options-->
-
-        <v-tab-item>
-          <PaymentOption></PaymentOption>
-        </v-tab-item>
-      </v-tabs-items>
-    </v-card>
-  </div>
+          <v-stepper-items>
+            <v-stepper-content step="1">
+              <ShoppingCart></ShoppingCart>
+            </v-stepper-content>
+            <v-stepper-content step="2">
+              <ShippingDetail></ShippingDetail>
+            </v-stepper-content>
+            <v-stepper-content step="3">
+              <PaymentOption></PaymentOption>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-import ShoppingCart from "../../components/ShoppingCart";
-import ShoppingDetail from "../../components/ShoppingDetail";
-import PaymentOption from "../../components/PaymentOption";
+import ShoppingCart from "../../components/shop/ShoppingCart";
+import ShippingDetail from "../../components/shop/ShippingDetail";
+import PaymentOption from "../../components/shop/PaymentOption";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
-    return {
-      tab: null
-    };
+    return {};
   },
   components: {
-    "ShoppingCart": ShoppingCart,
-    "ShoppingDetail": ShoppingDetail,
-    "PaymentOption": PaymentOption,
+    ShoppingCart: ShoppingCart,
+    ShippingDetail: ShippingDetail,
+    PaymentOption: PaymentOption
+  },
+  computed: {
+    ...mapGetters(["checkoutStep"])
   }
 };
 </script>
