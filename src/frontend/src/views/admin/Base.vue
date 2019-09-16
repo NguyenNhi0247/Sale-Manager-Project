@@ -1,6 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0" fluid>
-    <v-app-bar app clipped-left color="deep-purple accent-4" dark class="elevation-2">
+    <v-app-bar app clipped-left color="indigo accent-4" dark class="elevation-2">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <span class="title ml-3 mr-5">
         Bookstore

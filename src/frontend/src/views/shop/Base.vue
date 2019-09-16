@@ -6,7 +6,7 @@ likes the header, footer...
     <my-header v-if="showHeader"></my-header>
 
     <!-- Child pages will be rendered here based on the URL path. Take a look on router.js file -->
-    <v-content :style='showHeader ? {"margin-top": "65px"} : { "margin-top": "0"}'>
+    <v-content :style="showHeader ? {'margin-top': '65px'} : { 'margin-top': '0'}">
       <v-container fluid class="pa-0 ma-0" style="background-color: #F4F4F4">
         <transition name="fade" mode="out-in">
           <router-view></router-view>
@@ -27,18 +27,11 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     "my-header": Header,
-    "my-footer": Footer,
+    "my-footer": Footer
   },
+  data: () => ({}),
   computed: {
     ...mapGetters(["showHeader", "showFooter"])
-  },
-  data() {
-    return {
-      // Nothing here, yet...
-    };
-  },
-  methods: {
-    // Nothing here, yet...
   }
 };
 </script>

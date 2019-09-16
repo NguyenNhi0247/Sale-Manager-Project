@@ -124,7 +124,7 @@ export default {
     this.$http
       .get("/api/v1/books?limit=4&offset=27", axiosConfig)
       .then(resp => {
-        console.log(resp.data);
+        console.log("LIST BOOKS (offset=27)", resp.data);
         this.newBooks = resp.data;
       })
       .catch(err => {
@@ -134,7 +134,7 @@ export default {
     this.$http
       .get("/api/v1/books?limit=8&offset=40", axiosConfig)
       .then(resp => {
-        console.log(resp.data);
+        console.log("LIST BOOKS (offset=40)", resp.data);
         this.bestSellers = resp.data;
       })
       .catch(err => {

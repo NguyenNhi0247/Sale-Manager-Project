@@ -3,7 +3,7 @@
     <div v-if="book">
       <v-toolbar
         dense
-        :color="isReadingMode ? 'grey darken-3' : 'deep-purple accent-3 white--text'"
+        :color="isReadingMode ? 'grey darken-3' : 'indigo accent-3 white--text'"
         dark
         style="margin-top: -1px"
         height="40"

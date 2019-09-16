@@ -9,12 +9,7 @@ from app.main.model.user_addresses import UserAddresses
 from app.main.model.user_payments import UserPayments
 from ..util.password import PasswordCrypt
 from ..util.jwt import encode_auth_token
-from ..util.error import (
-    BadRequest,
-    Unauthorized,
-    InternalServerError,
-    raiseIfExcept,
-)
+from ..util.error import BadRequest, Unauthorized, InternalServerError, raiseIfExcept
 
 
 log = logging.getLogger("user.service")
@@ -91,51 +86,65 @@ def generate_token(user):
         log.error(e)
         return InternalServerError("Failed to generate JWT Wtoken")
 
+
 def get_user_address_by_user_id(user_id):
-    return UserAddresses.query.filter_by(uid=user_id).first()
+    return UserAddresses.query.filter_by(user_id=user_id).first()
+
 
 def get_user_payment_by_user_id(user_id):
-    return UserPayments.query.filter_by(uid=user_id).first()
+    return UserPayments.query.filter_by(user_id=user_id).first()
 
-def edit_user_address(user_id, receiver_name, address, phone_number, zip_code):
+
+def edit_user_address(user_id, data):
     now = datetime.now()
     user_address = get_user_address_by_user_id(user_id)
     if user_address:
-        user_address.receiver_name = receiver_name,
-        user_address.address = address,
-        user_address.zip_code = zip_code,
-        user_address.phone_number = phone_number,
-        db.session.commit()    
+        user_address.receiver_name = (data["receiver_name"],)
+        user_address.address = (data["address"],)
+        user_address.city = (data["city"],)
+        user_address.country = (data["country"],)
+        user_address.zip_code = (data["zip_code"],)
+        user_address.email = (data["email"],)
+        user_address.phone_number = (data["phone_number"],)
+        user_address.updated_at = (now,)
+        db.session.commit()
     else:
         new_user_address = UserAddresses(
-            uid = user_id,
-            receiver_name = receiver_name,
-            address = address,
-            is_default = False,
-            zip_code = zip_code,
-            phone_number = phone_number,
-            updated_at = now
+            user_id=user_id,
+            receiver_name=data["receiver_name"],
+            address=data["address"],
+            city=data["city"],
+            country=data["country"],
+            email=data["email"],
+            is_default=True,
+            zip_code=data["zip_code"],
+            phone_number=data["phone_number"],
+            created_at=now,
+            updated_at=now,
+            is_deleted=False,
+            deleted_at=now,
         )
         save_changes(new_user_address)
+
 
 def edit_user_payment(user_id, type, card_number, card_holder, valid_date):
     now = datetime.now()
     user_payment = get_user_payment_by_user_id(user_id)
     if user_payment:
-        user_payment.type = type,
-        user_payment.card_number = card_number,
-        user_payment.card_holder = card_holder,
-        user_payment.valid_date = valid_date,
-        db.session.commit()    
+        user_payment.type = (type,)
+        user_payment.card_number = (card_number,)
+        user_payment.card_holder = (card_holder,)
+        user_payment.valid_date = (valid_date,)
+        db.session.commit()
     else:
         new_user_payment = UserPayments(
-            uid = user_id,
-            type = type,
-            is_default = False,
-            card_number = card_number,
-            card_holder = card_holder,
-            valid_date = valid_date,
-            updated_at = now            
+            uid=user_id,
+            type=type,
+            is_default=False,
+            card_number=card_number,
+            card_holder=card_holder,
+            valid_date=valid_date,
+            updated_at=now,
         )
         save_changes(new_user_payment)
 
