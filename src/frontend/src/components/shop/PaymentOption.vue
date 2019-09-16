@@ -1,139 +1,87 @@
 <template>
-    <v-card flat>
-            <v-card-text>
-              <v-layout row wrap class="ml-5 mb-10 mr-10">
-                <v-flex md8 sm12>
-                  <h2 class="title font-weight-light mb-4">
-                    <b>Payment Method</b>
-                  </h2>
-                  <!-- <hr width="810" class="mb-4"> -->
-                  <!--<v-radio-group >-->
-                  <v-card class="mt-5 mr-10">
-                    <v-simple-table class="pb-10">
-                      <tr width="500">
-                        <v-radio label="Credit Cart" value="credit-cart" class="mr-3 mt-6 ml-3"></v-radio>
-                        <!-- <p class="ml-10"> Pay with Credit Cart </p> -->
-                      </tr>
-                      <tr>
-                        <td width="500">
-                          <v-text-field label="0000  0000  0000  0000" />
-                        </td>
-                        <td>
-                          <v-text-field label="MM/YY" />
-                        </td>
-                        <td>
-                          <v-text-field label="CVV" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <v-text-field label="Cart Holder Name" />
-                        </td>
-                      </tr>
-                    </v-simple-table>
-                  </v-card>
+  <v-container fluid class="pa-0 ma-0">
+    <v-layout class="mb-10 align-start">
+      <v-flex 12 md9 class="pr-5">
+        <v-container fluid class="pt-0">
+          <v-layout row>
+            <v-flex xs12>
+               <v-text-field label="Card holder name" />
+            </v-flex>
+            <v-flex xs12>
+               <v-text-field label="Card number" />
+            </v-flex>
+            <v-flex xs6 class="pr-3">
+               <v-text-field label="MM/YY" />
+            </v-flex>
+            <v-flex xs6 class="pl-3">
+               <v-text-field label="CVV" />
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-flex>
 
-                  <!-- <hr width="810" class="mt-6"> -->
+      <v-divider vertical class="mx-3"></v-divider>
+      <v-flex md3 class="pl-5">
+        <h2 class="title mb-5">Summary</h2>
+        <v-simple-table>
+          <tr>
+            <td class="body-1">Subtotal</td>
+            <td class="body-1">{{ orderSummary.subTotal | toLocaleString }}₫</td>
+          </tr>
+          <tr>
+            <td class="body-1">Shipping fee</td>
+            <td class="body-1">+ {{ orderSummary.shippingFee | toShippingFeeText }}</td>
+          </tr>
+          <tr>
+            <td class="body-1">Discount</td>
+            <td class="body-1">- {{ orderSummary.discount | toLocaleString }}₫ (5%)</td>
+          </tr>
 
-                  <v-card class="mt-6 mr-10">
-                    <v-simple-table>
-                      <tr>
-                        <td width="600">
-                          <v-radio label="Payal" value="payment" class="mr-3 mt-4 ml-3 mb-4"></v-radio>
-                          <!-- <p class="ml-10"> Pay by Paypal</p> -->
-                        </td>
+          <v-divider></v-divider>
+          <tr class="pt-2">
+            <td class="subtitle-1" style="font-weight: 500; color:red">Total</td>
+            <td
+              class="subtitle-1"
+              style="font-weight: 500; color:red"
+            >{{ orderSummary.total | toLocaleString }}₫</td>
+          </tr>
+        </v-simple-table>
 
-                        <td>
-                          <v-img
-                            width="100"
-                            height="30"
-                            src="https://cdn.pixabay.com/photo/2015/05/26/09/37/paypal-784404_960_720.png"
-                          />
-                        </td>
-                      </tr>
-                    </v-simple-table>
-                  </v-card>
-
-                  <v-card class="mt-6 mr-10">
-                    <v-simple-table>
-                      <tr>
-                        <td width="600">
-                          <v-radio label="Cash" value="cash" class="mr-3 mt-4 ml-3 mb-4"></v-radio>
-                          <!-- <p class="ml-10"> Pay by Paypal</p> -->
-                        </td>
-
-                        <td>
-                          <v-img
-                            width="100"
-                            height="30"
-                            src="https://www.marondahomes.com/blog/wp-content/uploads/2015/10/holding-money.jpg"
-                          />
-                        </td>
-                      </tr>
-                    </v-simple-table>
-                  </v-card>
-
-                  <div class="ml-5 mt-10">
-                    <v-btn color="red" class="btn-cancel">Cancel</v-btn>
-                    <v-btn color="primary" class="btn-next">Pay Now</v-btn>
-                  </div>
-                  <!--</v-radio-group>-->
-                </v-flex>
-
-                <v-flex md4 sm12>
-                  <h2 class="title font-weight-light mb-4">
-                    <b>Summary</b>
-                  </h2>
-                  <!-- <hr width="400" class="mb-4"> -->
-                  
-                  <v-card class="ml-5" max-width="350" outlined>
-                    <v-simple-table>
-                      <tr>
-                        <td>
-                          <h3>SUBTOTAL</h3>
-                        </td>
-                        <td>600</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <h3>SHIPPING</h3>
-                        </td>
-                        <td>
-                          <h3>FREE</h3>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <h3>TAXES</h3>
-                        </td>
-                        <td>13$</td>
-                      </tr>
-
-                      <tr class="pt-2">
-                        <td>
-                          <h3>
-                            <p style="color:red">TOTAL</p>
-                          </h3>
-                        </td>
-                        <td>
-                          <h2>
-                            <p style="color:red">613$</p>
-                          </h2>
-                        </td>
-                      </tr>
-                    </v-simple-table>
-                  </v-card>
-                </v-flex>
-                <!-- <hr width="810" class="mb-0"> -->
-              </v-layout>
-            </v-card-text>
-    </v-card>
+        <div class="mt-8">
+          <v-btn
+            color="grey"
+            dark
+            depressed
+            class="mr-3 text--white"
+            @click="backToCheckoutClicked"
+          >Back to checkout</v-btn>
+          <v-btn color="red" dark depressed @click="paymentClicked">Buy it</v-btn>
+        </div>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
-  name: "payment-option"
-}
+  name: "payment-option",
+  data: () => ({}),
+  computed: {
+    ...mapGetters(["orderSummary"])
+  },
+  methods: {
+    ...mapMutations(["backCheckoutStep"]),
+    backToCheckoutClicked() {
+      this.backCheckoutStep();
+    },
+    paymentClicked() {
+      // TODO
+      alert("DONE PAYMENT!")
+    }
+  }
+};
 </script>
 
 <style scoped>
