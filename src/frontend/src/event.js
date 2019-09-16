@@ -26,6 +26,11 @@ export const eventBus = new Vue({
         bookUpdated(id) {
             this.$emit('updateBook', id)
         },
+        userEditModalShown(data) {
+            this.$emit('showUserEditModal', data)
+        },
+        userUpdated(id) {
+            this.$emit('updateUser', id)
+        },
     }
 })
- 

@@ -46,3 +46,8 @@ def delete_book(bid):
     print(bid)
     db.session.query(Book).filter_by(id=bid).delete()
     db.session.commit()
+
+
+def save_changes(data):
+    db.session.add(data)
+    db.session.commit()

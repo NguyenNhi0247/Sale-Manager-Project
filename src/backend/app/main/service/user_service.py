@@ -144,3 +144,30 @@ def save_changes(data):
     db.session.add(data)
     db.session.commit()
 
+
+def update_user(username, data):
+    user = get_user_by_username(username)
+    if user:
+        user.email = data["email"],
+        user.avatar = data["avatar"],
+        user.role = data["role"],
+        user.display_name = data["display_name"],
+        user.date_of_birth = data["date_of_birth"],
+        db.session.commit()
+    else:
+        new_user = User(
+            username = data["username"],
+            email = data["email"],
+            password = data["password"],
+            avatar = data["avatar"],
+            role = data["role"],
+            display_name = data["display_name"],
+            date_of_birth = data["date_of_birth"]
+        )
+        save_changes(new_user)
+
+
+def delete_user(username):
+    db.session.query(User).filter_by(username=username).delete()
+    db.session.commit()
+

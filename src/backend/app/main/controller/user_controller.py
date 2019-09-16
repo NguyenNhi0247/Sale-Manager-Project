@@ -6,7 +6,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
-from ..util.jwt import decode_auth_token, get_user_id_by_token
+from ..util.jwt import decode_auth_token, get_user_id_by_token, get_username_by_token, get_user_role_by_token
 from ..service.user_service import (
     list_users_by_status,
     get_user_by_username,
@@ -14,8 +14,10 @@ from ..service.user_service import (
     edit_user_address,
     get_user_payment_by_user_id,
     edit_user_payment,
+    update_user,
+    delete_user
 )
-from ..util.error import raiseIfExcept, Forbidden
+from ..util.error import raiseIfExcept, Forbidden, Unauthorized
 
 
 api = UserDto.api
@@ -40,6 +42,7 @@ class UserList(Resource):
         if status is None:
             status = "active"
         log.error(status)
+
         return list_users_by_status(status)
 
 
@@ -66,6 +69,29 @@ class User(Resource):
             return "", 404
         return user
 
+    @api.doc("Update user by username")
+    @api.param("username", "User identifier")
+    def put(self, username):
+        """Update user details by its username"""
+        token = request.headers.get("Authorization")
+        role = get_user_role_by_token(token)
+        if role != 1:
+            raiseIfExcept(Unauthorized("Only admin allowed to update user"))
+            return
+        update_user(username, request.json)
+        return "", 200
+
+    @api.doc("Delete user by ID")
+    @api.param("username", "User identifier")
+    def delete(self, username):
+        """Delete user by its id"""
+        token = request.headers.get("Authorization")
+        role = get_user_role_by_token(token)
+        if role != 1:
+            raiseIfExcept(Unauthorized("Only admin allowed to delete user"))
+            return
+        delete_user(username)
+        return "", 200
 
 @api.route("/whoami")
 class Whoami(Resource):
