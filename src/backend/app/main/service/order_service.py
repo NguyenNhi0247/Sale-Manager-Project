@@ -59,7 +59,7 @@ def process_order(user_id, data):
         save_changes(bo)
         delete_item_in_cart(item.cart_id, item.book_id)
         # Increase the number of times this book has been purchased
-        increase_purchased(item.book_id)
+        increase_purchased(item.book_id, item.quantity)
 
     return order
 

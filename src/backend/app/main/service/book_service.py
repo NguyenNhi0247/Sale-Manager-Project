@@ -42,9 +42,9 @@ def update_book(bid, data):
         save_changes(new_book)
 
 
-def increase_purchased(book_id):
+def increase_purchased(book_id, quantity):
     book = get_book_by_id(book_id)
-    book.total_purchased += 1
+    book.total_purchased += quantity
     save_changes(book)
 
 
