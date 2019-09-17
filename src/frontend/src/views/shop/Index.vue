@@ -1,205 +1,145 @@
 <template>
-  <v-container fluid>
+  <v-container fluid pb-4>
     <v-layout>
       <!-- Left section => Category list / Advanced search... -->
       <v-flex xs2>
         <h3>Categories</h3>
         <ul>
-          <li><a href="#">Children</a></li>
-          <li><a href="#">Science</a></li>
-          <li><a href="#">Programming</a></li>
-          <li><a href="#">Thriller</a></li>
-          <li><a href="#">Business Management</a></li>
-          <li><a href="#">Religious</a></li>
-          <li><a href="#">Romance</a></li>
+          <li>
+            <a href="#">Children</a>
+          </li>
+          <li>
+            <a href="#">Science</a>
+          </li>
+          <li>
+            <a href="#">Programming</a>
+          </li>
+          <li>
+            <a href="#">Thriller</a>
+          </li>
+          <li>
+            <a href="#">Business Management</a>
+          </li>
+          <li>
+            <a href="#">Religious</a>
+          </li>
+          <li>
+            <a href="#">Romance</a>
+          </li>
         </ul>
-        <p style="font-size: 0.8rem; margin-top: 15px; margin-right: 10px"><i>TODO: Styling this left-section later. Also add more advanced search/filter options if possible.</i></p>
+        <p style="font-size: 0.8rem; margin-top: 15px; margin-right: 10px">
+          <i>TODO: Styling this left-section later. Also add more advanced search/filter options if possible.</i>
+        </p>
       </v-flex>
 
       <!-- Right section => Display list of books -->
       <v-flex xs10>
-        <!-- Best sellers - Can change this by banner/carousel later -->
-        <h2>Best Sellers</h2>
-        <v-container fluid grid-list-md pa-3 px-0>
-          <v-layout wrap>
-            <v-flex xs4 v-for="(book, idx) in books" :key="idx">
-              <v-hover v-slot:default="{ hover }">
-                <v-card :elevation="hover ? 24 : 2">
-                  <v-img height="250" :src="book.thumbnail"/>
-                  <v-card-title>{{ book.title }}</v-card-title>
-                  <v-card-text class="mb-0 pb-0">
-                    <span>{{ book.author }}</span>
-                  </v-card-text>
-                  <v-card-text class="mt-0">
-                    <v-layout align-center>
-                      <v-rating :value="book.total_rating_point / book.total_rated" color="amber" half-increments dense size="14" readonly></v-rating>
-                      <div class="grey--text ml-4">{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</div>
-                    </v-layout>
+        <!-- Promotion banners -->
+        <v-carousel cycle continuos height="350" hide-delimiter-background show-arrows-on-hover>
+          <v-carousel-item
+            v-for="(item, i) in banners"
+            :key="i"
+            :src="item.img"
+            :to="item.url"
+            reverse-transition="fade-transition"
+            transition="fade-transition"
+          ></v-carousel-item>
+        </v-carousel>
 
-                    <div class="my-4 subtitle-1 black--text">{{ book.price | toLocaleString }} VND • {{ book.publisher }}</div>
-
-                    <div>{{ book.description }}</div>
-
-                    <!-- Categories -->
-                    <v-chip-group active-class="deep-purple accent-4 white--text" column>
-                      <v-chip small v-for="category in book.categories">{{ category.name }}</v-chip>
-                    </v-chip-group>
-                  </v-card-text>
-                  <v-divider class="mx-4"></v-divider>
-
-                  <v-card-actions right>
-                    <v-btn color="indigo accent-4" small text light @click="addToCart">
-                      <v-icon small>mdi-cart</v-icon>&nbsp;Add To Cart
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-hover>
+        <h2 class="mt-5 pt-3">New Books</h2>
+        <v-container fluid grid-list-md pt-3 px-0 pb-4>
+          <v-layout row wrap justify-space-between align-end v-if="newBooks.length > 0">
+            <v-flex d-flex xs3 v-for="book in newBooks" :key="book.id">
+              <book-card :book="book"></book-card>
             </v-flex>
           </v-layout>
         </v-container>
 
-        <!-- Example of a category -->
-        <v-divider class="mt-5 mb-3"></v-divider>
-        <h2>Children</h2>
-        <v-container fluid grid-list-md pa-3 px-0>
-          <v-layout wrap>
-            <v-flex xs4 v-for="(book, idx) in books" :key="idx">
-              <v-hover v-slot:default="{ hover }">
-                <v-card :elevation="hover ? 24 : 2">
-                  <v-img height="250" :src="book.thumbnail"/>
-                  <v-card-title>{{ book.title }}</v-card-title>
-                  <v-card-text class="mb-0 pb-0">
-                    <span>{{ book.author }}</span>
-                  </v-card-text>
-                  <v-card-text class="mt-0">
-                    <v-layout align-center>
-                      <v-rating :value="book.total_rating_point / book.total_rated" color="amber" half-increments dense size="14" readonly></v-rating>
-                      <div class="grey--text ml-4">{{ book.total_rating_point / book.total_rated }} ({{ book.total_rated }})</div>
-                    </v-layout>
-
-                    <div class="my-4 subtitle-1 black--text">{{ book.price | toLocaleString }} VND • {{ book.publisher }}</div>
-
-                    <div>{{ book.description }}</div>
-
-                    <!-- Book's categories -->
-                    <v-chip-group active-class="deep-purple accent-4 white--text" column>
-                      <v-chip small v-for="category in book.categories">{{ category.name }}</v-chip>
-                    </v-chip-group>
-                  </v-card-text>
-                  <v-divider class="mx-4"></v-divider>
-
-                  <v-card-actions right>
-                    <v-btn color="indigo accent-4" small text light @click="addToCart">
-                      <v-icon small>mdi-cart</v-icon>&nbsp;Add To Cart
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-hover>
+        <h2 class="mt-5 pt-3">Best Sellers</h2>
+        <v-container fluid grid-list-md pt-3 px-0 pb-4>
+          <v-layout row wrap justify-space-between align-end v-if="bestSellers.length > 0">
+            <v-flex d-flex xs3 v-for="book in bestSellers" :key="book.id">
+              <book-card :book="book"></book-card>
             </v-flex>
           </v-layout>
         </v-container>
-
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+import { axiosConfig } from "../../utils";
+import { eventBus } from "../../event";
+import { mapGetters } from "vuex";
+
+import BookCard from "../../components/shop/BookCard";
+
 export default {
   name: "index",
+  components: {
+    "book-card": BookCard
+  },
   data() {
     return {
-      // Fake data for displaying books.
-      // Later then we will need to call to backend API to get the list of books from databse then
-      // display it here.
-      books: [
+      banners: [
         {
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" },
-          ]
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/01/71/a9/6ac55f6662bd04bbd4ff8ab9e2d37732.jpg",
+          url: "/product/80"
         },
         {
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" },
-          ]
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/c1/73/8b/0b114d3c8f057d06ff460f0ec719f0bb.jpg",
+          url: "/product/85"
         },
         {
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" },
-          ]
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/ac/72/8e/d4c7f4c7b95b4b03485a315667c000aa.jpg",
+          url: "/product/90"
         },
         {
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" },
-          ]
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/a6/ed/d8/60bbc7ad46d7f1bc89d3e1a7cebe81f3.jpg",
+          url: "/product/33"
         },
         {
-          title: "The Little Prince",
-          author: "Antoine de Saint-Exupéry",
-          thumbnail: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-          total_rated: 100,
-          total_rating_point: 470,
-          price: 50000,
-          publisher: "Reynal & Hitchcock",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          categories: [
-            { name: "Children", url: "/category/children" },
-            { name: "Scientific", url: "/category/scientific" },
-          ]
+          img:
+            "https://salt.tikicdn.com/cache/w885/ts/banner/21/27/6b/5e0d5e9f477032844bee301dc0cf5198.jpg",
+          url: "/product/40"
         }
-      ]
+      ],
+      bestSellers: [],
+      newBooks: []
+    };
+  },
+  computed: {
+    ...mapGetters(["authUser"]),
+    isAuth() {
+      return this.authUser && this.authUser.id && true;
     }
   },
-  filters: {
-    // Convert v to its location form, return v itself if it's not a number.
-    // E.g.: 50000 => 50,000
-    toLocaleString(v) {
-      if (isNaN(v)) {
-        return v
-      }
-      return v.toLocaleString()
-    }
-  },
-  methods: {
-    addToCart() {
-      alert("Book added to cart...")
-    }
+  mounted() {
+    // TODO: Get list of new books ONLY
+    this.$http
+      .get("/api/v1/books?limit=4&offset=27", axiosConfig)
+      .then(resp => {
+        console.log("LIST BOOKS (offset=27)", resp.data);
+        this.newBooks = resp.data;
+      })
+      .catch(err => {
+        this.showError(err, "Cannot get book list.")
+      });
+
+    this.$http
+      .get("/api/v1/books?limit=8&offset=40", axiosConfig)
+      .then(resp => {
+        console.log("LIST BOOKS (offset=40)", resp.data);
+        this.bestSellers = resp.data;
+      })
+      .catch(err => {
+        this.showError(err, "Cannot get book list.")
+      });
   }
 };
 </script>
@@ -207,9 +147,9 @@ export default {
 // scoped mean the CSS defined here only has the affect to DOM inside this component ONLY.
 // E.g.: h2 in other components/pages will not be affected by the CSS below.
 <style scoped>
-  h2 {
-    color: #4CAF50;
-    font-weight: 400;
-    font-size: 2rem;
-  }  
+h2 {
+  color: #0078d9;
+  font-weight: 300;
+  font-size: 1.8rem;
+}
 </style>

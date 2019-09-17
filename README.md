@@ -23,13 +23,16 @@ $ cd Sale-Manager-Project
 $ make setup-env   # Prepare local dev env and install dependencies
 $ make docker-compose   # Start services for local dev
 ```
+*Note: If you got error when installing Python's `psycopg2` package then please install `sudo apt install libpq-dev` on your machine first.*  
+
 Services will be started and exposed at address:
   - Database: `postgres:5432` (+pgAdmin: `0.0.0.0:10000`)
   - Backend: `backend:9090`
   - Frontend: `frontend:8080`
   - NGINX proxy: `0.0.0.0:80`  
   
-After that, you can open your browser and head to `http://localhost` to see the webpage.
+After that, you can open your browser and head to `http://localhost` to see the webpage.  
+Backend API documents can be found at `http://localhost:9090/api/v1/apidoc`.
 
 *Note: In case, you're using Windows or don't have `Docker` and `docker-compose` installed, then you will have to manually install all the tools in the `Prerequisites` section above and start each service by yourself.*  
 *You can reference to the `setup-env`, `fe-start-dev` and `be-start-dev` profiles in the `Makefile` to know which commands must be run in order to manually setup the local development environment.*

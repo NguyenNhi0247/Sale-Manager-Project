@@ -2,9 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Base from './views/shop/Base.vue'
 import Index from './views/shop/Index.vue'
-import Product from './views/shop/Product.vue'
-import Checkout from './views/shop/Checkout.vue'
-import Payment from './views/shop/Payment.vue'
+
+import AdminBase from './views/admin/Base.vue'
 
 Vue.use(Router)
 
@@ -15,18 +14,22 @@ export default new Router({
       component: Base,
       children: [
         { name: "index", path: "/", component: Index },
-        { name: "product", path: "/product/:id", component: Product },
-        { name: "checkout", path: "/checkout", component: Checkout },
-        { name: "payment", path: "/payment", component: Payment },
+        { name: "product", path: "/product/:id", component: () => import('./views/shop/Product.vue') },
+        { name: "reading", path: "/read/:id", component: () => import('./views/shop/Reading.vue') },
+        { name: "checkout", path: "/checkout", component: () => import('./views/shop/Checkout.vue') },
+        { name: "user", path: "/user/:username", component: () => import('./views/shop/User.vue') },
       ]
     },
     {
       path: '/admin',
-      name: 'admin',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "admin" */ './views/admin/Admin.vue')
+      component: AdminBase,
+      children: [
+        { name: "dashboard", path: "/", component: () => import('./views/admin/Dashboard.vue') },
+        { name: "userManagement", path: "users", component: () => import('./views/admin/User.vue') },
+        { name: "bookManagement", path: "books", component: () => import('./views/admin/Book.vue') },
+        { name: "adminSettings", path: "settings", component: () => import('./views/admin/Settings.vue') },
+        { name: "adminHelp", path: "help", component: () => import('./views/admin/Help.vue') },
+      ]
     }
   ]
 })

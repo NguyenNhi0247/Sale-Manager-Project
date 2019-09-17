@@ -20,10 +20,25 @@ fe-setup-env:
 	yarn; \
 	cd ../..
 
+clean-env:
+	cd src/backend; \
+	rm -rf backend-env; \
+	cd ../frontend; \
+	rm -rf node_modules
+	cd ../..
+
 # Start local development environment by running docker-compose.
 docker-compose:
 	cd deployment; \
 	CURRENT_UID=$(id -u):$(id -g) docker-compose up
+
+stop-docker-compose:
+	cd deployment; \
+	CURRENT_UID=$(id -u):$(id -g) docker-compose stop
+
+clean-docker-compose:
+	cd deployment; \
+	CURRENT_UID=$(id -u):$(id -g) docker-compose rm -s -f
 
 # Manually start frontend and backend services for local development.
 fe-start-dev: 
@@ -31,7 +46,8 @@ fe-start-dev:
 	yarn serve
 be-start-dev: 
 	cd src/backend; \
-	python3 main.py
+	source backend-env/bin/activate; \
+	PYTHONDONTWRITEBYTECODE=1 python3 main.py run
 
 # Build Docker image for frontend and backend services for production deployment.
 docker-build: be-build-docker fe-build-docker

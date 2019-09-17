@@ -1,17 +1,47 @@
-from flask import Flask
+import os
+import unittest
 
-app = Flask(__name__)
+from flask import url_for
+
+# Database migration and app command line parameters
+from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager
+
+# Blueprint manage the routes to REST APIs
+from app import blueprint
+from app.main import create_app, db
+from app.main.model import user
+
+# Start application with corresponding configurations based on it running "stage" environment.
+app = create_app(os.getenv("BEANIES_ENV") or "dev")
+app.register_blueprint(blueprint)
+
+app.app_context().push()
+
+# Register app CLI parameters
+manager = Manager(app)
+
+# Database management
+migrate = Migrate(app, db)
+manager.add_command("db", MigrateCommand)
 
 
-@app.route("/")
-def hello_world():
-    return "Hello, World!"
+@manager.command
+def run():
+    app.run(
+        host="0.0.0.0", port="9090", debug=True
+    )  # TODO: Remove debug or make it configurable
 
 
-@app.route("/api/v1/ping")
-def ping():
-    return "pong"
+@manager.command
+def test():
+    """Runs the unit tests."""
+    tests = unittest.TestLoader().discover("app/test", pattern="test*.py")
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        return 0
+    return 1
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="9090")
+    manager.run()
