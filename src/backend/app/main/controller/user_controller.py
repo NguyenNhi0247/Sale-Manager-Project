@@ -2,10 +2,11 @@ import logging
 import os
 import datetime
 import flask
-from flask import request
+from flask import request, jsonify
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
+from ..util.dto.book import BookDto
 from ..util.jwt import get_user_id_by_token, get_username_by_token
 from ..service.user_service import (
     list_users_by_status,
@@ -14,6 +15,11 @@ from ..service.user_service import (
     edit_user_address,
     get_user_payment_by_user_id,
     edit_user_payment,
+)
+from ..service.order_service import (
+    process_order,
+    list_all_orders,
+    list_all_purchased_books,
 )
 from ..util.error import raiseIfExcept, Forbidden
 
@@ -97,49 +103,90 @@ class Address(Resource):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
         return get_user_address_by_user_id(user_id)
-        return user_address
 
     @api.doc(
         "Add user address",
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
     @api.expect(UserDto.user_address_request, validate=True)
-    def post(self, username):
+    def put(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        edit_user_address(user_id, request.json)
-        return {}
+        return edit_user_address(user_id, request.json)
 
 
-@api.route("/payment")
+@api.route("/<string:username>/payments")
+@api.param("username", "Username")
 class Payment(Resource):
     @api.doc(
         "Get user payment",
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
-    @api.marshal_with(UserDto.user_payment_request)
-    def get(self):
+    @api.marshal_with(UserDto.user_payment_response)
+    def get(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        user_payment = get_user_payment_by_user_id(user_id)
-
-        return user_payment
+        return get_user_payment_by_user_id(user_id)
 
     @api.doc(
         "Add user payment",
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
-    @api.expect(UserDto.user_payment_request, validate=True)
+    @api.expect(UserDto.user_payment_request, validate=False)
     # @api.marshal_with(UserDto.list_user_response)
-    def put(self):
+    def put(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        data = request.json
-        type = data.get("type", "")
-        card_number = data.get("card_number", "")
-        card_holder = data.get("card_holder", "")
-        valid_date = data.get("valid_date", "")
-        user_payment = edit_user_payment(
-            user_id, type, card_number, card_holder, valid_date
-        )
-        return {}
+        return edit_user_payment(user_id, request.json)
+
+
+@api.route("/<string:username>/order-info")
+@api.param("username", "Username")
+class Payment(Resource):
+    @api.doc(
+        "Get user payment",
+        responses={200: "Successfully", 500: "Internal Server Error"},
+    )
+    @api.marshal_with(UserDto.user_order_info_response)
+    def get(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        address = get_user_address_by_user_id(user_id)
+        payment = get_user_payment_by_user_id(user_id)
+        return {"address": address, "payment": payment}
+
+
+@api.route("/<string:username>/orders")
+@api.param("username", "Username")
+class Payment(Resource):
+    @api.doc(
+        "List order history",
+        responses={200: "Successfully", 500: "Internal Server Error"},
+    )
+    @api.marshal_list_with(UserDto.new_order_response)
+    def get(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        return list_all_orders(user_id)
+
+    @api.doc("New order", responses={200: "Successfully", 500: "Internal Server Error"})
+    @api.expect(UserDto.new_order_request, validate=False)
+    @api.marshal_with(UserDto.new_order_response)
+    def post(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        return process_order(user_id, request.json)
+
+
+@api.route("/<string:username>/books")
+@api.param("username", "Username")
+class Payment(Resource):
+    @api.doc(
+        "List all purchased books",
+        responses={200: "Successfully", 500: "Internal Server Error"},
+    )
+    @api.marshal_list_with(BookDto.book)
+    def get(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        return list_all_purchased_books(user_id)

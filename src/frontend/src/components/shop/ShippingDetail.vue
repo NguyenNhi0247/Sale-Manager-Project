@@ -34,7 +34,7 @@
                 ></v-radio>
                 <v-radio
                   color="indigo accent-3"
-                  label="Next day delivery - 20,000VND (24 hours from checkout)"
+                  label="Next day delivery - 20,000₫ (24 hours from checkout)"
                   value="nextDay"
                 ></v-radio>
               </v-radio-group>
@@ -116,7 +116,7 @@ export default {
   },
   watch: {
     radShippingOpt(v) {
-      let sum = JSON.parse(JSON.stringify(this.orderSummary)); // Clone object
+      let sum = this.cloneObject(this.orderSummary);
       if (v === "nextDay") {
         sum.shippingFee = 20000;
       } else {
@@ -156,7 +156,7 @@ export default {
       let data = this.cloneObject(this.userAddress);
 
       this.$http
-        .post(
+        .put(
           `/api/v1/users/${this.authUser.username}/addresses`,
           JSON.stringify(data),
           this.getAuthHeader()
@@ -177,14 +177,6 @@ export default {
     },
     paymentClicked() {
       this.nextCheckoutStep();
-    }
-  },
-  filters: {
-    toShippingFeeText(v) {
-      if (!v) {
-        return "0₫ (free)";
-      }
-      return v + "₫";
     }
   },
   mounted() {

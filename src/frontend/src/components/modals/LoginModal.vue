@@ -228,22 +228,14 @@ export default {
         .post("/api/v1/login", data, axiosConfig)
         .then(resp => {
           this.isLoginLoading = false;
-          console.log("auth", resp.data);
+          console.log("LOGIN", resp.data);
           this.setCookie("beanies_token", resp.data.token);
 
           this.whoami(); // Load user detail and store to cookie
         })
         .catch(err => {
-          console.log("ERR", err.response);
           this.isLoginLoading = false;
-          let em = err.message;
-          if (err && err.response) {
-            em = err.response.data.message;
-          }
-          eventBus.snackbarShown({
-            type: "error",
-            msg: `Login failed. ${em}`
-          });
+          this.showError(err, "Login failed.")
         });
     },
     register() {
@@ -261,10 +253,9 @@ export default {
       this.$http
         .post("/api/v1/register", data, axiosConfig)
         .then(res => {
-          console.log("REG", res.data);
+          console.log("REGISTER", res.data);
           this.isRegLoading = false;
           eventBus.snackbarShown({
-            // TODO
             type: "success",
             msg: "Account created. Please login!"
           });
@@ -280,7 +271,7 @@ export default {
       this.$http
         .get("/api/v1/users/whoami", headers)
         .then(resp => {
-          console.log(resp);
+          console.log("WHOAMI", resp.data);
 
           let user = {
             id: resp.data.id,
@@ -314,9 +305,6 @@ export default {
         rePassword: ""
       };
     },
-    clearError() {
-      console.log(this);
-    }
   },
   created() {
     eventBus.$on("showLoginModal", () => {

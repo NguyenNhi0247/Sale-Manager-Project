@@ -29,6 +29,9 @@ export const eventBus = new Vue({
         bookUpdated(id) {
             this.$emit('updateBook', id)
         },
+        orderConfirmModalShown(order) {
+            this.$emit('showOrderConfirmModal', order)
+        },
     }
 })
 

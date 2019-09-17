@@ -120,13 +120,13 @@ export default {
       {
         id: 0,
         key: "Revenue 30 days",
-        value: "12,540,000₫",
+        value: "79,540,100₫",
         trend: 12.3,
         to: "#"
       },
-      { id: 1, key: "Total requests 24h", value: 15303, trend: -3.6, to: "#" },
-      { id: 2, key: "Books published", value: 8420, to: "#" },
-      { id: 3, key: "Customers", value: 1203, to: "#" }
+      { id: 1, key: "Total requests 24h", value: 58303, trend: -3.6, to: "#" },
+      { id: 2, key: "Books published", value: 7420, to: "#" },
+      { id: 3, key: "Customers", value: 62039, to: "#" }
     ],
     dpMenuStart: false,
     dpInputStart: "",

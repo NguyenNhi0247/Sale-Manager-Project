@@ -127,29 +127,33 @@ def edit_user_address(user_id, data):
         save_changes(new_user_address)
 
 
-def edit_user_payment(user_id, type, card_number, card_holder, valid_date):
+def edit_user_payment(user_id, data):
     now = datetime.now()
     user_payment = get_user_payment_by_user_id(user_id)
     if user_payment:
-        user_payment.type = (type,)
-        user_payment.card_number = (card_number,)
-        user_payment.card_holder = (card_holder,)
-        user_payment.valid_date = (valid_date,)
+        user_payment.type = (data["type"],)
+        user_payment.card_number = (data["card_number"],)
+        user_payment.card_holder = (data["card_holder"],)
+        user_payment.valid_date = (data["valid_date"],)
+        user_payment.updated_at = (now,)
         db.session.commit()
     else:
         new_user_payment = UserPayments(
-            uid=user_id,
-            type=type,
-            is_default=False,
-            card_number=card_number,
-            card_holder=card_holder,
-            valid_date=valid_date,
+            user_id=data["user_id"],
+            type=data["type"],
+            is_default=True,
+            card_number=data["card_number"],
+            card_holder=data["card_holder"],
+            valid_date=data["valid_date"],
+            created_at=now,
             updated_at=now,
+            deleted_at=now,
+            is_deleted=False,
         )
         save_changes(new_user_payment)
 
 
 def save_changes(data):
     db.session.add(data)
-    db.session.commit()
+    db.session.commit() 
 
