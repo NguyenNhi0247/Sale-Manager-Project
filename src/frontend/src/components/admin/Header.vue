@@ -120,7 +120,6 @@ export default {
       eventBus.loginModalShown();
     },
     menuItemClicked(idx) {
-      console.log(idx);
       switch (idx) {
         case 0: // Profile
           this.$router.push({ name: "user", params: { username: this.authUser.username } })

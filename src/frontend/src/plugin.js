@@ -23,6 +23,12 @@ Vue.mixin({
             }
             return v.toLocaleString();
         },
+        toShippingFeeText(v) {
+            if (!v) {
+                return "0₫ (free)";
+            }
+            return v + "₫";
+        }
     },
     methods: {
         cloneObject(obj) {
@@ -62,7 +68,7 @@ Vue.mixin({
             return cfg
         },
         showError(err, msg) {
-            console.log(err);
+            console.log("ERROR", err);
             let em = err.message;
             if (err.response) {
                 em = err.response.data.message;

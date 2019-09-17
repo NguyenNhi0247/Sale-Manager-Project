@@ -75,9 +75,27 @@ class UserDto:
         "user_payment_request",
         {
             "type": fields.String(),
+            "user_id": fields.Integer(),
             "card_number": fields.String(),
             "card_holder": fields.String(),
-            "valid_date": fields.DateTime(),
+            "valid_date": fields.String(),
+        },
+    )
+
+    user_payment_response = api.model(
+        "user_payment_response",
+        {
+            "id": fields.Integer(),
+            "type": fields.String(),
+            "user_id": fields.Integer(),
+            "is_default": fields.Boolean(),
+            "card_number": fields.String(),
+            "card_holder": fields.String(),
+            "valid_date": fields.String(),
+            "created_at": fields.DateTime(),
+            "updated_at": fields.DateTime(),
+            "deleted_at": fields.DateTime(),
+            "is_deleted": fields.Boolean(),
         },
     )
 

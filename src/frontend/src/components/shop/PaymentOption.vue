@@ -5,16 +5,31 @@
         <v-container fluid class="pt-0">
           <v-layout row>
             <v-flex xs12>
-               <v-text-field label="Card holder name" />
+              <v-text-field label="Card holder name" v-model="payment.card_holder" />
             </v-flex>
             <v-flex xs12>
-               <v-text-field label="Card number" />
+              <v-text-field label="Card number" v-model="payment.card_number" />
             </v-flex>
             <v-flex xs6 class="pr-3">
-               <v-text-field label="MM/YY" />
+              <v-text-field label="MM/YY" v-model="payment.valid_date" />
             </v-flex>
             <v-flex xs6 class="pl-3">
-               <v-text-field label="CVV" />
+              <v-text-field label="CVV" />
+            </v-flex>
+            <v-flex xs12>
+              <v-tooltip top small>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="mt-5"
+                    color="indigo accent-4"
+                    dark
+                    depressed
+                    @click="saveUserPayment"
+                    v-on="on"
+                  >Save Payment Info</v-btn>
+                </template>
+                <span>We won't save your CVV. You will have to manually input it everytime you want to make a payment.</span>
+              </v-tooltip>
             </v-flex>
           </v-layout>
         </v-container>
@@ -64,22 +79,69 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { eventBus } from "../../event";
 
 export default {
   name: "payment-option",
-  data: () => ({}),
+  data: () => ({
+    payment: {
+      type: "card",
+      card_number: "",
+      card_holder: "",
+      valid_date: ""
+    }
+  }),
   computed: {
-    ...mapGetters(["orderSummary"])
+    ...mapGetters(["authUser", "orderSummary"])
   },
   methods: {
     ...mapMutations(["backCheckoutStep"]),
+    loadUserPayment() {
+      this.$http
+        .get(
+          `/api/v1/users/${this.authUser.username}/payments`,
+          this.getAuthHeader()
+        )
+        .then(resp => {
+          console.log("USER PAYMENT", resp.data);
+          this.payment = resp.data;
+        })
+        .catch(err => {
+          console.log(
+            "Cannot get user payment info. Please create new one first!",
+            err
+          );
+        });
+    },
+    saveUserPayment() {
+      this.payment.user_id = this.authUser.id;
+      this.$http
+        .put(
+          `/api/v1/users/${this.authUser.username}/payments`,
+          JSON.stringify(this.payment),
+          this.getAuthHeader()
+        )
+        .then(resp => {
+          console.log("USER PAYMENT SAVED", resp.data);
+          eventBus.snackbarShown({
+            type: "success",
+            msg: `User payment saved!`
+          });
+        })
+        .catch(err => {
+          this.showError(err, "Cannot save user payment info.");
+        });
+    },
     backToCheckoutClicked() {
       this.backCheckoutStep();
     },
     paymentClicked() {
       // TODO
-      alert("DONE PAYMENT!")
+      alert("DONE PAYMENT!");
     }
+  },
+  mounted() {
+    this.loadUserPayment()
   }
 };
 </script>

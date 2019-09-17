@@ -442,7 +442,7 @@ export default {
       this.$http
         .get(`/api/v1/users/${this.authUser.username}`, headers)
         .then(resp => {
-          console.log(resp.data);
+          console.log("USER INFO", resp.data);
           this.user = resp.data;
         })
         .catch(err => {

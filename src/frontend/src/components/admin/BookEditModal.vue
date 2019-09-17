@@ -77,7 +77,7 @@ export default {
           this.getAuthHeader()
         )
         .then(resp => {
-          console.log(resp.data);
+          console.log("BOOK SAVED", resp.data);
           eventBus.snackbarShown({
             type: "success",
             msg: `Book updated!`

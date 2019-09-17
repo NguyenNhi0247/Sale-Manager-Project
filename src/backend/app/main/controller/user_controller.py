@@ -97,7 +97,6 @@ class Address(Resource):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
         return get_user_address_by_user_id(user_id)
-        return user_address
 
     @api.doc(
         "Add user address",
@@ -111,35 +110,27 @@ class Address(Resource):
         return {}
 
 
-@api.route("/payment")
+@api.route("/<string:username>/payments")
+@api.param("username", "Username")
 class Payment(Resource):
     @api.doc(
         "Get user payment",
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
-    @api.marshal_with(UserDto.user_payment_request)
-    def get(self):
+    @api.marshal_with(UserDto.user_payment_response)
+    def get(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        user_payment = get_user_payment_by_user_id(user_id)
-
-        return user_payment
+        return get_user_payment_by_user_id(user_id)
 
     @api.doc(
         "Add user payment",
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
-    @api.expect(UserDto.user_payment_request, validate=True)
+    @api.expect(UserDto.user_payment_request, validate=False)
     # @api.marshal_with(UserDto.list_user_response)
-    def put(self):
+    def put(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        data = request.json
-        type = data.get("type", "")
-        card_number = data.get("card_number", "")
-        card_holder = data.get("card_holder", "")
-        valid_date = data.get("valid_date", "")
-        user_payment = edit_user_payment(
-            user_id, type, card_number, card_holder, valid_date
-        )
+        edit_user_payment(user_id, request.json)
         return {}

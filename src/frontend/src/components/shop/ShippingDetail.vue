@@ -34,7 +34,7 @@
                 ></v-radio>
                 <v-radio
                   color="indigo accent-3"
-                  label="Next day delivery - 20,000VND (24 hours from checkout)"
+                  label="Next day delivery - 20,000₫ (24 hours from checkout)"
                   value="nextDay"
                 ></v-radio>
               </v-radio-group>
@@ -177,14 +177,6 @@ export default {
     },
     paymentClicked() {
       this.nextCheckoutStep();
-    }
-  },
-  filters: {
-    toShippingFeeText(v) {
-      if (!v) {
-        return "0₫ (free)";
-      }
-      return v + "₫";
     }
   },
   mounted() {
