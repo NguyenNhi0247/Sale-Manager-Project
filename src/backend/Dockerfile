@@ -1,6 +1,7 @@
-FROM python:3.7-alpine
+FROM python:3.7
+# FROM python:3.7-alpine
 
-RUN apk add --no-cache openssl-dev libffi-dev
+# RUN apk add --no-cache openssl-dev libffi-dev
 RUN adduser -D -g '' sm
 RUN addgroup sm sm
 USER sm
