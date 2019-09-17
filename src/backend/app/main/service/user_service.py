@@ -155,5 +155,5 @@ def edit_user_payment(user_id, data):
 
 def save_changes(data):
     db.session.add(data)
-    db.session.commit()
+    db.session.commit() 
 

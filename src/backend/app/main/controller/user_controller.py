@@ -2,7 +2,7 @@ import logging
 import os
 import datetime
 import flask
-from flask import request
+from flask import request, jsonify
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
@@ -103,11 +103,10 @@ class Address(Resource):
         responses={200: "Successfully", 500: "Internal Server Error"},
     )
     @api.expect(UserDto.user_address_request, validate=True)
-    def post(self, username):
+    def put(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        edit_user_address(user_id, request.json)
-        return {}
+        return edit_user_address(user_id, request.json)
 
 
 @api.route("/<string:username>/payments")
@@ -132,5 +131,20 @@ class Payment(Resource):
     def put(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        edit_user_payment(user_id, request.json)
-        return {}
+        return edit_user_payment(user_id, request.json)
+
+
+@api.route("/<string:username>/order-info")
+@api.param("username", "Username")
+class Payment(Resource):
+    @api.doc(
+        "Get user payment",
+        responses={200: "Successfully", 500: "Internal Server Error"},
+    )
+    @api.marshal_with(UserDto.user_order_info_response)
+    def get(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        address = get_user_address_by_user_id(user_id)
+        payment = get_user_payment_by_user_id(user_id)
+        return {"address": address, "payment": payment}

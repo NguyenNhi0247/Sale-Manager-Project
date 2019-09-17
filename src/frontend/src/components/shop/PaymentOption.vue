@@ -28,7 +28,7 @@
                     v-on="on"
                   >Save Payment Info</v-btn>
                 </template>
-                <span>We won't save your CVV. You will have to manually input it everytime you want to make a payment.</span>
+                <span>We won't save your CVV, of course.</span>
               </v-tooltip>
             </v-flex>
           </v-layout>
@@ -74,15 +74,21 @@
         </div>
       </v-flex>
     </v-layout>
+
+    <order-confirm-modal></order-confirm-modal>
   </v-container>
 </template>
 
 <script>
+import OrderConfirmModal from "../../components/shop/OrderConfirmModal";
 import { mapGetters, mapMutations } from "vuex";
 import { eventBus } from "../../event";
 
 export default {
   name: "payment-option",
+  components: {
+    "order-confirm-modal": OrderConfirmModal
+  },
   data: () => ({
     payment: {
       type: "card",
@@ -136,12 +142,27 @@ export default {
       this.backCheckoutStep();
     },
     paymentClicked() {
-      // TODO
-      alert("DONE PAYMENT!");
+      this.$http
+        .get(
+          `/api/v1/users/${this.authUser.username}/order-info`,
+          this.getAuthHeader()
+        )
+        .then(resp => {
+          console.log("USER ORDER INFO", resp.data);
+          let order = {
+            summary: this.cloneObject(this.orderSummary),
+            address: resp.data.address,
+            payment: resp.data.payment
+          };
+          eventBus.orderConfirmModalShown(order);
+        })
+        .catch(err => {
+          this.showError(err, "Cannot get user order info.");
+        });
     }
   },
   mounted() {
-    this.loadUserPayment()
+    this.loadUserPayment();
   }
 };
 </script>

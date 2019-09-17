@@ -22,7 +22,7 @@ export default {
   components: {
     "login-modal": LoginModal,
     "logout-modal": LogoutModal,
-    snackbar: Snackbar
+    "snackbar": Snackbar
   },
   data: () => ({}),
   methods: {

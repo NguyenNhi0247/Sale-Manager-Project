@@ -116,7 +116,7 @@ export default {
   },
   watch: {
     radShippingOpt(v) {
-      let sum = JSON.parse(JSON.stringify(this.orderSummary)); // Clone object
+      let sum = this.cloneObject(this.orderSummary);
       if (v === "nextDay") {
         sum.shippingFee = 20000;
       } else {
@@ -156,7 +156,7 @@ export default {
       let data = this.cloneObject(this.userAddress);
 
       this.$http
-        .post(
+        .put(
           `/api/v1/users/${this.authUser.username}/addresses`,
           JSON.stringify(data),
           this.getAuthHeader()
