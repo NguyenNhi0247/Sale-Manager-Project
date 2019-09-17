@@ -1,24 +1,92 @@
 <template>
-  <v-dialog v-model="dialog" persistent>
+  <v-dialog v-model="dialog" persistent max-width="700px">
     <v-card v-if="summary">
       <v-card-title>
-        <span class="headline">Order Summary</span>
+        <span class="headline">Order Details</span>
       </v-card-title>
 
       <v-card-text>
         <v-container>
           <v-layout row>
             <v-flex xs12>
-              <pre>{{ address }}<br />{{ payment }}<br />{{ summary }}</pre>
+              <p class="title">Summary</p>
+              <v-simple-table>
+                <tbody>
+                  <tr>
+                    <td>Subtotal</td>
+                    <td>{{ summary.subTotal | toLocaleString }}₫</td>
+                  </tr>
+                  <tr>
+                    <td>Shipping fee</td>
+                    <td>+ {{ summary.shippingFee | toLocaleString }}₫</td>
+                  </tr>
+                  <tr>
+                    <td>Discount</td>
+                    <td>- {{ summary.discount | toLocaleString }}₫</td>
+                  </tr>
+                  <tr>
+                    <td class="subtitle-2" style="color: red">Total</td>
+                    <td class="subtitle-2" style="color: red">{{ summary.total | toLocaleString }}₫</td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+
+              <p class="title mt-5">Shipping Address</p>
+              <v-simple-table>
+                <tbody>
+                  <tr>
+                    <td>Receiver</td>
+                    <td>{{ address.receiver_name }}</td>
+                  </tr>
+                  <tr>
+                    <td>Phone number</td>
+                    <td>{{ address.phone_number }}</td>
+                  </tr>
+                  <tr>
+                    <td>Email</td>
+                    <td>{{ address.email }}</td>
+                  </tr>
+                  <tr>
+                    <td>Address</td>
+                    <td>{{ address.address }}, {{ address.city }}, {{ address.country }}</td>
+                  </tr>
+                  <tr>
+                    <td>Postal code</td>
+                    <td>{{ address.zip_code }}</td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+
+              <p class="title mt-5">Payment Info</p>
+              <v-simple-table>
+                <tbody>
+                  <tr>
+                    <td>Payment type</td>
+                    <td>Credit card</td>
+                  </tr>
+                  <tr>
+                    <td>Card holder name</td>
+                    <td>{{ payment.card_holder }}</td>
+                  </tr>
+                  <tr>
+                    <td>Card number</td>
+                    <td>{{ payment.card_number }}</td>
+                  </tr>
+                  <tr>
+                    <td>Valid date</td>
+                    <td>{{ payment.valid_date }}</td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
             </v-flex>
           </v-layout>
         </v-container>
       </v-card-text>
 
-      <v-card-actions>
+      <v-card-actions class="pb-5 pr-3">
         <div class="flex-grow-1"></div>
-        <v-btn text @click="close">Cancel</v-btn>
-        <v-btn color="primary" @click="confirm" :disabled="!summary">Confirm</v-btn>
+        <v-btn color="grey" dark text @click="close">Cancel</v-btn>
+        <v-btn color="red" dark @click="confirm" :disabled="!summary">Confirm</v-btn>
       </v-card-actions>
     </v-card>
 
