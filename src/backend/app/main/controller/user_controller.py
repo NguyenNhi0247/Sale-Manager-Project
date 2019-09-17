@@ -6,6 +6,7 @@ from flask import request, jsonify
 from flask_restplus import Resource
 
 from ..util.dto.user import UserDto
+from ..util.dto.book import BookDto
 from ..util.jwt import get_user_id_by_token, get_username_by_token
 from ..service.user_service import (
     list_users_by_status,
@@ -15,7 +16,11 @@ from ..service.user_service import (
     get_user_payment_by_user_id,
     edit_user_payment,
 )
-from ..service.order_service import process_order
+from ..service.order_service import (
+    process_order,
+    list_all_orders,
+    list_all_purchased_books,
+)
 from ..util.error import raiseIfExcept, Forbidden
 
 
@@ -154,6 +159,16 @@ class Payment(Resource):
 @api.route("/<string:username>/orders")
 @api.param("username", "Username")
 class Payment(Resource):
+    @api.doc(
+        "List order history",
+        responses={200: "Successfully", 500: "Internal Server Error"},
+    )
+    @api.marshal_list_with(UserDto.new_order_response)
+    def get(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        return list_all_orders(user_id)
+
     @api.doc("New order", responses={200: "Successfully", 500: "Internal Server Error"})
     @api.expect(UserDto.new_order_request, validate=False)
     @api.marshal_with(UserDto.new_order_response)
@@ -161,3 +176,17 @@ class Payment(Resource):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
         return process_order(user_id, request.json)
+
+
+@api.route("/<string:username>/books")
+@api.param("username", "Username")
+class Payment(Resource):
+    @api.doc(
+        "List all purchased books",
+        responses={200: "Successfully", 500: "Internal Server Error"},
+    )
+    @api.marshal_list_with(BookDto.book)
+    def get(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        return list_all_purchased_books(user_id)
