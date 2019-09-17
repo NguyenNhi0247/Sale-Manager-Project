@@ -102,35 +102,67 @@ class UserDto:
     user_order_info_response = api.model(
         "user_order_info_response",
         {
-            "address": fields.Nested({
-                "id": fields.Integer(),
-                "user_id": fields.Integer(),
-                "receiver_name": fields.String(),
-                "address": fields.String(),
-                "email": fields.String(),
-                "city": fields.String(),
-                "country": fields.String(),
-                "phone_number": fields.String(),
-                "zip_code": fields.String(),
-                "is_default": fields.Boolean(),
-                "created_at": fields.DateTime(),
-                "updated_at": fields.DateTime(),
-                "is_deleted": fields.Boolean(),
-                "deleted_at": fields.DateTime(),
-            }),
-            "payment": fields.Nested({
-                "id": fields.Integer(),
-                "type": fields.String(),
-                "user_id": fields.Integer(),
-                "is_default": fields.Boolean(),
-                "card_number": fields.String(),
-                "card_holder": fields.String(),
-                "valid_date": fields.String(),
-                "created_at": fields.DateTime(),
-                "updated_at": fields.DateTime(),
-                "deleted_at": fields.DateTime(),
-                "is_deleted": fields.Boolean(),
-            })
+            "address": fields.Nested(
+                {
+                    "id": fields.Integer(),
+                    "user_id": fields.Integer(),
+                    "receiver_name": fields.String(),
+                    "address": fields.String(),
+                    "email": fields.String(),
+                    "city": fields.String(),
+                    "country": fields.String(),
+                    "phone_number": fields.String(),
+                    "zip_code": fields.String(),
+                    "is_default": fields.Boolean(),
+                    "created_at": fields.DateTime(),
+                    "updated_at": fields.DateTime(),
+                    "is_deleted": fields.Boolean(),
+                    "deleted_at": fields.DateTime(),
+                }
+            ),
+            "payment": fields.Nested(
+                {
+                    "id": fields.Integer(),
+                    "type": fields.String(),
+                    "user_id": fields.Integer(),
+                    "is_default": fields.Boolean(),
+                    "card_number": fields.String(),
+                    "card_holder": fields.String(),
+                    "valid_date": fields.String(),
+                    "created_at": fields.DateTime(),
+                    "updated_at": fields.DateTime(),
+                    "deleted_at": fields.DateTime(),
+                    "is_deleted": fields.Boolean(),
+                }
+            ),
         },
     )
 
+    new_order_request = api.model(
+        "new_order_request",
+        {
+            "user_id": fields.Integer(),
+            "user_payment_id": fields.Integer(),
+            "user_address_id": fields.Integer(),
+            "total": fields.Float(),
+            "discount": fields.Float(),
+            "shipping_fee": fields.Float(),
+        },
+    )
+
+    new_order_response = api.model(
+        "new_order_request",
+        {
+            "id": fields.Integer(),
+            "user_id": fields.Integer(),
+            "user_payment_id": fields.Integer(),
+            "user_address_id": fields.Integer(),
+            "total": fields.Float(),
+            "discount": fields.Float(),
+            "shipping_fee": fields.Float(),
+            "created_at": fields.DateTime(),
+            "updated_at": fields.DateTime(),
+            "deleted_at": fields.DateTime(),
+            "is_deleted": fields.Boolean(),
+        },
+    )

@@ -11,9 +11,14 @@ from app.main.model.user_payments import UserPayments
 
 from app.main.model.order import Order
 from ..util.jwt import decode_auth_token
-from app.main.service.book_service import get_book_by_id
+from app.main.service.book_service import get_book_by_id, increase_purchased
 from app.main.service.cart_service import get_cart_by_user_id, get_book_carts_by_card_id
-from app.main.service.user_service import get_user_by_id, edit_user_address, edit_user_payment
+from app.main.service.user_service import (
+    get_user_by_id,
+    edit_user_address,
+    edit_user_payment,
+)
+from .cart_service import get_book_carts_by_card_id, delete_item_in_cart
 
 log = logging.getLogger("cart.service")
 log.setLevel(logging.DEBUG)
@@ -21,6 +26,43 @@ log.setLevel(logging.DEBUG)
 
 def get_order_by_user_id(user_id):
     return Order.query.filter_by(user_id=user_id).first()
+
+
+def process_order(user_id, data):
+    # Create new oder
+    now = datetime.now()
+    order = Order(
+        user_id=data["user_id"],
+        user_payment_id=data["user_payment_id"],
+        user_address_id=data["user_address_id"],
+        total=data["total"],
+        discount=data["discount"],
+        shipping_fee=data["shipping_fee"],
+        created_at=now,
+        updated_at=now,
+        is_deleted=False,
+        deleted_at=now,
+    )
+    save_changes(order)
+
+    # Move all items from book_carts to book_orders
+    cart = get_cart_by_user_id(user_id)
+    items = get_book_carts_by_card_id(cart.id)
+    for item in items:
+        bo = BookOrders(
+            order_id=order.id,
+            book_id=item.book_id,
+            price=item.price,
+            quantity=item.quantity,
+            updated_at=now,
+        )
+        save_changes(bo)
+        delete_item_in_cart(item.cart_id, item.book_id)
+        # Increase the number of times this book has been purchased
+        increase_purchased(item.book_id)
+
+    return order
+
 
 # def get_or_insert_order_by_user_id(uid):
 #     now = datetime.now()
@@ -30,7 +72,7 @@ def get_order_by_user_id(user_id):
 #     cart = get_cart_by_user_id(uid)
 #     list_book_cart = get_book_carts_by_card_id(cart.id)
 #     total_price = 0
-#     discount = 0 
+#     discount = 0
 #     final_price = 0
 #     user_payment = get_user_payment_by_user_id(uid)
 #     if not user_payment:
@@ -82,7 +124,8 @@ def get_order_by_user_id(user_id):
 #     )
 #     save_changes(new_order)
 #     return str(total_price), str(discount), str(final_price)
-    
+
+
 def save_changes(data):
     db.session.add(data)
     db.session.commit()

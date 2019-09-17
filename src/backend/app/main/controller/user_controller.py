@@ -15,6 +15,7 @@ from ..service.user_service import (
     get_user_payment_by_user_id,
     edit_user_payment,
 )
+from ..service.order_service import process_order
 from ..util.error import raiseIfExcept, Forbidden
 
 
@@ -148,3 +149,15 @@ class Payment(Resource):
         address = get_user_address_by_user_id(user_id)
         payment = get_user_payment_by_user_id(user_id)
         return {"address": address, "payment": payment}
+
+
+@api.route("/<string:username>/orders")
+@api.param("username", "Username")
+class Payment(Resource):
+    @api.doc("New order", responses={200: "Successfully", 500: "Internal Server Error"})
+    @api.expect(UserDto.new_order_request, validate=False)
+    @api.marshal_with(UserDto.new_order_response)
+    def post(self, username):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        return process_order(user_id, request.json)

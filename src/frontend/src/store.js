@@ -100,7 +100,7 @@ export default new Vuex.Store({
       state.checkoutStep--
     },
     resetCheckoutStep(state) {
-      state.checkoutStep = 0
+      state.checkoutStep = 1
     },
     setOrderSummary(state, v) {
       state.orderSummary = v

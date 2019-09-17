@@ -1,9 +1,9 @@
 <template>
-  <v-dialog v-if="book" v-model="dialog" persistent max-width="700px">
+  <v-dialog v-model="dialog" persistent max-width="700px">
     <!-- <template v-slot:activator="{ on }">
                   <v-btn small color="primary" dark class="mb-2" v-on="on">New Book</v-btn>
     </template>-->
-    <v-card>
+    <v-card v-if="book">
       <v-card-title>
         <span class="headline">{{ formTitle }}</span>
       </v-card-title>
@@ -51,6 +51,7 @@
         <v-btn color="primary" @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
+    <p v-else> No book data</p>
   </v-dialog>
 </template>
 
@@ -61,7 +62,7 @@ export default {
   name: "book-edit-modal",
   data: () => ({
     formTitle: "",
-    dialog: true,
+    dialog: false,
     book: null
   }),
   methods: {

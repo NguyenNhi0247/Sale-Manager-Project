@@ -42,7 +42,19 @@ def update_book(bid, data):
         save_changes(new_book)
 
 
+def increase_purchased(book_id):
+    book = get_book_by_id(book_id)
+    book.total_purchased += 1
+    save_changes(book)
+
+
 def delete_book(bid):
-    print(bid)
-    db.session.query(Book).filter_by(id=bid).delete()
-    db.session.commit()
+    book = get_book_by_id(bid)
+    book.is_deleted=True
+    book.deleted_at= datetime.now()
+    save_changes(book)
+
+
+def save_changes(data):
+    db.session.add(data)
+    db.session.commit() 
