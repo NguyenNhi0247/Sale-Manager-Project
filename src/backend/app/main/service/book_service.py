@@ -44,7 +44,11 @@ def update_book(bid, data):
 
 def delete_book(bid):
     print(bid)
-    db.session.query(Book).filter_by(id=bid).delete()
+    db.session.query(Book).filter_by(id=bid).update(
+        {
+            "is_deleted": True 
+        }
+    )
     db.session.commit()
 
 

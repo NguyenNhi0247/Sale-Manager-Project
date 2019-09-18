@@ -64,7 +64,7 @@ export default {
     save() {
       this.$http
         .put(
-          `/api/v1/users/${this.user.id}`,
+          `/api/v1/users/${this.user.username}`,
           JSON.stringify(this.user),
           this.getAuthHeader()
         )
@@ -74,7 +74,7 @@ export default {
             type: "success",
             msg: `User updated!`
           });
-          eventBus.userUpdated(this.user.id);
+          eventBus.userUpdated(this.user.username);
           this.close();
         })
         .catch(err => {

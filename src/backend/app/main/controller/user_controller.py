@@ -62,7 +62,8 @@ class User(Resource):
         """Get user details by its username"""
         token = request.headers.get("Authorization")
         tu = get_username_by_token(token)
-        if tu != username:
+        role = get_user_role_by_token(token)
+        if role != 1 and tu != username:
             raise Forbidden("Not allow to read other user info")
 
         user = get_user_by_username(username)
