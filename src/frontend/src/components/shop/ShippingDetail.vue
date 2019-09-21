@@ -154,7 +154,7 @@ export default {
       //   return;
       // }
       let data = this.cloneObject(this.userAddress);
-      data["user_id"] = this.authUser.id;
+      data["user_id"] = parseInt(this.authUser.id);
 
       this.$http
         .put(
