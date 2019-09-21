@@ -14,4 +14,4 @@ RUN pip3 install --user sm -r requirements.txt
 # TODO
 EXPOSE 9090
 ENTRYPOINT [ "python3" ]
-CMD [ "main.py" ]
+CMD [ "python3", "/home.sm/app/main.py", "run" ]
