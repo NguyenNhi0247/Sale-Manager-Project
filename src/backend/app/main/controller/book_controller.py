@@ -1,5 +1,6 @@
 import logging
 import os
+import flask
 from flask import request
 from flask_restplus import Resource
 
@@ -16,7 +17,7 @@ log = logging.getLogger("book.controller")
 log.setLevel(logging.DEBUG)
 
 
-# Get list of books: GET /api/v1/books?limit=5&offset=10
+# Get list of books: GET /api/v1/books?limit=5&offset=10&status=[all/active/deleted]
 # Query params: limit, offset
 @api.route("/")
 class BookList(Resource):
@@ -30,7 +31,10 @@ class BookList(Resource):
         if limit == None:
             limit = 10
         offset = request.args.get("offset")
-        books = list_books(limit, offset)
+        status = flask.request.args.get("status")
+        if status is None:
+            status = "active"
+        books = list_books(limit, offset, status)
         return books
 
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from app.main import db
 from app.main.model.book import Book
 
@@ -6,8 +7,25 @@ def get_book_by_id(bid):
     return Book.query.filter_by(id=bid).first()
 
 
-def list_books(limit=10, offset=0):
-    return Book.query.order_by(Book.id).limit(limit).offset(offset).all()
+def list_books(limit=10, offset=0, status="active"):
+    status = str(status).lower()
+    if status == "active" or status == "":
+        return (
+            Book.query.filter_by(is_deleted=False)
+            .order_by(Book.id)
+            .limit(limit)
+            .offset(offset)
+            .all()
+        )
+    if status == "all":
+        return Book.query.order_by(Book.id).limit(limit).offset(offset).all()
+    return (
+        Book.query.filter_by(is_deleted=True)
+        .order_by(Book.id)
+        .limit(limit)
+        .offset(offset)
+        .all()
+    )
 
 
 def update_book(bid, data):
@@ -50,11 +68,11 @@ def increase_purchased(book_id, quantity):
 
 def delete_book(bid):
     book = get_book_by_id(bid)
-    book.is_deleted=True
-    book.deleted_at= datetime.now()
+    book.is_deleted = True
+    book.deleted_at = datetime.now()
     save_changes(book)
 
 
 def save_changes(data):
     db.session.add(data)
-    db.session.commit() 
+    db.session.commit()

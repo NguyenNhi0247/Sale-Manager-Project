@@ -42,11 +42,9 @@ class UserList(Resource):
     @api.marshal_list_with(UserDto.list_user_response)
     def get(self):
         """List all users based on status (all/active/deleted)"""
-        log.error("HIT")
         status = flask.request.args.get("status")
         if status is None:
             status = "active"
-        log.error(status)
         return list_users_by_status(status)
 
 
