@@ -44,6 +44,17 @@
       <v-list>
         <v-subheader>{{this.authUser.display_name}}</v-subheader>
         <v-divider></v-divider>
+        <div v-if="isAdmin">
+          <v-list-item @click="toAdminPage" ripple>
+            <v-list-item-icon class="mr-3">
+              <v-icon>mdi-view-dashboard-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Administrator</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+        </div>
         <v-list-item-group color="primary">
           <v-list-item
             v-for="(item, idx) in menuItems"
@@ -105,6 +116,12 @@ export default {
     ...mapGetters(["cartItemQuantity", "authUser"]),
     isAuth() {
       return this.authUser && this.authUser.id && true;
+    },
+    isAdmin() {
+      if (!this.isAuth) {
+        return false;
+      }
+      return this.authUser.role === 1;
     }
   },
   watch: {
@@ -158,6 +175,9 @@ export default {
           eventBus.logoutModalShown();
           break;
       }
+    },
+    toAdminPage() {
+      this.$router.push({ path: "/admin" });
     }
   },
   created() {
