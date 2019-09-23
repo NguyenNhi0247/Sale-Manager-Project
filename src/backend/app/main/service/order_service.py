@@ -18,6 +18,8 @@ from app.main.service.user_service import (
     get_user_by_id,
     edit_user_address,
     edit_user_payment,
+    add_user_purchased_book,
+    get_user_purchased_books,
 )
 from .cart_service import get_book_carts_by_card_id, delete_item_in_cart
 
@@ -59,6 +61,8 @@ def process_order(user_id, data):
         )
         save_changes(bo)
         delete_item_in_cart(item.cart_id, item.book_id)
+        # Create a link between purchased books and user
+        add_user_purchased_book(user_id, item.book_id)
         # Increase the number of times this book has been purchased
         increase_purchased(item.book_id, item.quantity)
 
@@ -79,13 +83,11 @@ def get_book_orders_by_order_id(order_id):
 
 
 def list_all_purchased_books(user_id):
-    orders = list_all_orders(user_id)
+    books = get_user_purchased_books(user_id)
     bookIDs = []
-    for order in orders:
-        items = get_book_orders_by_order_id(order.id)
-        for item in items:
-            if item.id not in bookIDs:
-                bookIDs.append(item.book_id)
+    for item in books:
+        if item.book_id not in bookIDs:
+            bookIDs.append(item.book_id)
 
     # Find all books in list of bookIDs
     return db.session.query(Book).filter(Book.id.in_(bookIDs)).all()

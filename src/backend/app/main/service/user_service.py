@@ -7,6 +7,7 @@ from app.main import db
 from app.main.model.user import User
 from app.main.model.user_addresses import UserAddresses
 from app.main.model.user_payments import UserPayments
+from app.main.model.user_books import UserBooks
 from ..util.password import PasswordCrypt
 from ..util.jwt import encode_auth_token
 from ..util.error import BadRequest, Unauthorized, InternalServerError, raiseIfExcept
@@ -95,6 +96,10 @@ def get_user_payment_by_user_id(user_id):
     return UserPayments.query.filter_by(user_id=user_id).first()
 
 
+def get_user_purchased_books(user_id):
+    return UserBooks.query.filter_by(user_id=user_id).all()
+
+
 def edit_user_address(user_id, data):
     now = datetime.now()
     user_address = get_user_address_by_user_id(user_id)
@@ -153,7 +158,14 @@ def edit_user_payment(user_id, data):
         save_changes(new_user_payment)
 
 
+def add_user_purchased_book(user_id, book_id):
+    new_user_book = UserBooks(
+        user_id=user_id, book_id=book_id, created_at=datetime.now()
+    )
+    save_changes(new_user_book)
+
+
 def save_changes(data):
     db.session.add(data)
-    db.session.commit() 
+    db.session.commit()
 
