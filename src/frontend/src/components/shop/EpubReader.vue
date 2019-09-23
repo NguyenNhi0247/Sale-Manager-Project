@@ -41,9 +41,23 @@
         <v-btn icon small class="ml-3 mr-1" @click="switchReadingMode()">
           <v-icon small>{{ isReadingMode ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
         </v-btn>
-        <v-btn icon small class="ml-1">
-          <v-icon small>mdi-dots-vertical</v-icon>
-        </v-btn>
+
+        <v-menu offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn icon small class="ml-1" v-on="on" :disabled="!isPurchased">
+              <v-icon small>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in bookInfo.ebook_formats"
+              :key="index"
+              @click="downloadEbook(item)"
+            >
+              <v-list-item-title>{{ item | toDownloadText }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-toolbar>
 
       <div class="epub-container">
@@ -86,7 +100,7 @@
 <script>
 import Epub from "epubjs";
 import { mapGetters, mapMutations } from "vuex";
-import { eventBus } from '../../event';
+import { eventBus } from "../../event";
 
 global.ePub = Epub;
 export default {
@@ -124,6 +138,7 @@ export default {
   data() {
     return {
       isPurchased: false,
+      dropdown_download: ["Arial", "Calibri", "Courier", "Verdana"],
       slTheme: this.theme,
       slThemeItems: ["White", "Beige", "Night"],
       themes: {
@@ -325,7 +340,7 @@ export default {
         return;
       }
 
-      this.isPurchasedBook()
+      this.isPurchasedBook();
 
       console.log("INIT EPUB:", this.epubUrl);
       this.book = new Epub(this.epubUrl, {});
@@ -374,22 +389,60 @@ export default {
     },
     isPurchasedBook() {
       this.$http
-        .get(`/api/v1/users/${this.authUser.username}/books/${this.bookInfo.id}`, this.getAuthHeader())
+        .get(
+          `/api/v1/users/${this.authUser.username}/books/${this.bookInfo.id}`,
+          this.getAuthHeader()
+        )
         .then(resp => {
-          console.log("IS BOOK PURCHASED", resp.data)
-          this.isPurchased = resp.data.is_purchased
+          console.log("IS BOOK PURCHASED", resp.data);
+          this.isPurchased = resp.data.is_purchased;
           if (!this.isPurchased) {
-            eventBus.snackbarShown({type: "warning", msg: "Please purchased the book for full reading!"})
+            eventBus.snackbarShown({
+              type: "warning",
+              msg: "Please purchased the book for full reading!"
+            });
           }
         })
         .catch(err => {
           this.showError(err, "Cannot check book purchased.");
         });
+    },
+    downloadEbook(format) {
+      let url = `/api/v1/files/${format.file_path.replace("_data/", "")}`;
+      window.open(url, "_blank");
     }
   },
   //   mounted() {
   //     this.initialize();
   //   },
+  filters: {
+    toDownloadText(format) {
+      let formatFileSize = size => {
+        var sizes = [
+          " Bytes",
+          " KB",
+          " MB",
+          " GB",
+          " TB",
+          " PB",
+          " EB",
+          " ZB",
+          " YB"
+        ];
+        for (var i = 1; i < sizes.length; i++) {
+          if (size < Math.pow(1024, i))
+            return (
+              Math.round((size / Math.pow(1024, i - 1)) * 100) / 100 +
+              sizes[i - 1]
+            );
+        }
+        return size;
+      };
+      return `${format.type.toUpperCase()} (${formatFileSize(
+        format.file_size
+      )})`;
+    }
+  },
   created() {
     window.addEventListener("keyup", this.keyListener);
   },
