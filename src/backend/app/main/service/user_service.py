@@ -165,6 +165,16 @@ def add_user_purchased_book(user_id, book_id):
     save_changes(new_user_book)
 
 
+def check_book_purchased(user_id, book_id):
+    try:
+        found = UserBooks.query.filter_by(user_id=user_id, book_id=book_id).one()
+        if found is None:
+            return False
+        return True
+    except Exception:  # Not found
+        return False
+
+
 def save_changes(data):
     db.session.add(data)
     db.session.commit()

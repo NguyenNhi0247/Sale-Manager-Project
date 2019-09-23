@@ -15,6 +15,7 @@ from ..service.user_service import (
     edit_user_address,
     get_user_payment_by_user_id,
     edit_user_payment,
+    check_book_purchased
 )
 from ..service.order_service import (
     process_order,
@@ -190,3 +191,18 @@ class Payment(Resource):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
         return list_all_purchased_books(user_id)
+
+
+@api.route("/<string:username>/books/<int:book_id>")
+@api.param("username", "Username")
+@api.param("book_id", "Book ID")
+class PurchasedBook(Resource):
+    @api.doc(
+        "Check if book purchased",
+        responses={200: "Successfully", 500: "Internal Server Error"},
+    )
+    def get(self, username, book_id):
+        token = request.headers.get("Authorization")
+        user_id = get_user_id_by_token(token)
+        is_purchased = check_book_purchased(user_id, book_id)
+        return {"is_purchased": is_purchased}

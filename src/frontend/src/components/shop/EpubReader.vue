@@ -73,8 +73,12 @@
       </slot>-->
     </div>
 
-    <div v-else>
-      <h3>No book data</h3>
+    <div v-else style="min-height: 600px" class="text-center">
+      <p class="mt-12 pt-12 title">
+        Sorry :(
+        <br />Online reading for this book is not avalable yet.
+      </p>
+      <v-btn color="indigo accent-4" depressed dark @click="backToShop">Back to shop</v-btn>
     </div>
   </v-container>
 </template>
@@ -82,6 +86,7 @@
 <script>
 import Epub from "epubjs";
 import { mapGetters, mapMutations } from "vuex";
+import { eventBus } from '../../event';
 
 global.ePub = Epub;
 export default {
@@ -114,10 +119,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["showHeader", "showFooter"])
+    ...mapGetters(["showHeader", "showFooter", "authUser"])
   },
   data() {
     return {
+      isPurchased: false,
       slTheme: this.theme,
       slThemeItems: ["White", "Beige", "Night"],
       themes: {
@@ -319,6 +325,8 @@ export default {
         return;
       }
 
+      this.isPurchasedBook()
+
       console.log("INIT EPUB:", this.epubUrl);
       this.book = new Epub(this.epubUrl, {});
       this.book.loaded.navigation.then(({ toc }) => {
@@ -360,6 +368,23 @@ export default {
         }, 250)
       );
       this.updateScreenSizeInfo();
+    },
+    backToShop() {
+      this.$router.push({ path: "/" });
+    },
+    isPurchasedBook() {
+      this.$http
+        .get(`/api/v1/users/${this.authUser.username}/books/${this.bookInfo.id}`, this.getAuthHeader())
+        .then(resp => {
+          console.log("IS BOOK PURCHASED", resp.data)
+          this.isPurchased = resp.data.is_purchased
+          if (!this.isPurchased) {
+            eventBus.snackbarShown({type: "warning", msg: "Please purchased the book for full reading!"})
+          }
+        })
+        .catch(err => {
+          this.showError(err, "Cannot check book purchased.");
+        });
     }
   },
   //   mounted() {
