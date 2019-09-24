@@ -12,7 +12,13 @@
     <v-spacer></v-spacer>
 
     <!-- Right button group -->
-    <v-text-field
+    
+    <v-autocomplete
+      v-model="select"
+      :loading="loading"
+      :items="items"
+      :search-input.sync="search"
+      cache-items
       class="mr-3"
       color="indigo accent-4"
       solo-inverted
@@ -23,7 +29,22 @@
       clearable
       label="Search"
       prepend-inner-icon="mdi-magnify"
-    ></v-text-field>
+      @keyup.enter="bookClicked(search)"
+    ></v-autocomplete>
+  
+
+    <!-- <v-text-field
+      class="mr-3"
+      color="indigo accent-4"
+      solo-inverted
+      dark
+      single-line
+      flat
+      hide-details
+      clearable
+      label="Search"
+      prepend-inner-icon="mdi-magnify"
+    ></v-text-field> -->
 
     <v-menu
       v-if="isAuth"
@@ -91,6 +112,8 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import { eventBus } from "../../event";
+import { axiosConfig } from "../../utils";
+
 
 export default {
   name: "my-header",
@@ -99,7 +122,15 @@ export default {
       { title: "Profile", icon: "mdi-account-circle" },
       { title: "Settings", icon: "mdi-settings-outline" },
       { title: "Logout", icon: "mdi-logout-variant" }
-    ]
+    ],
+
+    loading: false,
+        items: [],
+        search: null,
+        select: null,
+        states: [
+          
+        ],
   }),
   computed: {
     ...mapGetters(["cartItemQuantity", "authUser"]),
@@ -112,9 +143,46 @@ export default {
       if (val && val.id && true) {
         this.listCartItems();
       }
-    }
+    },
+
+    search (val) {
+      val && val !== this.select && this.querySelections(val);
+      this.$http
+        .get(`/api/v1/books/search/${val}`, this.getAuthHeader)
+        .then(resp => {
+          let i=0;
+          for (i = 0; i < resp.data.length; i++) {
+              this.states.push(resp.data[i].title);
+
+              //this.$router.push({ path: `/product/${resp.data[i].id}` });
+            }
+          
+        })
+        
+      },
   },
   methods: {
+    querySelections (v) {
+        this.loading = true
+        // Simulated ajax query
+        setTimeout(() => {
+          this.items = this.states.filter(e => {
+            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
+          })
+          this.loading = false
+        }, 500)
+      },
+      bookClicked(book_name) {
+      this.$http
+        .get(`/api/v1/books/book_id/${book_name}`, this.getAuthHeader)
+        .then(resp => {
+          this.$router.push({ path: `/product/${resp.data}` });
+          
+        })
+    },
+
+
+
     ...mapMutations(["addToCart", "cleanUpCart"]),
     listCartItems() {
       // Load all books added to cart and put it to global vuex store

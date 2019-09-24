@@ -124,7 +124,7 @@ class Address(Resource):
     def get(self, username):
         token = request.headers.get("Authorization")
         user_id = get_user_id_by_token(token)
-        return get_user_address_by_user_id(user_id)
+        user_address = get_user_address_by_user_id(user_id)
         return user_address
 
     @api.doc(

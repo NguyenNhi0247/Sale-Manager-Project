@@ -2,9 +2,33 @@ from app.main import db
 from app.main.model.book import Book
 
 
+def get_book_id_by_name(book_name):
+    book = Book.query.filter_by(title=book_name).first()
+    return book.id
+
+
+def get_book_by_category(category):
+    result = []
+    list_book = list_books(100, 0)
+    for book in list_book:
+        if category in book.categories:
+            result.append(book)
+    return result[:10]
+
+
+def get_book_by_prefixStr(prefixStr):
+    result = []
+    if prefixStr == None:
+        return result
+    list_book = list_books(100, 0)
+    for book in list_book:
+        if book.title.startswith(prefixStr):
+            result.append({"id":book.id,"title":book.title})
+    return result[:10]
+
+
 def get_book_by_id(bid):
     return Book.query.filter_by(id=bid).first()
-
 
 def list_books(limit=10, offset=0):
     return Book.query.order_by(Book.id).limit(limit).offset(offset).all()
@@ -40,6 +64,25 @@ def update_book(bid, data):
             published_place=data["published_place"],
         )
         save_changes(new_book)
+
+def create_book(bid, data):
+    list_author = []
+    list_category=[]
+    list_author += list_author.append(data["authors"].split(","))
+    list_category += list_category.append(data["authors"].split(","))
+    new_book = Book(
+            title=data["title"],
+            sub_title=data["sub_title"],
+            description=data["description"],
+            long_description=data["long_description"],
+            authors=list_author,
+            categories=list_category,
+            price=data["price"],
+            publisher=data["publisher"],
+            published_at=data["published_at"],
+            published_place=data["published_place"],
+        )
+    save_changes(new_book)
 
 
 def delete_book(bid):
