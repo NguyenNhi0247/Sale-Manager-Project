@@ -6,16 +6,16 @@
         <v-card
         class="mr-3"
         >
-          <v-toolbar
+          <!-- <v-toolbar
             color="indigo accent-4"
             dark
+            dense
+            class="elevation-1"
           >
-            <v-toolbar-title>Categories</v-toolbar-title>
-
-            <div class="flex-grow-1"></div>
-          </v-toolbar>
-
-          <v-list>
+            <v-toolbar-title class="subtitle-1">Categories</v-toolbar-title>
+          </v-toolbar> -->
+          <v-list dense>
+            <v-subheader>CATEGORIES</v-subheader>
             <template>
               <v-list-item href="/#/category/Children">Children</v-list-item>
               <v-list-item href="/#/category/Science">Science</v-list-item>
@@ -115,7 +115,6 @@ export default {
     }
   },
   mounted() {
-    // TODO: Get list of new books ONLY
     this.$http
       .get("/api/v1/books?limit=4&offset=27", axiosConfig)
       .then(resp => {

@@ -6,7 +6,14 @@ from flask_restplus import Resource
 
 from ..util.dto.book import BookDto
 from ..util.jwt import get_user_role_by_token
-from ..service.book_service import get_book_by_id, list_books, update_book, delete_book, get_book_by_category, get_book_by_prefixStr,get_book_id_by_name
+from ..service.book_service import (
+    get_book_by_id,
+    list_books,
+    update_book,
+    delete_book,
+    get_book_by_category,
+    get_book_by_title,
+)
 from ..util.error import Unauthorized, raiseIfExcept
 
 
@@ -130,29 +137,18 @@ class BookCategory(Resource):
             log.exception("failed to get book")
 
 
-@api.route("/search/<string:prefix>")
-@api.param("prefix", "Book identifier")
+# /api/v1/books/search?query=something
+@api.route("/search")
 @api.response(404, "Book not found.")
 class BookSearch(Resource):
-    @api.doc("Get list book by prefix")
-    @api.marshal_list_with(BookDto.list_book_search)
-    def get(self, prefix):
-        """Get book details prefix"""
+    @api.doc("Search book by title")
+    @api.marshal_list_with(_book)
+    def get(self):
+        """Search book by title"""
         try:
-            book = get_book_by_prefixStr(prefix)
-            return book
-        except Exception as e:
-            log.exception("failed to get book")
-
-
-@api.route("/book_id/<string:book_name>")
-@api.param("book_name", "Book identifier")
-@api.response(404, "Book id not found.")
-class BookSearch(Resource):
-    # @api.marshal_list_with(BookDto.list_book_search)
-    def get(self, book_name):
-        try:
-            book_id = get_book_id_by_name(book_name)
-            return book_id
+            query = request.args.get("query")
+            if query == None:
+                return []
+            return get_book_by_title(query)
         except Exception as e:
             log.exception("failed to get book")

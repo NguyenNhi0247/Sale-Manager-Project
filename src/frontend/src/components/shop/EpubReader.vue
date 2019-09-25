@@ -399,12 +399,12 @@ export default {
           if (!this.isPurchased) {
             eventBus.snackbarShown({
               type: "warning",
-              msg: "Please purchased the book for full reading!"
+              msg: "Please buy the book for full reading!"
             });
           }
         })
         .catch(err => {
-          this.showError(err, "Cannot check book purchased.");
+          this.showError(err, "Cannot check book purchased status.");
         });
     },
     downloadEbook(format) {

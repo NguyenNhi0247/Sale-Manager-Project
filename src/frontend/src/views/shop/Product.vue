@@ -152,6 +152,7 @@ import { eventBus } from "../../event";
 export default {
   data() {
     return {
+      id: 0,
       book: null,
       quantity: 1,
       breadcrumbItems: [
@@ -178,6 +179,9 @@ export default {
     };
   },
   watch: {
+    id(val) {
+      this.loadBook();
+    },
     book(value) {
       let title =
         value && value.title ? value.title : "Book is your best friend";
@@ -192,18 +196,20 @@ export default {
   },
   mounted() {
     this.id = this.$route.params.id;
-    this.$http
-      .get(`/api/v1/books/${this.id}`, axiosConfig)
-      .then(resp => {
-        console.log("BOOK DETAILS", resp.data);
-        this.book = resp.data;
-      })
-      .catch(err => {
-        this.showError(err, "Cannot get book details.");
-      });
   },
   methods: {
     ...mapMutations(["addToCart"]),
+    loadBook() {
+      this.$http
+        .get(`/api/v1/books/${this.id}`, axiosConfig)
+        .then(resp => {
+          console.log("BOOK DETAILS", resp.data);
+          this.book = resp.data;
+        })
+        .catch(err => {
+          this.showError(err, "Cannot get book details.");
+        });
+    },
     addBookToCart() {
       if (!this.isAuth) {
         eventBus.loginModalShown();

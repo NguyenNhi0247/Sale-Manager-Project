@@ -17,15 +17,11 @@ def get_book_by_category(category):
     return result[:10]
 
 
-def get_book_by_prefixStr(prefixStr):
-    result = []
-    if prefixStr == None:
-        return result
-    list_book = list_books(100, 0)
-    for book in list_book:
-        if book.title.startswith(prefixStr):
-            result.append({"id": book.id, "title": book.title})
-    return result[:10]
+def get_book_by_title(query):
+    if query == None:
+        return []
+    search = "%{}%".format(query)
+    return Book.query.filter(Book.title.like(search)).all()
 
 
 def get_book_by_id(bid):
