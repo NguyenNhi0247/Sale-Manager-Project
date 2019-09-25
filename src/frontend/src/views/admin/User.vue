@@ -112,15 +112,15 @@ export default {
       eventBus.userEditModalShown(item);
     },
     deleteItem(item) {
-      let ret = confirm(
-        `Are you sure you want to delete "${item.username}" user?`
-      );
+      let ret = confirm(`Are you sure to delete the "${item.username}" user?`);
       if (!ret) {
         return;
       }
       this.$http
         .delete(`/api/v1/users/${item.username}`, this.getAuthHeader())
         .then(resp => {
+          console.log("DELETE USER", resp.data);
+
           for (let i = 0; i < this.tblData.length; i++) {
             let user = this.tblData[i];
             if (user.id == item.id) {
