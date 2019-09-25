@@ -6,7 +6,14 @@ from flask_restplus import Resource
 
 from ..util.dto.book import BookDto
 from ..util.jwt import get_user_role_by_token
-from ..service.book_service import get_book_by_id, list_books, update_book, delete_book
+from ..service.book_service import (
+    get_book_by_id,
+    list_books,
+    update_book,
+    delete_book,
+    get_book_by_category,
+    get_book_by_title,
+)
 from ..util.error import Unauthorized, raiseIfExcept
 
 
@@ -113,3 +120,35 @@ class Book(Resource):
 #                 log.error(format)
 #                 return send_file(format.file_path, as_attachment=True)
 #         return "", 404
+
+
+@api.route("/category/<string:category>")
+@api.param("category", "Book identifier")
+@api.response(404, "Book not found.")
+class BookCategory(Resource):
+    @api.doc("Get list book by category")
+    @api.marshal_with(_book)
+    def get(self, category):
+        """Get book details by its id"""
+        try:
+            book = get_book_by_category(category)
+            return book
+        except Exception as e:
+            log.exception("failed to get book")
+
+
+# /api/v1/books/search?query=something
+@api.route("/search")
+@api.response(404, "Book not found.")
+class BookSearch(Resource):
+    @api.doc("Search book by title")
+    @api.marshal_list_with(_book)
+    def get(self):
+        """Search book by title"""
+        try:
+            query = request.args.get("query")
+            if query == None:
+                return []
+            return get_book_by_title(query)
+        except Exception as e:
+            log.exception("failed to get book")

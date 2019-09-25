@@ -40,3 +40,11 @@ class BookDto:
             "deleted_at": fields.DateTime(),
         },
     )
+
+    list_book_search = api.model(
+        "list_book_search",
+        {
+            "id": fields.Integer(description="book identifier"),
+            "title": fields.String(required=True, description="user username")
+        }
+    )

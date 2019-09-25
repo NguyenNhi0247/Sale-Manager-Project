@@ -2,34 +2,29 @@
   <v-container fluid pb-4>
     <v-layout>
       <!-- Left section => Category list / Advanced search... -->
-      <v-flex xs2>
-        <h3>Categories</h3>
-        <ul>
-          <li>
-            <a href="#">Children</a>
-          </li>
-          <li>
-            <a href="#">Science</a>
-          </li>
-          <li>
-            <a href="#">Programming</a>
-          </li>
-          <li>
-            <a href="#">Thriller</a>
-          </li>
-          <li>
-            <a href="#">Business Management</a>
-          </li>
-          <li>
-            <a href="#">Religious</a>
-          </li>
-          <li>
-            <a href="#">Romance</a>
-          </li>
-        </ul>
-        <p style="font-size: 0.8rem; margin-top: 15px; margin-right: 10px">
-          <i>TODO: Styling this left-section later. Also add more advanced search/filter options if possible.</i>
-        </p>
+      <v-flex xs2 >
+        <v-card
+        class="mr-3"
+        >
+          <!-- <v-toolbar
+            color="indigo accent-4"
+            dark
+            dense
+            class="elevation-1"
+          >
+            <v-toolbar-title class="subtitle-1">Categories</v-toolbar-title>
+          </v-toolbar> -->
+          <v-list dense>
+            <v-subheader>CATEGORIES</v-subheader>
+            <template>
+              <v-list-item href="/#/category/Children">Children</v-list-item>
+              <v-list-item href="/#/category/Science">Science</v-list-item>
+              <v-list-item href="/#/category/Love">Love</v-list-item>
+              <v-list-item href="/#/category/Vietnam">VietNam</v-list-item>
+              <v-list-item href="/#/category/Art">Art</v-list-item>
+            </template>
+          </v-list>
+        </v-card>
       </v-flex>
 
       <!-- Right section => Display list of books -->
@@ -120,7 +115,6 @@ export default {
     }
   },
   mounted() {
-    // TODO: Get list of new books ONLY
     this.$http
       .get("/api/v1/books?limit=4&offset=27", axiosConfig)
       .then(resp => {
@@ -140,8 +134,10 @@ export default {
       .catch(err => {
         this.showError(err, "Cannot get book list.")
       });
-  }
+  },
+  
 };
+
 </script>
 
 // scoped mean the CSS defined here only has the affect to DOM inside this component ONLY.
@@ -152,4 +148,5 @@ h2 {
   font-weight: 300;
   font-size: 1.8rem;
 }
+
 </style>

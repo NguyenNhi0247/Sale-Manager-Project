@@ -12,7 +12,14 @@
     <v-spacer></v-spacer>
 
     <!-- Right button group -->
-    <v-text-field
+
+    <v-autocomplete
+      v-model="searchModel"
+      :loading="loading"
+      :items="items"
+      :search-input.sync="searchText"
+      item-text="title"
+      item-value="id"
       class="mr-3"
       color="indigo accent-4"
       solo-inverted
@@ -23,7 +30,7 @@
       clearable
       label="Search"
       prepend-inner-icon="mdi-magnify"
-    ></v-text-field>
+    ></v-autocomplete>
 
     <v-menu
       v-if="isAuth"
@@ -110,7 +117,12 @@ export default {
       { title: "Profile", icon: "mdi-account-circle" },
       { title: "Settings", icon: "mdi-settings-outline" },
       { title: "Logout", icon: "mdi-logout-variant" }
-    ]
+    ],
+    titleLimit: 60,
+    loading: false,
+    searchText: null,
+    searchModel: null,
+    searchResults: []
   }),
   computed: {
     ...mapGetters(["cartItemQuantity", "authUser"]),
@@ -122,6 +134,16 @@ export default {
         return false;
       }
       return this.authUser.role === 1;
+    },
+    items() {
+      return this.searchResults.map(item => {
+        const title =
+          item.title.length > this.titleLimit
+            ? item.title.slice(0, this.titleLimit) + "..."
+            : item.title;
+
+        return Object.assign({}, item, { title });
+      });
     }
   },
   watch: {
@@ -129,6 +151,38 @@ export default {
       if (val && val.id && true) {
         this.listCartItems();
       }
+    },
+    searchText(val) {
+      if (!val) {
+        this.searchResults = [];
+        return;
+      }
+      if (this.isLoading) return;
+      this.isLoading = true;
+
+      this.$http
+        .get(`/api/v1/books/search?query=${val}`, this.getAuthHeader())
+        .then(resp => {
+          this.searchResults = [];
+          if (!resp || resp.data == undefined) {
+            return;
+          }
+          for (let i = 0; i < resp.data.length; i++) {
+            this.searchResults.push(resp.data[i]);
+          }
+          this.isLoading = false;
+        })
+        .catch(err => {
+          this.isLoading = false;
+          this.showError(err, "Failed to search.");
+        });
+    },
+    searchModel(val) {
+      if (!val) {
+        return;
+      }
+      this.$router.push({ path: `/product/${val}` });
+      this.$router.go(this.$router.currentRoute)
     }
   },
   methods: {
@@ -177,7 +231,7 @@ export default {
       }
     },
     toAdminPage() {
-      this.$router.push({ path: "/admin" });
+      this.$router.go({ path: "/admin" });
     }
   },
   created() {
