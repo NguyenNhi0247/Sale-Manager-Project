@@ -1,20 +1,11 @@
 <template>
   <v-container fluid pb-4>
     <v-layout>
-      <!-- Left section => Category list / Advanced search... -->
       <v-flex xs2 >
         <v-card
         class="mr-3"
         >
-          <!-- <v-toolbar
-            color="indigo accent-4"
-            dark
-            dense
-            class="elevation-1"
-          >
-            <v-toolbar-title class="subtitle-1">Categories</v-toolbar-title>
-          </v-toolbar> -->
-          <v-list dense>
+          <v-list dense rounded color="indio accent-4">
             <v-subheader>CATEGORIES</v-subheader>
             <template>
               <v-list-item href="/#/category/Children">Children</v-list-item>
