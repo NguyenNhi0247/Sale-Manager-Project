@@ -21,7 +21,7 @@ def get_book_by_title(query):
     if query == None:
         return []
     search = "%{}%".format(query)
-    return Book.query.filter(Book.title.like(search)).all()
+    return Book.query.filter(Book.title.ilike(search)).all()
 
 
 def get_book_by_id(bid):

@@ -181,8 +181,8 @@ export default {
       if (!val) {
         return;
       }
-      console.log("Book clicked", val);
       this.$router.push({ path: `/product/${val}` });
+      this.$router.go(this.$router.currentRoute)
     }
   },
   methods: {

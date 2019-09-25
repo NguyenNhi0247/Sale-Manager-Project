@@ -179,9 +179,6 @@ export default {
     };
   },
   watch: {
-    id(val) {
-      this.loadBook();
-    },
     book(value) {
       let title =
         value && value.title ? value.title : "Book is your best friend";
@@ -196,6 +193,7 @@ export default {
   },
   mounted() {
     this.id = this.$route.params.id;
+    this.loadBook()
   },
   methods: {
     ...mapMutations(["addToCart"]),
