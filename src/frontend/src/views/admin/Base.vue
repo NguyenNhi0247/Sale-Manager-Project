@@ -60,9 +60,9 @@
                 <v-col cols="6">
                   <v-subheader v-if="item.heading">{{ item.heading }}</v-subheader>
                 </v-col>
-                <v-col cols="6" class="text-right">
+                <!-- <v-col cols="6" class="text-right">
                   <v-btn small text class="grey--text">edit</v-btn>
-                </v-col>
+                </v-col> -->
               </v-row>
               <v-divider v-else-if="item.divider" :key="i" dark class="mt-3 mb-2"></v-divider>
 
@@ -119,8 +119,8 @@ export default {
       { id: 5, heading: "Books" },
       { id: 6, icon: "mdi-notebook-outline", text: "Manage" },
       { id: 7, icon: "mdi-book-play-outline", text: "Archived" },
-      { id: 8, icon: "mdi-delete-variant", text: "Deleted" },
-      { id: 9, divider: true },
+      { id: 8, divider: true },
+      { id: 9, heading: "Misc" },
       { id: 10, icon: "mdi-settings-outline", text: "Settings" },
       { id: 11, icon: "mdi-help", text: "Help" },
       { id: 12, icon: "mdi-arrow-left", text: "Back to shop" }
@@ -169,6 +169,10 @@ export default {
         case 6: // Book management
           this.$router.push({ path: "/admin/books" });
           this.pageTitle = "Books";
+          break;
+        case 7: // Book archived
+          this.$router.push({ path: "/admin/books/archived" });
+          this.pageTitle = "Archived";
           break;
         case 10: // Settings
           this.$router.push({ path: "/admin/settings" });

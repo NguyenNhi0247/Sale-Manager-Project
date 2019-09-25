@@ -150,6 +150,7 @@ export default {
         .then(resp => {
           console.log("USER ORDER INFO", resp.data);
           let order = {
+            isReadOnly: false,
             summary: this.cloneObject(this.orderSummary),
             address: resp.data.address,
             payment: resp.data.payment

@@ -3,6 +3,27 @@ from app.main import db
 from app.main.model.book import Book
 
 
+def get_book_id_by_name(book_name):
+    book = Book.query.filter_by(title=book_name).first()
+    return book.id
+
+
+def get_book_by_category(category):
+    result = []
+    list_book = list_books(100, 0)
+    for book in list_book:
+        if category in book.categories:
+            result.append(book)
+    return result[:10]
+
+
+def get_book_by_title(query):
+    if query == None:
+        return []
+    search = "%{}%".format(query)
+    return Book.query.filter(Book.title.ilike(search)).all()
+
+
 def get_book_by_id(bid):
     return Book.query.filter_by(id=bid).first()
 
@@ -60,6 +81,26 @@ def update_book(bid, data):
         save_changes(new_book)
 
 
+def create_book(bid, data):
+    list_author = []
+    list_category = []
+    list_author += list_author.append(data["authors"].split(","))
+    list_category += list_category.append(data["authors"].split(","))
+    new_book = Book(
+        title=data["title"],
+        sub_title=data["sub_title"],
+        description=data["description"],
+        long_description=data["long_description"],
+        authors=list_author,
+        categories=list_category,
+        price=data["price"],
+        publisher=data["publisher"],
+        published_at=data["published_at"],
+        published_place=data["published_place"],
+    )
+    save_changes(new_book)
+
+
 def increase_purchased(book_id, quantity):
     book = get_book_by_id(book_id)
     book.total_purchased += quantity
@@ -71,6 +112,11 @@ def delete_book(bid):
     book.is_deleted = True
     book.deleted_at = datetime.now()
     save_changes(book)
+
+
+def publish_book(bid):
+    db.session.query(Book).filter_by(id=bid).update({"is_deleted": False})
+    db.session.commit()
 
 
 def save_changes(data):
