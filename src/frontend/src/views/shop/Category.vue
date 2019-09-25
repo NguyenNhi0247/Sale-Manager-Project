@@ -1,9 +1,8 @@
 <template>
-  <v-container >
+  <v-container>
     <v-layout>
-      <v-flex >
-
-        <h2 class="text-center mt-10">{{ name }} Books</h2>
+      <v-flex xs12>
+        <h2 class="text-center mt-3">{{ name }} Books</h2>
         <v-container fluid grid-list-md pt-3 px-0 pb-4>
           <v-layout row align-end v-if="resultBook.length > 0">
             <v-flex d-flex xs3 v-for="book in resultBook" :key="book.id">

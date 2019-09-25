@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="700px">
+  <v-dialog v-model="dialog" :persistent="!isReadOnly" max-width="700px">
     <v-card v-if="summary">
       <v-card-title>
         <span class="headline">Order Details</span>
@@ -83,10 +83,14 @@
         </v-container>
       </v-card-text>
 
-      <v-card-actions class="pb-5 pr-3">
+      <v-card-actions class="pb-5 pr-3" v-if="!isReadOnly">
         <div class="flex-grow-1"></div>
-        <v-btn color="grey" dark text @click="close">Cancel</v-btn>
-        <v-btn color="red" dark @click="confirm" :disabled="!summary">Confirm</v-btn>
+        <v-btn color="grey" dark text depressed @click="close">Cancel</v-btn>
+        <v-btn color="red" dark depressed @click="confirm" :disabled="!summary">Confirm</v-btn>
+      </v-card-actions>
+      <v-card-actions class="pb-5 pr-3" v-else>
+        <div class="flex-grow-1"></div>
+        <v-btn color="indigo accent-4" depressed dark @click="close()">OK</v-btn>
       </v-card-actions>
     </v-card>
 
@@ -101,6 +105,7 @@ import { eventBus } from "../../event";
 export default {
   name: "order-confirm-modal",
   data: () => ({
+    isReadOnly: true,
     address: null,
     payment: null,
     summary: null,
@@ -160,6 +165,7 @@ export default {
   },
   created() {
     eventBus.$on("showOrderConfirmModal", data => {
+      this.isReadOnly = data.isReadOnly;
       this.address = data.address;
       this.payment = data.payment;
       this.summary = data.summary;
