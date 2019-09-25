@@ -9,7 +9,7 @@
       style="cursor: pointer"
     >
       <v-card-text class="pt-8 caption text-uppercase" style="color: #818ea3">{{ stats.key }}</v-card-text>
-      <p class="display-1" style="color: #3d5170">{{ stats.value }}</p>
+      <p class="display-1" style="color: #3d5170">{{ stats.value | toLocaleString }}</p>
       <div v-if="stats.trend > 0" class="body-2" style="color: #4CAF50">
         <v-icon color="green" class>mdi-menu-up</v-icon>
         {{ stats.trend }}%

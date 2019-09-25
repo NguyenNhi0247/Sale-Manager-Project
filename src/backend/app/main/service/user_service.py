@@ -7,6 +7,7 @@ from app.main import db
 from app.main.model.user import User
 from app.main.model.user_addresses import UserAddresses
 from app.main.model.user_payments import UserPayments
+from app.main.model.user_books import UserBooks
 from ..util.password import PasswordCrypt
 from ..util.jwt import encode_auth_token
 from ..util.error import BadRequest, Unauthorized, InternalServerError, raiseIfExcept
@@ -95,6 +96,10 @@ def get_user_payment_by_user_id(user_id):
     return UserPayments.query.filter_by(user_id=user_id).first()
 
 
+def get_user_purchased_books(user_id):
+    return UserBooks.query.filter_by(user_id=user_id).all()
+
+
 def edit_user_address(user_id, data):
     now = datetime.now()
     user_address = get_user_address_by_user_id(user_id)
@@ -127,26 +132,47 @@ def edit_user_address(user_id, data):
         save_changes(new_user_address)
 
 
-def edit_user_payment(user_id, type, card_number, card_holder, valid_date):
+def edit_user_payment(user_id, data):
     now = datetime.now()
     user_payment = get_user_payment_by_user_id(user_id)
     if user_payment:
-        user_payment.type = (type,)
-        user_payment.card_number = (card_number,)
-        user_payment.card_holder = (card_holder,)
-        user_payment.valid_date = (valid_date,)
+        user_payment.type = (data["type"],)
+        user_payment.card_number = (data["card_number"],)
+        user_payment.card_holder = (data["card_holder"],)
+        user_payment.valid_date = (data["valid_date"],)
+        user_payment.updated_at = (now,)
         db.session.commit()
     else:
         new_user_payment = UserPayments(
-            uid=user_id,
-            type=type,
-            is_default=False,
-            card_number=card_number,
-            card_holder=card_holder,
-            valid_date=valid_date,
+            user_id=data["user_id"],
+            type=data["type"],
+            is_default=True,
+            card_number=data["card_number"],
+            card_holder=data["card_holder"],
+            valid_date=data["valid_date"],
+            created_at=now,
             updated_at=now,
+            deleted_at=now,
+            is_deleted=False,
         )
         save_changes(new_user_payment)
+
+
+def add_user_purchased_book(user_id, book_id):
+    new_user_book = UserBooks(
+        user_id=user_id, book_id=book_id, created_at=datetime.now()
+    )
+    save_changes(new_user_book)
+
+
+def check_book_purchased(user_id, book_id):
+    try:
+        found = UserBooks.query.filter_by(user_id=user_id, book_id=book_id).one()
+        if found is None:
+            return False
+        return True
+    except Exception:  # Not found
+        return False
 
 
 def save_changes(data):

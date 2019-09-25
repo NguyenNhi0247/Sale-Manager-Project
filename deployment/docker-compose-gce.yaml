@@ -33,10 +33,10 @@ services:
     image: gcr.io/beanies/backend:latest
     hostname: beanies-backend
     container_name: beanies-backend
-    ports:
+    command: "main.py run"
+    ports:  
       - "9090:9090"
     links:
-      # - frontend:frontend
       - postgres:postgres
     depends_on:
       - postgres

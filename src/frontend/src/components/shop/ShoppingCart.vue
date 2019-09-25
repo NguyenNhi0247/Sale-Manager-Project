@@ -220,14 +220,6 @@ export default {
       this.$router.push({ path: `/product/${book.id}` });
     }
   },
-  filters: {
-    toShippingFeeText(v) {
-      if (!v) {
-        return "0₫ (free)";
-      }
-      return v + "₫";
-    }
-  },
   mounted() {
     this.listCartItems();
   }

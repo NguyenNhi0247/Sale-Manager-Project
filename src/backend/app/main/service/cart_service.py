@@ -91,6 +91,11 @@ def remove_book_from_cart(user_id, book_id):
             remove_book_in_book_carts(book_id)
 
 
+def delete_item_in_cart(cart_id, book_id):
+    db.session.query(BookCarts).filter_by(cart_id=cart_id, book_id=book_id).delete()
+    db.session.commit()
+
+
 def list_items_in_cart(uid):
     cart = get_cart_by_user_id(uid)
     return db.session.query(BookCarts).filter_by(cart_id=cart.id).all()

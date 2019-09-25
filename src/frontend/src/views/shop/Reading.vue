@@ -81,7 +81,7 @@ export default {
     this.$http
       .get(`/api/v1/books/${this.id}`, axiosConfig)
       .then(resp => {
-        console.log(resp.data);
+        console.log("BOOK DETAILS", resp.data);
         this.book = resp.data;
 
         let filePath = "";

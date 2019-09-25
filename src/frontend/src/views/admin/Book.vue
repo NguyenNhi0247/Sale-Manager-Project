@@ -90,13 +90,13 @@ export default {
     listAllBooks() {
       let headers = this.getAuthHeader();
       this.$http
-        .get("/api/v1/books?limit=100", headers)
+        .get("/api/v1/books?limit=100&status=active", headers)
         .then(resp => {
-          console.log("LIST ALl BOOKS", resp.data);
+          console.log("LIST ALL ACTIVE BOOKS", resp.data);
           this.tblData = resp.data;
         })
         .catch(err => {
-          this.showError(err, "Cannot get book list.");
+          this.showError(err, "Cannot get list of active books.");
         });
     },
     calcTableHeight() {
@@ -126,7 +126,7 @@ export default {
       this.$http
         .delete(`/api/v1/books/${item.id}`, this.getAuthHeader())
         .then(resp => {
-          console.log("DELETE BOOK", resp, data);
+          console.log("DELETE BOOK", resp.data);
 
           for (let i = 0; i < this.tblData.length; i++) {
             let book = this.tblData[i];
