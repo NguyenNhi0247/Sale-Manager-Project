@@ -231,7 +231,7 @@ export default {
       }
     },
     toAdminPage() {
-      this.$router.go({ path: "/admin" });
+      this.$router.push({ path: "/admin" });
     }
   },
   created() {
