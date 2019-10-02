@@ -120,6 +120,11 @@ def delete_book(bid):
     save_changes(book)
 
 
+def publish_book(bid):
+    db.session.query(Book).filter_by(id=bid).update({"is_deleted": False})
+    db.session.commit()
+
+
 def save_changes(data):
     db.session.add(data)
     db.session.commit()

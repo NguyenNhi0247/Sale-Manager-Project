@@ -2,18 +2,6 @@
   <v-container fluid class="ma-0 pa-0">
     <v-layout>
       <v-flex xs12>
-        <!-- <v-data-table
-          class="elevation-1"
-          :headers="tblHeaders"
-          :items="tblData"
-          :items-per-page="50"
-          fixed-header
-          fixed-footer
-          no-data-text="No book found"
-          :height="calcTableHeight()"
-          v-if="tblData"
-        >
-        </v-data-table>-->
 
         <v-data-table
           v-if="tblData"
@@ -26,19 +14,8 @@
           no-data-text="No book found"
           :height="calcTableHeight()"
         >
-          <template v-slot:top>
-            <!-- <v-toolbar flat color="white"> -->
-            <!-- <v-toolbar-title class="caption">My CRUD</v-toolbar-title> -->
-            <!-- <v-divider class="mx-4" inset vertical></v-divider> -->
-            <!-- <div class="flex-grow-1"></div> -->
-
-            <!-- </v-toolbar> -->
-            <book-edit-modal></book-edit-modal>
-          </template>
-
           <template v-slot:item.action="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-            <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+            <v-icon @click="publishBook(item)">mdi-telegram</v-icon>
           </template>
 
           <template
@@ -47,10 +24,6 @@
           >
             <p>{{ item.subtitle }}</p>
           </template>
-
-          <!-- <template v-slot:no-data>
-            <p>No book found</p>
-          </template>-->
         </v-data-table>
       </v-flex>
     </v-layout>
@@ -59,16 +32,12 @@
 
 <script>
 import { eventBus } from "../../event";
-import BooKEditModal from "../../components/admin/BookEditModal";
 
 export default {
   name: "book-management",
-  components: {
-    "book-edit-modal": BooKEditModal
-  },
   data: () => ({
     tblHeaders: [
-      { text: "Actions", value: "action", sortable: false, width: 30 },
+      { text: "Publish", value: "action", sortable: false, width: 30 },
       { text: "ID", align: "left", value: "id", width: 20 },
       { text: "Title", value: "title", width: 250 },
       { text: "Subtitle", value: "sub_title", sortable: false, width: 200 },
@@ -90,13 +59,13 @@ export default {
     listAllBooks() {
       let headers = this.getAuthHeader();
       this.$http
-        .get("/api/v1/books?limit=100&status=active", headers)
+        .get("/api/v1/books?limit=100&status=deleted", headers)
         .then(resp => {
-          console.log("LIST ALL ACTIVE BOOKS", resp.data);
+          console.log("LIST ALL DELETED BOOKS", resp.data);
           this.tblData = resp.data;
         })
         .catch(err => {
-          this.showError(err, "Cannot get list of active books.");
+          this.showError(err, "Cannot get list of DELETED books.");
         });
     },
     calcTableHeight() {
@@ -113,20 +82,17 @@ export default {
         ) - 147
       );
     },
-    editItem(item) {
-      eventBus.bookEditModalShown(item);
-    },
-    deleteItem(item) {
+    publishBook(item) {
       let ret = confirm(
-        `Are you sure to delete the "${item.title}" book?`
+        `Are you sure to re-publish the "${item.title}" book?`
       );
       if (!ret) {
         return;
       }
       this.$http
-        .delete(`/api/v1/books/${item.id}`, this.getAuthHeader())
+        .put(`/api/v1/books/${item.id}/publish`, null, this.getAuthHeader())
         .then(resp => {
-          console.log("DELETE BOOK", resp.data);
+          console.log("PUBLISH BOOK", resp.data);
 
           for (let i = 0; i < this.tblData.length; i++) {
             let book = this.tblData[i];
@@ -136,11 +102,11 @@ export default {
           }
           eventBus.snackbarShown({
             type: "success",
-            msg: `Book deleted!`
+            msg: `Book published!`
           });
         })
         .catch(err => {
-          this.showError(err, "Cannot delete book.");
+          this.showError(err, "Cannot publish book.");
         });
     }
   },

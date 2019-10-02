@@ -82,7 +82,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="order in orderHistory" :key="order.id">
+                <tr
+                  v-for="order in orderHistory"
+                  :key="order.id"
+                  ripple
+                  @click="orderClicked(order)"
+                >
                   <td>{{ order.id }}</td>
                   <td>{{ order.total | toLocaleString }}₫</td>
                   <td>{{ order.created_at }}</td>
@@ -94,10 +99,13 @@
         </v-layout>
       </v-flex>
     </v-layout>
+
+    <order-confirm-modal></order-confirm-modal>
   </v-container>
 </template>
 
 <script>
+import OrderConfirmModal from "../../components/shop/OrderConfirmModal";
 import { eventBus } from "../../event";
 import { mapGetters } from "vuex";
 
@@ -106,7 +114,8 @@ import BookCard from "../../components/shop/BookCard";
 export default {
   name: "user",
   components: {
-    "book-card": BookCard
+    "book-card": BookCard,
+    "order-confirm-modal": OrderConfirmModal
   },
   data() {
     return {
@@ -192,6 +201,30 @@ export default {
         })
         .catch(err => {
           this.showError(err, "Cannot get user's order history.");
+        });
+    },
+    orderClicked(orderInfo) {
+      this.$http
+        .get(
+          `/api/v1/users/${this.authUser.username}/order-info`,
+          this.getAuthHeader()
+        )
+        .then(resp => {
+          console.log("USER ORDER INFO", resp.data);
+          let summary = this.cloneObject(orderInfo);
+          summary.shippingFee = summary.shipping_fee;
+          summary.subTotal =
+            summary.total - summary.shippingFee + summary.discount;
+          let order = {
+            isReadOnly: true,
+            summary: summary,
+            address: resp.data.address,
+            payment: resp.data.payment
+          };
+          eventBus.orderConfirmModalShown(order);
+        })
+        .catch(err => {
+          this.showError(err, "Cannot get user order info.");
         });
     }
   },

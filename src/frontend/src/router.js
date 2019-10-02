@@ -35,6 +35,8 @@ export default new Router({
                         import ('./views/admin/User.vue') },
                 { name: "bookManagement", path: "books", component: () =>
                         import ('./views/admin/Book.vue') },
+                { name: "bookArchived", path: "books/archived", component: () =>
+                        import ('./views/admin/BookArchived.vue') },
                 { name: "adminSettings", path: "settings", component: () =>
                         import ('./views/admin/Settings.vue') },
                 { name: "adminHelp", path: "help", component: () =>

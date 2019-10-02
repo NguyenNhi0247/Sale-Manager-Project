@@ -4,7 +4,7 @@
       <!-- Left section => Category list / Advanced search... -->
       <v-flex xs2>
         <v-card class="mr-3">
-          <v-list>
+          <v-list dense rounded color="indio accent-4">
             <v-subheader>CATEGORIES</v-subheader>
             <template>
               <v-list-item

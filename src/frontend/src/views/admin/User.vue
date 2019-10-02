@@ -112,9 +112,7 @@ export default {
       eventBus.userEditModalShown(item);
     },
     deleteItem(item) {
-      let ret = confirm(
-        `Are you sure you want to delete "${item.username}" user?`
-      );
+      let ret = confirm(`Are you sure to delete the "${item.username}" user?`);
       if (!ret) {
         return;
       }
