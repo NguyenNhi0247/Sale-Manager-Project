@@ -48,3 +48,11 @@ class BookDto:
             "title": fields.String(required=True, description="user username")
         }
     )
+
+    list_categories = api.model(
+        "list_categories",
+        {
+            "id": fields.Integer(description="Category identifier"),
+            "name": fields.String(required=True)
+        }
+    )

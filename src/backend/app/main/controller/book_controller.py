@@ -14,6 +14,7 @@ from ..service.book_service import (
     publish_book,
     get_book_by_category,
     get_book_by_title,
+    list_categories
 )
 from ..util.error import Unauthorized, raiseIfExcept
 
@@ -151,3 +152,17 @@ class BookSearch(Resource):
             return get_book_by_title(query)
         except Exception as e:
             log.exception("failed to get book")
+
+
+@api.route("/categories")
+class Category(Resource):
+    @api.doc("list_of_categories")
+    @api.response(501, "Failed to load list of categories")
+    @api.marshal_list_with(BookDto.list_categories)
+    def get(self):
+        limit = request.args.get("limit")
+        if limit == None:
+            limit = 10
+        offset = request.args.get("offset")
+        result = list_categories(limit, offset)
+        return result
