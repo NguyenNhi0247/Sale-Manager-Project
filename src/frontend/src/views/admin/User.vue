@@ -121,6 +121,7 @@ export default {
       this.$http
         .delete(`/api/v1/users/${item.username}`, this.getAuthHeader())
         .then(resp => {
+          console.log("DELETE USER", resp.data);
           for (let i = 0; i < this.tblData.length; i++) {
             let user = this.tblData[i];
             if (user.id == item.id) {

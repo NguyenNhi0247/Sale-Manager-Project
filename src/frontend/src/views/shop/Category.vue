@@ -18,9 +18,6 @@
 </template>
 
 <script>
-import { axiosConfig } from "../../utils";
-
-
 import BookCard from "../../components/shop/BookCard";
 
 export default {

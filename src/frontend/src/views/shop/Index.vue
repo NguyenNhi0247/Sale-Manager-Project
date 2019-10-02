@@ -2,26 +2,16 @@
   <v-container fluid pb-4>
     <v-layout>
       <!-- Left section => Category list / Advanced search... -->
-      <v-flex xs2 >
-        <v-card
-        class="mr-3"
-        >
-          <!-- <v-toolbar
-            color="indigo accent-4"
-            dark
-            dense
-            class="elevation-1"
-          >
-            <v-toolbar-title class="subtitle-1">Categories</v-toolbar-title>
-          </v-toolbar> -->
-          <v-list dense>
+      <v-flex xs2>
+        <v-card class="mr-3">
+          <v-list>
             <v-subheader>CATEGORIES</v-subheader>
             <template>
-              <v-list-item href="/#/category/Children">Children</v-list-item>
-              <v-list-item href="/#/category/Science">Science</v-list-item>
-              <v-list-item href="/#/category/Love">Love</v-list-item>
-              <v-list-item href="/#/category/Vietnam">VietNam</v-list-item>
-              <v-list-item href="/#/category/Art">Art</v-list-item>
+              <v-list-item
+                v-for="category in listCategories"
+                :key="category.id"
+                @click.native.stop="categoryClicked(category.name)"
+              >{{ category.name }}</v-list-item>
             </template>
           </v-list>
         </v-card>
@@ -65,7 +55,6 @@
 
 <script>
 import { axiosConfig } from "../../utils";
-import { eventBus } from "../../event";
 import { mapGetters } from "vuex";
 
 import BookCard from "../../components/shop/BookCard";
@@ -105,7 +94,8 @@ export default {
         }
       ],
       bestSellers: [],
-      newBooks: []
+      newBooks: [],
+      listCategories: []
     };
   },
   computed: {
@@ -122,7 +112,7 @@ export default {
         this.newBooks = resp.data;
       })
       .catch(err => {
-        this.showError(err, "Cannot get book list.")
+        this.showError(err, "Cannot get book list.");
       });
 
     this.$http
@@ -132,12 +122,24 @@ export default {
         this.bestSellers = resp.data;
       })
       .catch(err => {
-        this.showError(err, "Cannot get book list.")
+        this.showError(err, "Cannot get book list.");
+      });
+
+    this.$http
+      .get("/api/v1/books/categories?limit=20&offset=0", axiosConfig)
+      .then(resp => {
+        this.listCategories = resp.data;
+      })
+      .catch(err => {
+        this.showError(err, "Cannot get categores");
       });
   },
-  
+  methods: {
+    categoryClicked(category_name) {
+      this.$router.push({ path: `/category/${category_name}` });
+    }
+  }
 };
-
 </script>
 
 // scoped mean the CSS defined here only has the affect to DOM inside this component ONLY.
@@ -148,5 +150,4 @@ h2 {
   font-weight: 300;
   font-size: 1.8rem;
 }
-
 </style>

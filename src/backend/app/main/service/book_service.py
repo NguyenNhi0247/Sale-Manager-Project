@@ -1,6 +1,12 @@
 from datetime import datetime
 from app.main import db
 from app.main.model.book import Book
+from app.main.model.category import Category
+
+
+
+def list_categories(limit=10, offset=0):
+    return Category.query.order_by(Category.id).limit(limit).offset(offset).all()
 
 
 def get_book_id_by_name(book_name):
