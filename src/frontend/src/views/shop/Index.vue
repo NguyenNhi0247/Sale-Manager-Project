@@ -15,13 +15,9 @@
             <div class="flex-grow-1"></div>
           </v-toolbar>
 
-          <v-list>
-            <template>
-              <v-list-item href="/#/category/Children">Children</v-list-item>
-              <v-list-item href="/#/category/Science">Science</v-list-item>
-              <v-list-item href="/#/category/Love">Love</v-list-item>
-              <v-list-item href="/#/category/Vietnam">VietNam</v-list-item>
-              <v-list-item href="/#/category/Art">Art</v-list-item>
+          <v-list v-for="category in listCategories" :key="category.id">
+            <template >
+              <v-list-item @click.native.stop="categoryClicked(category.name)">{{ category.name }}</v-list-item>
             </template>
           </v-list>
         </v-card>
@@ -105,7 +101,9 @@ export default {
         }
       ],
       bestSellers: [],
-      newBooks: []
+      newBooks: [],
+      listCategories: [],
+
     };
   },
   computed: {
@@ -135,7 +133,21 @@ export default {
       .catch(err => {
         this.showError(err, "Cannot get book list.")
       });
+
+    this.$http
+      .get("/api/v1/books/categories?limit=10&offset=0", axiosConfig)
+      .then(resp => {
+        this.listCategories = resp.data;
+      })
+      .catch(err => {
+        this.showError(err, "Cannot get categores")
+      });
   },
+  methods: {
+    categoryClicked(category_name) {
+      this.$router.push({ path: `/category/${category_name}` });
+    }
+  }
   
 };
 

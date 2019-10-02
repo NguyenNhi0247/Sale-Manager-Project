@@ -5,7 +5,7 @@ from flask_restplus import Resource
 
 from ..util.dto.book import BookDto
 from ..util.jwt import get_user_role_by_token
-from ..service.book_service import get_book_by_id, list_books, update_book, delete_book, get_book_by_category, get_book_by_prefixStr,get_book_id_by_name
+from ..service.book_service import get_book_by_id, list_books, update_book, delete_book, get_book_by_category, get_book_by_prefixStr,get_book_id_by_name, list_categories
 from ..util.error import Unauthorized, raiseIfExcept
 
 
@@ -152,3 +152,17 @@ class BookSearch(Resource):
             return book_id
         except Exception as e:
             log.exception("failed to get book")
+
+
+@api.route("/categories")
+class Category(Resource):
+    @api.doc("list_of_categories")
+    @api.response(501, "Failed to load list of categories")
+    @api.marshal_list_with(BookDto.list_categories)
+    def get(self):
+        limit = request.args.get("limit")
+        if limit == None:
+            limit = 10
+        offset = request.args.get("offset")
+        result = list_categories(limit, offset)
+        return result
